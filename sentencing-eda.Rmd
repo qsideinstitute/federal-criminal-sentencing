@@ -128,7 +128,10 @@ ggplot(us_sent) +
 
 ```{r}
 ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district))))
+  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
 ```
 ```{r}
 ggplot(us_sent) +
