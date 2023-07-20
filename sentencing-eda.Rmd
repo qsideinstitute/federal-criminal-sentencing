@@ -309,7 +309,7 @@ ggplot(us_sent) +
 ```{r census-data-import, echo = TRUE, warning = FALSE, message = FALSE, results = 'hide'}
 
 # apply unique census api key
-census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", install = TRUE, overwrite = TRUE)
+census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 
 # import census data 
 ## guide to spatial units: https://api.census.gov/data/2016/acs/acs5/geography.html
