@@ -1,0 +1,56 @@
+---
+title: "Sentencing Tutorial"
+author: "Laurie"
+date: "2023-07-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readr)
+```
+
+First you will want to read in your data. You can do this using `read_csv`. To open the data you can "uncomment" (delete the hash tag #) to view the data file. Note that you will need to "recomment" this out in order to knit your file again.
+
+```{r read in data, message=FALSE, warning=FALSE, echo=FALSE}
+
+us_sent <- read_csv("data/cleaned_data_renamed.csv")
+#View(us_sent)
+```
+
+Let's inspect our variables which are in the columns.
+
+```{r check column names}
+names(us_sent)
+
+glimpse(us_sent)
+```
+Let's check what districts we have in the data.
+
+```{r}
+us_sent %>%
+  distinct(district)
+```
+You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North). If you live in the United States. 
+
+Q: Can you identify which district you live in?
+
+### What does each row represent?
+
+In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
+
+In this case each row represents a single court sentence at the federal court level
+
+
+### 
+
+
+###
+
+
+###
+
