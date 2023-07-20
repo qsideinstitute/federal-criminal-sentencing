@@ -1,106 +1,116 @@
-
 ```{r}
-setwd('~/Desktop/Sentencing/')
 library(tidyverse)
 library(palmerpenguins)
 library(gridExtra)
-peng = penguins %>% na.omit()
+penguins = penguins %>% na.omit()
 knitr::opts_chunk$set(fig.width=4, fig.height=4) 
-
 ```
 
---- 
 ## Data Types
 
-What is halfway between 0 and 1? It is 1/2. 
-What is halfway between horse and dog? There is no such thing! Thinking about each type of data is very important so that we don't code silly things like the mean of animal species!
+What is halfway between 0 and 1? It is 1/2. What is halfway between horse and dog? There is no such thing! Thinking about each type of data is very important so that we don't code silly things like the mean of animal species!
 
-There are two main types of data: **categorical data** and **numerical data**. Some examples of categorical data would be color, ethnicity, employment status, or states/countries. These have unique values, like California or Oregon. 
+There are two main types of data: **categorical data** and **numerical data**. Some examples of categorical data would be color, ethnicity, employment status, or states/countries. These have unique values, like California or Oregon.
 
-Some examples of numerical data are temperature, height and salary. It makes perfect sense to be 165.8 cm tall or for the temperature to be 82.4 degrees outside. 
+Some examples of numerical data are temperature, height and salary. It makes perfect sense to be 165.8 cm tall or for the temperature to be 82.4 degrees outside.
 
-There are some confusing data types that use numbers to *represent* categorical data, like zip code. You may live in the zip code 90201, which is a number, but you can't live in the zip code 90210.3. Only whole numbers, and specific ones at that, make sense here. We will learn more about using numbers to represent categorical data in this lesson. 
+There are some confusing data types that use numbers to *represent* categorical data, like zip code. You may live in the zip code 90201, which is a number, but you can't live in the zip code 90210.3. Only whole numbers, and specific ones at that, make sense here. We will learn more about using numbers to represent categorical data in this lesson.
 
 ### Penguins Data
 
-Take a look at the penguin data. There are 8 columns in the table, each giving an attribute about penguins. Can you identify which data type each variable is? 
+Take a look at the penguin data. There are 8 columns in the table, each giving an attribute about penguins. Can you identify which data type each variable is?
 
 ```{r}
 head(penguins)
 ```
+
 ## Explorations
+
 A good practice to do with a new data set is to explore it through visualization. We will walk through a few graphs in R so you can see how to plot. We will examine each of these so we can see relationships and learn more about our data. Then, explore on your own by modifying this code!
 
 ## How to make a scatter plot with quantitative variables
-In this first plot, we will look at numerical variables only. We will see how each penguin's flipper length relates to its body mass. 
 
-Each dot in the scatterplot we produce with the ggplot command represents a row in our penguin data. Scatterplots help us to visualize and understand numerical data better. We will compare each penguin's body mass to their flipper length through visualization and observation. We will use this scatterplot to identify any patterns that exist in our penguin data set.
+In this first plot, we will look at numerical variables only. We will see how each penguin's flipper length relates to its body mass.
+
+Each dot in the scatter plot we produce with the ggplot command represents a row in our penguin data. Scatter plots help us to visualize and understand numerical data better. We will compare each penguin's body mass to their flipper length through visualization and observation. We will use this scatterplot to identify any patterns that exist in our penguin data set.
 
 %%%%%%%%% come back to this to explain R code %%%%%%%%%%%
+
 ```{r}
 ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point()
 ```
-What do you notice in this scatterplot? What do you wonder?
+
+What do you notice in this scatter plot? What do you wonder?
 
 ## What happens when you try to make a scatter plot with categorical variables?
 
-We just created a scatterplot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical? Run the code below tht plots species (a categorical variable) against flipper length (a numerical variable).
+We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical? Run the code below tht plots species (a categorical variable) against flipper length (a numerical variable).
 
 ```{r}
 ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point()
 ```
-What do you notice in this scatterplot? What do you wonder?
 
-Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex againstagainst species (both categorical variables).
+What do you notice in this scatter plot? What do you wonder?
+
+Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex against species (both categorical variables).
+
 ```{r}
 ggplot(penguins, aes(x=species, y=sex)) + geom_point()
 ```
-What do you notice in this scatterplot? What do you wonder?
 
-Scatterplots of two categorical variables are not that useful for analysis and inference. In the remainder of this lesson we will focus on comparisons where we have at least one numerical variable.
+What do you notice in this scatter plot? What do you wonder?
 
-Let's momentarily restrict our data to two data points to think more about linear patterns.
+Scatter plots of two categorical variables are not that useful for analysis and inference. In the remainder of this lesson we will focus on comparisons where we have at least one numerical variable.
 
 ## Fitting Lines to Data
 
-- motivation on why we would do this in other contexts
-- motivation on the simple case
+-   motivation on why we would do this in other contexts
+-   motivation on the simple case
 
-Let's make two example points, one at (1,2) and one at (3,5). In R, we will save this into a data frame using a vector of the x values, 1 and 3, and a vector of the matching y values, 2 and 5.
+Let's make two example points, point A at (1,2) and point B at (3,5). In R, we will save this into a data frame using a vector of the x values, 1 and 3, and a vector of the matching y values, 2 and 5.
 
 ```{r}
-twopoints <- data.frame(xvals = c(1,3), yvals = c(2,5))
+twopoints <- data.frame(xvals = c(1,3), yvals = c(2,5), label = c('A','B'))
 head(twopoints)
 ```
-We can make a fairly boring plot of these two points. 
+
+We can make a fairly boring plot of these two points.
+
 ```{r}
 twoplot <- ggplot(twopoints, aes(x=xvals, y=yvals)) + 
   geom_point(color='red') + 
+  geom_text(aes(label=label), nudge_x = -.2, nudge_y = .2 ) +
   xlim(0,6) + 
   ylim(0,6)
+twoplot
 ```
-In order to create a linear regression on these two points, we can think back to algebra and use the formula for a line. 
+
+### Analytically Fit a Line to Two Points
+
+In order to create a linear regression on these two points, we can think back to algebra and use the formula for a line.
 
 $$ 
 y = m x + b
 $$
 
-Fitting our line to the data is easy, we can solve in a number of ways. We can plug both these points into the equation and then solve the system together. 
+Fitting our line to the data is easy, we can solve in a number of ways. We can plug both these points into the equation and then solve the system together.
 
 $$
 2 = m + b 
-$$
-$$5 = 3m+b$$
-Here we have a system that has two equations and two unknowns, $m$ and $b$. We know this has a unique solution! We can solve this system using a variety of techniques. Try this using a technique you are comfortable with and verify that the solution passes through each of the two points. 
+$$ $$5 = 3m+b$$Here we have a system that has two equations and two unknowns, $m$ and $b$. We know this has a unique solution! We can solve this system using a variety of techniques. Try this using a technique you are comfortable with and verify that the solution passes through each of the two points.
 
 $$
 y = \frac{3}{2} x+ \frac{1}{2}
 $$
 
-We can plot the results. Here we use the `abline()` function which can be done inslope-intercept form. 
+We can plot the results. Here we use the `abline()` function which can be done in slope-intercept form.
+
 ```{r}
 twoplot + geom_abline(slope=3/2, intercept = 1/2)
 ```
+
+### Numerically Fit a Line to Two Points
+
 ```{r}
 twolinear <- lm(formula = yvals ~ xvals, data=twopoints)
 twolinear
@@ -108,20 +118,25 @@ twolinear
 
 ```{r}
 twopoints$group = as.factor(1)
-threepoints = rbind(twopoints, data.frame(xvals = 2, yvals = 3, group=as.factor(2)))
+threepoints = rbind(twopoints, data.frame(xvals = 2, yvals = 3, label='C')
 threepoints$yfit1 = threepoints$xvals*3/2+1/2
 threepoints$yfit2 = threepoints$xvals+1
 threepoints$yfit3 = threepoints$xvals*2-1
 
-threeplot = ggplot(threepoints, aes(x=xvals, y = yvals, color=group)) + geom_point()  + xlim(0,6) + ylim(0,6)
+threeplot = ggplot(threepoints, aes(x=xvals, y = yvals)) + 
+  geom_point()  + 
+  geom_text(aes(label=label), nudge_x = -.2, nudge_y = .2 ) +
+  xlim(0,6) + ylim(0,6)
 
 grid.arrange(
-threeplot + geom_abline(slope=3/2, intercept = 1/2)+  geom_segment(aes(xend = xvals, yend = yfit1)),
-threeplot + geom_abline(slope=1, intercept = 1) + geom_segment(aes(xend = xvals, yend = yfit2)),
-threeplot + geom_abline(slope=2, intercept = -1) +  geom_segment(aes(xend = xvals, yend = yfit3)),
+  threeplot + geom_abline(slope=3/2, intercept = 1/2)+  geom_segment(aes(xend = xvals, yend = yfit1)),
+  threeplot + geom_abline(slope=1, intercept = 1) + geom_segment(aes(xend = xvals, yend = yfit2)),
+  threeplot + geom_abline(slope=2, intercept = -1) +  geom_segment(aes(xend = xvals, yend = yfit3)),
 ncol=3
 )
 ```
+
+### Numerically Fit a Line to Three Points
 
 ```{r}
 threelinear = lm(formula=yvals~xvals, data=threepoints)
@@ -137,8 +152,10 @@ ggplot(threepoints, aes(x=xvals, y = yvals, color=group)) +
   geom_segment(aes(xend = xvals, yend = linfit))
 ```
 
+## Fitting a Line to Many Points: Linear Regression!
+
 ```{r}
-pengscat = ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point()
+pengscat = ggplot(peng, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point()
 pengscat
 ```
 
@@ -150,23 +167,25 @@ pengfit
 ```{r}
 pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
 ```
+
 ## Categorical Data to Numerical Representations
 
 ```{r}
-peng$isAdelie = ifelse(peng$species=='Adelie',1,0)
+peng$isAdelie = ifelse(peng$species=='Adelie', 1, 0)
 adelieplot = ggplot(peng, aes(x=isAdelie, y=flipper_length_mm)) + geom_point()
 adelieplot
 ```
-
 
 ```{r}
 amodel = lm(formula = flipper_length_mm~isAdelie, data=peng)
 amodel
 ```
+
 ```{r}
 adelieplot + geom_abline(slope=-19.35, intercept=209.45)
 ```
-```{r}
+
+```{r, fig.width=12}
 peng$isChinstrap = ifelse(peng$species=='Chinstrap',1,0)
 peng$isGentoo = ifelse(peng$species=='Gentoo',1,0)
 
@@ -185,7 +204,6 @@ grid.arrange( aplot, cplot, gplot, ncol=3)
 linmodel <- lm(flipper_length_mm ~ species, data = peng)
 linmodel
 ```
-
 
 ```{r}
 peng_encoded = peng %>% mutate(value = 1) %>% spread(species, value, fill = 0 )
