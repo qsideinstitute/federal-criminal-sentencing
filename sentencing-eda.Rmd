@@ -197,9 +197,10 @@ ggplot(us_sent) +
 ```{r}
 ggplot(us_sent) +
   geom_point(aes(y = sentence_length, 
-                 x = base_chapter2_3_adjustments), alpha = 0.3) +
-  labs(x = "Sentence length in months", 
-       y = "Base Chapter2_3_adjustments")
+                 x = base_chapter2_3_adjustments, color = race), alpha = 0.01) +
+  labs(x = "Base Chapter 2_3", 
+       y = "Sentence length in months") +
+  facet_wrap(~ race)
 ```
 
 #### How does the age range vary with criminal history?
@@ -327,7 +328,7 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", install = TRUE, overw
 # B03002_009: Multiple Races (Not Hispanic or Latino)
 # B03002_008: Other (Not Hispanic or Latino)
 
-census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
+#census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
 
 ```
 
