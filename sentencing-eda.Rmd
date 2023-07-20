@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readr)
 library(ggridges)
+library(tidycensus)
 ```
 
 ## Reading in the data
@@ -276,6 +277,40 @@ ggplot(us_sent) +
 ggplot(us_sent) +
   geom_bar(aes(y = fct_infreq(district)))
 ```
+
+##### Exploring the census data
+
+**To Do**:
+
+- If we want to get out the district populations, we will probably need to download the data by the county level. 
+- Decision points: we could download the data in categories by age and sex and race: e.g. 5-9, 10-14 etc. This might get a little
+
+```{r census-data-import, echo = TRUE, warning = FALSE, message = FALSE, results = 'hide'}
+
+# apply unique census api key
+census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", install = TRUE, overwrite = TRUE)
+
+# import census data 
+## guide to spatial units: https://api.census.gov/data/2016/acs/acs5/geography.html
+## variable of interest --> population
+## vars <- load_variables(year = 2013,
+                      # dataset = "acs5",
+                      # cache = TRUE)
+
+# B02001_001: Total
+# B03002_003: White alone (Not Hispanic or Latino)
+# B03002_004 Black or African American alone (Not Hispanic or Latino)
+# B03002_012: Hispanic or Latino
+# B03002_005: Native American alone (Not Hispanic or Latino)
+# B03002_006: Asian alone (Not Hispanic or Latino)
+# B03002_007: Native Hawaiian or Pacific Islander alone (Not Hispanic or Latino)
+# B03002_009: Multiple Races (Not Hispanic or Latino)
+# B03002_008: Other (Not Hispanic or Latino)
+
+census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
+
+```
+
 
 ### 
 
