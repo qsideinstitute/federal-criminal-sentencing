@@ -1,6 +1,6 @@
 ---
-title: "Sentencing Tutorial"
-author: "Laurie"
+title: "Sentencing Exploratory Data Analysis"
+author: "Laurie Baker, Lily Khadjavi, and José Pabon"
 date: "2023-07-19"
 output: html_document
 ---
@@ -14,6 +14,8 @@ library(tidyverse)
 library(readr)
 ```
 
+### Reading in the data
+
 First you will want to read in your data. You can do this using `read_csv`. To open the data you can "uncomment" (delete the hash tag #) to view the data file. Note that you will need to "recomment" this out in order to knit your file again.
 
 ```{r read in data, message=FALSE, warning=FALSE, echo=FALSE}
@@ -21,6 +23,22 @@ First you will want to read in your data. You can do this using `read_csv`. To o
 us_sent <- read_csv("data/cleaned_data_renamed.csv")
 #View(us_sent)
 ```
+
+### Describe the structure of the data
+
+In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
+
+In this case each row represents a single court sentence for individuals who were convicted and given a sentence at the federal district court in one of the 94 districts in the U.S.
+
+When we start with a dataset we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred.
+
+#### Who
+
+#### What
+
+#### When
+
+#### Where
 
 Let's inspect our variables which are in the columns.
 
@@ -38,12 +56,6 @@ us_sent %>%
 You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North). If you live in the United States. 
 
 Q: Can you identify which district you live in?
-
-### What does each row represent?
-
-In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
-
-In this case each row represents a single court sentence at the federal court level
 
 
 ### 
