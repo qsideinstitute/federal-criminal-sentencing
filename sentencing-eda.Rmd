@@ -28,11 +28,28 @@ us_sent <- read_csv("data/cleaned_data_renamed.csv")
 
 In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
 
-In this case each row represents a single court sentence for individuals who were convicted and given a sentence at the federal district court in one of the 94 districts in the U.S.
+In this case each row represents an individual who was sentenced in the federal district court system in the U.S. in one of the 94 districts in the U.S.
 
 When we start with a dataset we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred.
 
+Let's inspect our variables which are in the columns.
+
+```{r check column names}
+names(us_sent)
+
+summary(us_sent)
+
+str(us_sent)
+
+glimpse(us_sent)
+```
+
+- explain what glimpse is
+- explain the different columns (linking to the background)
+
 #### Who
+
+
 
 #### What
 
@@ -40,14 +57,8 @@ When we start with a dataset we will want to think about and explore some key qu
 
 #### Where
 
-Let's inspect our variables which are in the columns.
 
-```{r check column names}
-names(us_sent)
-
-glimpse(us_sent)
-```
-Let's check what districts we have in the data.
+Let's check what districts we have in the data. We can do this using `distinct(district)`
 
 ```{r}
 us_sent %>%
@@ -55,8 +66,31 @@ us_sent %>%
 ```
 You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North). If you live in the United States. 
 
-Q: Can you identify which district you live in?
+Q: Can you identify which district you live in? Add a link to a reference where someone could also find which district their town/city is in. 
 
+#### Where did those sentences occur?
+
+- introduce factors as a data type
+- explain why it might be better to put our names on the y axis instead of the x-axis for many categories and those with longer names. This makes it more readable. 
+- explain that automatically categorical data will be placed in alphabetical order.
+- we can reconfigure the graph using functions from the `forcats` package.
+- This is a good example for when you might want to order it in terms of frequency (i.e. the count) using `fct_infreq`
+- We may also want to reverse the order to see the districts which have the most sentences at the top of our plot using `fct_rev`.
+- 
+
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(y = district))
+```
+
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_rev(fct_infreq(district))))
+```
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_infreq(district)))
+```
 
 ### 
 
