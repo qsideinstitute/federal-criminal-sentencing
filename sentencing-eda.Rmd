@@ -128,9 +128,16 @@ us_sent %>%
 - You may look at this plot and say that whites are sentenced at the federal district court more than black individuals. This is where it is important to look at the population in each area. 
 
 
-#### Bringing in the census data
+**Future Directions**
 
-- Limitations of census data.
+Bringing in the spatial district files
+
+- https://www.openicpsr.org/openicpsr/project/100069/version/V1/view
+- Downloading census data from the API.
+- Joining to census data
+- Limitations of census data
+
+
 
 
 ### What
@@ -139,8 +146,7 @@ us_sent %>%
 
 ### Where
 
-
-Let's check what districts we have in the data. We can do this using `distinct(district)`
+Let's check what districts we have in the data. We can do this using `distinct(district)`.
 
 ```{r}
 us_sent %>%
