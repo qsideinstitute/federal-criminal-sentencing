@@ -106,12 +106,12 @@ us_sent %>%
   labs(x = "Race*",
        title = "Race* of Sentenced Individuals", 
        y = "Number of Individuals",
-       fill = "Race*")
+       fill = "Race*") +
+  scale_fill_viridis_d()
 ```
 
 #### Race and Sex
 
-2000-2006
 
 ```{r}
 us_sent %>%
@@ -131,7 +131,8 @@ us_sent %>%
   labs(x = "Race*",
        title = "Race* and Sex* of Sentenced Individuals", 
        y = "Number of Individuals",
-       fill = "Sex*")
+       fill = "Sex*")  +
+  scale_fill_viridis_d()
 ```
 
 #### Proportional Race and Sex
@@ -148,7 +149,16 @@ us_sent %>%
   labs(x = "Race*",
        title = "Race* and Sex* of Sentenced Individuals", 
        y = "Number of Individuals",
-       fill = "Sex*")
+       fill = "Sex*")  +
+  scale_fill_viridis_d()
+```
+#### Age
+
+We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont.
+
+```{r}
+us_sent %>%
+  filter(district %in% c("Maine", "Rhode Island", "Vermont"))
 ```
 
 
@@ -174,6 +184,42 @@ Bringing in the spatial district files
 
 Sentence lengths and how do they relate to policy?
 
+When we are exploring the distribution of a dataset can we can use a number of different plots
+
+##### Histogram
+
+```{r}
+ggplot(us_sent) +
+  geom_histogram(aes(x = sentence_length), binwidth = 12) +
+  labs(x = "Sentence length in months", y = "Number of individuals")  +
+  geom_vline(aes(xintercept = 12), color = "red", linetype = 2) +
+  geom_vline(aes(xintercept = 60), color = "red", linetype = 2) +
+   geom_vline(aes(xintercept = 120), color = "red", linetype = 2) +
+  geom_vline(aes(xintercept = 240), color = "red", linetype = 2)
+  
+ 
+
+```
+##### Histogram
+
+```{r}
+ggplot(us_sent) +
+  geom_histogram(aes(x = sentence_length/12), binwidth = 1) +
+  labs(x = "Sentence length in years", y = "Number of individuals") +
+  geom_vline(aes(xintercept = 1), color = "red", linetype = 2) +
+  geom_vline(aes(xintercept = 5), color = "red", linetype = 2) +
+  geom_vline(aes(xintercept = 10), color = "red", linetype = 2) +
+  geom_vline(aes(xintercept = 20), color = "red", linetype = 2) +
+  labs(title = "Distribution of number of individuals by ")
+  
+ 
+
+```
+
+Could we add vertical bars to the plot to reflect the table and make the year marks. 
+
+Say something about skew and also particular peaks relative to the table.
+
 ##### Violin Plot
 
 ```{r}
@@ -182,25 +228,47 @@ ggplot(us_sent) +
   labs(fill = "Criminal History", y = "Sentence length in months", x = "Criminal History")
 
 ```
-##### Ridge plot of sentence length in months vs. criminal history
+##### Ridge plot
 
 ```{r}
 ggplot(us_sent) +
   geom_density_ridges(aes(y = as.factor(criminal_history), 
                           x = sentence_length, 
                           fill = as.factor(criminal_history))) +
-  labs(fill = "Criminal History", 
+  labs(title = "Distribution of sentence length in months by criminal history",
+       subtitle = "Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences",
+    fill = "Criminal History", 
        x = "Sentence length in months", 
-       y = "Criminal History")
+       y = "Criminal History") +
+  geom_vline(aes(xintercept = 12), color = "black", linetype = 2) +
+  geom_vline(aes(xintercept = 60), color = "black", linetype = 2) +
+   geom_vline(aes(xintercept = 120), color = "black", linetype = 2) +
+  geom_vline(aes(xintercept = 180), color = "black", linetype = 2) +
+  geom_vline(aes(xintercept = 240), color = "black", linetype = 2) +
+  scale_fill_viridis_d()
+  
+```
+What is the relationship between `base_chapter2_3_adjustment` and `sentence_length`?
+
+```{r}
+ggplot(us_sent) +
+  geom_point(aes(y = sentence_length, 
+                 x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
+  labs(x = "All Adjustments", 
+       y = "Sentence length in months", 
+       color = "Criminal History") +
+  facet_wrap(~ race) +
+  scale_color_viridis_d()
 ```
 
 ```{r}
 ggplot(us_sent) +
   geom_point(aes(y = sentence_length, 
-                 x = base_chapter2_3_adjustments, color = race), alpha = 0.01) +
-  labs(x = "Base Chapter 2_3", 
-       y = "Sentence length in months") +
-  facet_wrap(~ race)
+                 x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
+  labs(x = "All Adjustments", 
+       y = "Sentence length in months", 
+       color = "Criminal History") +
+  scale_color_viridis_d()
 ```
 
 #### How does the age range vary with criminal history?
@@ -285,7 +353,7 @@ ggplot(us_sent) +
        x = "Number of individuals")
 ```
 
-##### Highlighting a particular state
+##### Making the plot more readable with subsetting
 
 ```{r}
 ggplot(us_sent) +
