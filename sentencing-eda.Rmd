@@ -49,6 +49,65 @@ glimpse(us_sent)
 
 ### Who
 
+A key motivation for this work is exploring how our personal and racial identities influence the judicial sentencing. In a fair, democratic system this identity or perceived identity should not affect how we are treated by the justice system.
+
+In this dataset, we have four variables that are related to identity: `age`, `sex`, `educ`: education, and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination “intersect” to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023).
+
+#### Sex {.tabset}
+
+Sex has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female".
+
+```{r}
+us_sent %>%
+  distinct(sex)
+```
+
+We can recode this variable using `mutate` and `case_when`
+
+**To add**
+
+- Add how sex was defined (pre-sentencing report that comes out of the investigation done by the probation office). An interview with the defendant and documentation. See Background section.
+- Discuss how a binary variable will not reflect sentenced individuals gender identity and excludes several groups. It is also limiting in nature.
+- Discuss difference between sex and gender
+- Discuss who has defined this variable and why this is problematic
+- Discuss the limitations and how this affects the analysis and inferences we can make.
+- Update sex label with more appropriate label based on Background research.
+
+
+```{r}
+us_sent %>%
+  mutate(sex = case_when(sex == 0 ~ "Male",
+                         sex == 1 ~ "Female")) %>%
+  ggplot() +
+  geom_bar(aes(x = sex, fill = sex)) +
+  labs(x = "Sex *See background",
+       title = "Sex of Sentenced Individuals", 
+       y = "Number of Individuals",
+       fill = "Sex")
+```
+
+
+
+
+
+
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(x = sex))
+```
+
+
+
+By race
+
+
+By sex and race
+
+```{r}
+us_sent %>%
+  count(sex, race)
+```
+
 
 
 ### What
