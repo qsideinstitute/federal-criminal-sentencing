@@ -182,17 +182,37 @@ ggplot(us_sent) +
   labs(fill = "Criminal History", y = "Sentence length in months", x = "Criminal History")
 
 ```
-##### Ridges plot
+##### Ridge plot of sentence length in months vs. criminal history
 
 ```{r}
 ggplot(us_sent) +
-  geom_density_ridges(aes(y = as.factor(criminal_history), x = sentence_length, fill = as.factor(criminal_history))) +
-  labs(fill = "Criminal History", x = "Sentence length in months", y = "Criminal History")
+  geom_density_ridges(aes(y = as.factor(criminal_history), 
+                          x = sentence_length, 
+                          fill = as.factor(criminal_history))) +
+  labs(fill = "Criminal History", 
+       x = "Sentence length in months", 
+       y = "Criminal History")
 ```
 
-#### How does criminal history vary with age?
+```{r}
+ggplot(us_sent) +
+  geom_point(aes(y = sentence_length, 
+                 x = base_chapter2_3_adjustments), alpha = 0.3) +
+  labs(x = "Sentence length in months", 
+       y = "Base Chapter2_3_adjustments")
+```
 
+#### How does the age range vary with criminal history?
 
+```{r}
+ggplot(us_sent) +
+  geom_density_ridges(aes(y = as.factor(criminal_history), 
+                          x = age, 
+                          fill = as.factor(criminal_history))) +
+  labs(fill = "Criminal History", 
+       x = "Age of individual in years", 
+       y = "Criminal History")
+```
 
 ### When
 
