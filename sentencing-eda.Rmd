@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r load libraries, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(readr)
+library(ggridges)
 ```
 
 ## Reading in the data
@@ -42,6 +43,7 @@ summary(us_sent)
 str(us_sent)
 
 glimpse(us_sent)
+
 ```
 
 - explain what glimpse is
@@ -108,6 +110,14 @@ us_sent %>%
 
 #### Race and Sex
 
+2000-2006
+
+```{r}
+us_sent %>%
+  count(race, sex)
+```
+
+
 
 ```{r}
 us_sent %>%
@@ -123,9 +133,27 @@ us_sent %>%
        fill = "Sex*")
 ```
 
+#### Proportional Race and Sex
+
+We can also create a proportional bar plot
+```{r}
+us_sent %>%
+  mutate(race = case_when(race == "other" ~ "ari",
+                         TRUE ~ race)) %>%
+  mutate(sex = case_when(sex == 0 ~ "Male",
+                         sex == 1 ~ "Female")) %>%
+  ggplot() +
+  geom_bar(aes(x = fct_infreq(race), fill = sex), position = "fill") +
+  labs(x = "Race*",
+       title = "Race* and Sex* of Sentenced Individuals", 
+       y = "Number of Individuals",
+       fill = "Sex*")
+```
+
+
 **To add**: 
 - what do we divide by?
-- You may look at this plot and say that whites are sentenced at the federal district court more than black individuals. This is where it is important to look at the population in each area. 
+- You may look at this plot and say that whites are sentenced at the federal district court more than black individuals. This is where it is important to look at the population in each district. 
 
 
 **Future Directions**
@@ -136,11 +164,34 @@ Bringing in the spatial district files
 - Downloading census data from the API.
 - Joining to census data
 - Limitations of census data
-
-
+- Other potential things to mention (the affect of aggregation and spatial scale). 
 
 
 ### What
+
+#### How does sentence length correlate with criminal history? {.tabset}
+
+Sentence lengths and how do they relate to policy?
+
+##### Violin Plot
+
+```{r}
+ggplot(us_sent) +
+  geom_violin(aes(x = as.factor(criminal_history), y = sentence_length, fill = as.factor(criminal_history))) +
+  labs(fill = "Criminal History", y = "Sentence length in months", x = "Criminal History")
+
+```
+##### Ridges plot
+
+```{r}
+ggplot(us_sent) +
+  geom_density_ridges(aes(y = as.factor(criminal_history), x = sentence_length, fill = as.factor(criminal_history))) +
+  labs(fill = "Criminal History", x = "Sentence length in months", y = "Criminal History")
+```
+
+#### How does criminal history vary with age?
+
+
 
 ### When
 
