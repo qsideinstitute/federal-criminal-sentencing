@@ -1,6 +1,6 @@
 ---
 title: "Sentencing Exploratory Data Analysis"
-author: "Laurie Baker, Lily Khadjavi, and José Pabon"
+author: "Laurie Baker, Lily Khadjavi, and José Pabón"
 date: "2023-07-19"
 output: html_document
 ---
@@ -14,7 +14,7 @@ library(tidyverse)
 library(readr)
 ```
 
-### Reading in the data
+## Reading in the data
 
 First you will want to read in your data. You can do this using `read_csv`. To open the data you can "uncomment" (delete the hash tag #) to view the data file. Note that you will need to "recomment" this out in order to knit your file again.
 
@@ -24,7 +24,7 @@ us_sent <- read_csv("data/cleaned_data_renamed.csv")
 #View(us_sent)
 ```
 
-### Describe the structure of the data
+## Describe the structure of the data
 
 In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
 
@@ -47,15 +47,15 @@ glimpse(us_sent)
 - explain what glimpse is
 - explain the different columns (linking to the background)
 
-#### Who
+### Who
 
 
 
-#### What
+### What
 
-#### When
+### When
 
-#### Where
+### Where
 
 
 Let's check what districts we have in the data. We can do this using `distinct(district)`
@@ -64,11 +64,17 @@ Let's check what districts we have in the data. We can do this using `distinct(d
 us_sent %>%
   distinct(district)
 ```
-You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North). If you live in the United States. 
+You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North).  
 
-Q: Can you identify which district you live in? Add a link to a reference where someone could also find which district their town/city is in. 
+Q: If you live in the United States, can you identify which district you live in? 
 
-#### Where did those sentences occur?
+**To Do** Add a link to a reference where someone could also find which district their town/city is in. 
+
+We can use `distinct` to figure out what distinct districts we have in our dataset, but we are also interested in finding out how many sentences were made in each district and we will want to think about this question in relation to the population of those districts, which can be quite nuanced and we will come back to this later. 
+
+Our goals in this next section are to think about ways we can explore the question "Where did those sentences occur" in a visual way.
+
+**Learning aims**
 
 - introduce factors as a data type
 - explain why it might be better to put our names on the y axis instead of the x-axis for many categories and those with longer names. This makes it more readable. 
@@ -76,12 +82,49 @@ Q: Can you identify which district you live in? Add a link to a reference where 
 - we can reconfigure the graph using functions from the `forcats` package.
 - This is a good example for when you might want to order it in terms of frequency (i.e. the count) using `fct_infreq`
 - We may also want to reverse the order to see the districts which have the most sentences at the top of our plot using `fct_rev`.
-- 
+
+#### Number of individuals sentences across districts {.tabset}
+
+
+##### Base Bar Plot
+
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(x = district))
+```
+
+##### District on the y-axis
 
 ```{r}
 ggplot(us_sent) +
   geom_bar(aes(y = district))
 ```
+
+##### Ordered by number of sentences
+
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_infreq(district)))
+```
+
+##### Ordering from high to low
+
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_rev(fct_infreq(district))))
+```
+
+##### Add title and axes labels
+
+```{r}
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
+```
+
+##### Highlighting a particular state
 
 ```{r}
 ggplot(us_sent) +
