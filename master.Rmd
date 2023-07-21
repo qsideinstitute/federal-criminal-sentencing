@@ -4,10 +4,10 @@ subtitle: "We'll think of one eventually"
 author: "who knows"
 date: "`r format(Sys.Date(),'%B %d, %Y')`"
 output:
-  html_document:
+  github_document:
     toc: true
     number_sections: true
-    theme: yeti
+    # theme: yeti
 ---
 
 ```{r include=FALSE}
@@ -33,13 +33,11 @@ To be written.
 ```{r child = "Background.Rmd"}
 ```
 
-
 ```{r child = "sentencing-eda.Rmd"}
 ```
 
 ```{r child = "Exploration.Rmd"}
 ```
-
 
 ```{r child = "results.Rmd"}
 ```
