@@ -201,6 +201,7 @@ ggplot(us_sent) +
  
 
 ```
+
 ##### Histogram
 
 ```{r}
@@ -251,7 +252,7 @@ ggplot(us_sent) +
   scale_fill_viridis_d()
   
 ```
-What is the relationship between `base_chapter2_3_adjustment` and `sentence_length`?
+What is the relationship between `all_adjustments` and `sentence_length`?
 
 ```{r}
 ggplot(us_sent) +
