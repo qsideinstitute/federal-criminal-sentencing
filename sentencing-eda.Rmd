@@ -300,7 +300,7 @@ Excellent.  So we have years from 2006 from 2020 in our data, 15 rows worth of d
 Now each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the 'sapply()' routine.
 
 
-```{r use sapply() to verify the year data is indeed numero}
+```{r}
 sapply(us_sent,is.numeric)
 ```
 
@@ -444,8 +444,4 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 
 #census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
 
-<<<<<<< HEAD
 ```
-=======
-```
->>>>>>> 8e9421746f3dfd51eca6df3b0d1bb7e1a4450081

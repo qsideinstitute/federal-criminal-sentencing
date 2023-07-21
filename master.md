@@ -593,9 +593,10 @@ us_sent %>%
   ggplot() +
   geom_bar(aes(x = sex, fill = sex)) +
   labs(x = "Sex*",
-       title = "Sex* of Sentenced Individuals", 
+       title = "Sex* of Sentenced Individuals",
        y = "Number of Individuals",
-       fill = "Sex*")
+       fill = "Sex*") +
+  scale_fill_viridis_d()
 ```
 
 ![](master_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
@@ -622,7 +623,7 @@ us_sent %>%
   ggplot() +
   geom_bar(aes(x = fct_infreq(race), fill = race)) +
   labs(x = "Race*",
-       title = "Race* of Sentenced Individuals", 
+       title = "Race* of Sentenced Individuals",
        y = "Number of Individuals",
        fill = "Race*") +
   scale_fill_viridis_d()
@@ -658,7 +659,7 @@ us_sent %>%
   ggplot() +
   geom_bar(aes(x = fct_infreq(race), fill = sex)) +
   labs(x = "Race*",
-       title = "Race* and Sex* of Sentenced Individuals", 
+       title = "Race* and Sex* of Sentenced Individuals",
        y = "Number of Individuals",
        fill = "Sex*")  +
   scale_fill_viridis_d()
@@ -679,7 +680,7 @@ us_sent %>%
   ggplot() +
   geom_bar(aes(x = fct_infreq(race), fill = sex), position = "fill") +
   labs(x = "Race*",
-       title = "Race* and Sex* of Sentenced Individuals", 
+       title = "Race* and Sex* of Sentenced Individuals",
        y = "Number of Individuals",
        fill = "Sex*")  +
   scale_fill_viridis_d()
@@ -737,7 +738,11 @@ Bringing in the spatial district files
 Sentence lengths and how do they relate to policy?
 
 When we are exploring the distribution of a dataset can we can use a
-number of different plots
+number of different plots. To better understand sentence length data,
+we’ll display a histogram for this quantitative variable. A histogram
+gives us a visual representation of the frequency of values. With R, we
+can change the width of each bin or choose a number of bins, and then
+the plot shows us how many sentences fell within each bin range.
 
 ##### 4.2.2.1.1 Histogram
 
@@ -751,8 +756,9 @@ ggplot(us_sent) +
   geom_vline(aes(xintercept = 240), color = "red", linetype = 2)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-16-1.png)<!-- --> \#####
-Histogram
+![](master_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+##### 4.2.2.1.2 Histogram
 
 ``` r
 ggplot(us_sent) +
@@ -767,13 +773,18 @@ ggplot(us_sent) +
 
 ![](master_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
-Could we add vertical bars to the plot to reflect the table and make the
-year marks.
+We observe a high frequency over 0, meaning that many individuals who
+are convicted may in fact receive a sentence of 0 months. At the other
+extreme, we see cases corresponding to 470 months, representing
+individuals who either have been given a long sentence, meaning 39 years
+or possibly a life sentence.
 
-Say something about skew and also particular peaks relative to the
-table.
+$$could further discuss skew, peaks and relate to sentencing table,
+etc.$$
 
-##### 4.2.2.1.2 Violin Plot
+##### 4.2.2.1.3 Violin Plot
+
+Violin plots are another way of showing the distribution data.
 
 ``` r
 ggplot(us_sent) +
@@ -786,13 +797,13 @@ plot
 
 ``` r
 ggplot(us_sent) +
-  geom_density_ridges(aes(y = as.factor(criminal_history), 
-                          x = sentence_length, 
+  geom_density_ridges(aes(y = as.factor(criminal_history),
+                          x = sentence_length,
                           fill = as.factor(criminal_history))) +
   labs(title = "Distribution of sentence length in months by criminal history",
        subtitle = "Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences",
-    fill = "Criminal History", 
-       x = "Sentence length in months", 
+    fill = "Criminal History",
+       x = "Sentence length in months",
        y = "Criminal History") +
   geom_vline(aes(xintercept = 12), color = "black", linetype = 2) +
   geom_vline(aes(xintercept = 60), color = "black", linetype = 2) +
@@ -805,14 +816,14 @@ ggplot(us_sent) +
     ## Picking joint bandwidth of 5.47
 
 ![](master_files/figure-gfm/unnamed-chunk-19-1.png)<!-- --> What is the
-relationship between `base_chapter2_3_adjustment` and `sentence_length`?
+relationship between `all_adjustments` and `sentence_length`?
 
 ``` r
 ggplot(us_sent) +
-  geom_point(aes(y = sentence_length, 
+  geom_point(aes(y = sentence_length,
                  x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
-  labs(x = "All Adjustments", 
-       y = "Sentence length in months", 
+  labs(x = "All Adjustments",
+       y = "Sentence length in months",
        color = "Criminal History") +
   facet_wrap(~ race) +
   scale_color_viridis_d()
@@ -822,10 +833,10 @@ ggplot(us_sent) +
 
 ``` r
 ggplot(us_sent) +
-  geom_point(aes(y = sentence_length, 
+  geom_point(aes(y = sentence_length,
                  x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
-  labs(x = "All Adjustments", 
-       y = "Sentence length in months", 
+  labs(x = "All Adjustments",
+       y = "Sentence length in months",
        color = "Criminal History") +
   scale_color_viridis_d()
 ```
@@ -836,11 +847,11 @@ ggplot(us_sent) +
 
 ``` r
 ggplot(us_sent) +
-  geom_density_ridges(aes(y = as.factor(criminal_history), 
-                          x = age, 
+  geom_density_ridges(aes(y = as.factor(criminal_history),
+                          x = age,
                           fill = as.factor(criminal_history))) +
-  labs(fill = "Criminal History", 
-       x = "Age of individual in years", 
+  labs(fill = "Criminal History",
+       x = "Age of individual in years",
        y = "Criminal History")
 ```
 
@@ -849,6 +860,135 @@ ggplot(us_sent) +
 ![](master_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ### 4.2.3 When
+
+Let’s explore the time data found in our US sentencing data set. How
+many columns of data did we have again? This seems like a good place to
+start digging into what kind of time data we have in this data set.
+Which tool can we use to find out?
+
+Do we remember?
+
+We do remember; we can use the names() routine to remind ourselves.
+
+``` r
+names(us_sent)
+```
+
+    ##  [1] "sentence_length"             "age"                        
+    ##  [3] "sex"                         "educ"                       
+    ##  [5] "year"                        "guilty_plea"                
+    ##  [7] "base_chapter2_adjustments"   "base_chapter2_3_adjustments"
+    ##  [9] "all_adjustments"             "grid_cell"                  
+    ## [11] "mandatory_min"               "gov_departures"             
+    ## [13] "district"                    "race"                       
+    ## [15] "criminal_history"
+
+We can see the fifteen column names in that output. Awesome. Looks like
+our time data, as far as ‘when’ these convicted individuals in our data
+were convited, is in the ‘year’ column. Let’s see what we’re working
+with here. Let’s use the pipe distinct() routine again.
+
+``` r
+us_sent %>% distinct(year)
+```
+
+    ## # A tibble: 15 × 1
+    ##     year
+    ##    <dbl>
+    ##  1  2006
+    ##  2  2007
+    ##  3  2008
+    ##  4  2009
+    ##  5  2010
+    ##  6  2011
+    ##  7  2012
+    ##  8  2013
+    ##  9  2014
+    ## 10  2015
+    ## 11  2016
+    ## 12  2017
+    ## 13  2018
+    ## 14  2019
+    ## 15  2020
+
+Excellent. So we have years from 2006 from 2020 in our data, 15 rows
+worth of data. It is worth noticing that although 2020-2006 = 14, when
+we cound each year as a whole year of data ‘inclusively’, we have 15
+distinct instances, which the distinct command helpfully listed out for
+us.
+
+Now each of these data points is a numeric variable, such as ‘2010’, or
+‘2015’. One way we could check is to use the ‘sapply()’ routine.
+
+``` r
+sapply(us_sent,is.numeric)
+```
+
+    ##             sentence_length                         age 
+    ##                        TRUE                        TRUE 
+    ##                         sex                        educ 
+    ##                        TRUE                        TRUE 
+    ##                        year                 guilty_plea 
+    ##                        TRUE                        TRUE 
+    ##   base_chapter2_adjustments base_chapter2_3_adjustments 
+    ##                        TRUE                        TRUE 
+    ##             all_adjustments                   grid_cell 
+    ##                        TRUE                       FALSE 
+    ##               mandatory_min              gov_departures 
+    ##                       FALSE                       FALSE 
+    ##                    district                        race 
+    ##                       FALSE                       FALSE 
+    ##            criminal_history 
+    ##                        TRUE
+
+In the output we can indeed see \`TRUE’ for the column ‘year’. As we
+progress in our educational journey, learn about different numeric
+variables, including double precision floating point arithmetic numeric
+variables. Is our ‘year’ data in this format? Let’s use the same command
+with a different argument:
+
+``` r
+sapply(us_sent,is.double)
+```
+
+    ##             sentence_length                         age 
+    ##                        TRUE                        TRUE 
+    ##                         sex                        educ 
+    ##                        TRUE                        TRUE 
+    ##                        year                 guilty_plea 
+    ##                        TRUE                        TRUE 
+    ##   base_chapter2_adjustments base_chapter2_3_adjustments 
+    ##                        TRUE                        TRUE 
+    ##             all_adjustments                   grid_cell 
+    ##                        TRUE                       FALSE 
+    ##               mandatory_min              gov_departures 
+    ##                       FALSE                       FALSE 
+    ##                    district                        race 
+    ##                       FALSE                       FALSE 
+    ##            criminal_history 
+    ##                        TRUE
+
+Nice, we can see that our ‘year’ data is indeed a double precision
+floating point number.
+
+Let’s do a graph of our ‘year’ data, where we have each year on the
+vertical (y) axis and the sentences on the horizonal (x) axis.
+
+``` r
+ggplot(us_sent) +
+  geom_bar(aes(y = year))
+```
+
+![](master_files/figure-gfm/Bar%20chart%20of%20year%20data-1.png)<!-- -->
+
+If we wanted to use a scatter plot, which could be a bit ‘messier’, one
+way to do so would be:
+
+``` r
+ggplot(us_sent, aes(x=sentence_length, y=year)) + geom_point()
+```
+
+![](master_files/figure-gfm/graph%20our%20year%20data-%20scatter%20plot-1.png)<!-- -->
 
 ### 4.2.4 Where
 
@@ -918,7 +1058,7 @@ ggplot(us_sent) +
   geom_bar(aes(x = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 ##### 4.2.4.1.2 District on the y-axis
 
@@ -927,7 +1067,7 @@ ggplot(us_sent) +
   geom_bar(aes(y = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 ##### 4.2.4.1.3 Ordered by number of sentences
 
@@ -936,7 +1076,7 @@ ggplot(us_sent) +
   geom_bar(aes(y = fct_infreq(district)))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 ##### 4.2.4.1.4 Ordering from high to low
 
@@ -945,7 +1085,7 @@ ggplot(us_sent) +
   geom_bar(aes(y = fct_rev(fct_infreq(district))))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
 ##### 4.2.4.1.5 Add title and axes labels
 
@@ -957,7 +1097,7 @@ ggplot(us_sent) +
        x = "Number of individuals")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 ##### 4.2.4.1.6 Making the plot more readable with subsetting
 
@@ -969,14 +1109,17 @@ ggplot(us_sent) +
        x = "Number of individuals")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 ``` r
 ggplot(us_sent) +
-  geom_bar(aes(y = fct_infreq(district)))
+  geom_bar(aes(y = fct_infreq(district))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 ##### 4.2.4.1.7 Exploring the census data
 
@@ -991,7 +1134,7 @@ ggplot(us_sent) +
 # apply unique census api key
 census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 
-# import census data 
+# import census data
 ## guide to spatial units: https://api.census.gov/data/2016/acs/acs5/geography.html
 ## variable of interest --> population
 ## vars <- load_variables(year = 2013,
@@ -1082,7 +1225,7 @@ penguin data set.
 ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
@@ -1090,14 +1233,14 @@ What do you notice in this scatter plot? What do you wonder?
 
 We just created a scatter plot with two numerical variables. Now we will
 see what happens if one variable is numerical and the other is
-categorical? Run the code below tht plots species (a categorical
+categorical? Run the code below that plots species (a categorical
 variable) against flipper length (a numerical variable).
 
 ``` r
 ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
@@ -1109,18 +1252,30 @@ against species (both categorical variables).
 ggplot(penguins, aes(x=species, y=sex)) + geom_point(color='coral2', alpha=0.7)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
 Scatter plots of two categorical variables are not that useful for
-analysis and inference. In the remainder of this lesson we will focus on
-comparisons where we have at least one numerical variable.
+analysis and inference since they only display the way we’ve grouped our
+data and not any of the underlying patterns. To compare two categorical
+variables frequency tables or bar graphs are a better visualization to
+use. In the remainder of this lesson we will focus on comparisons where
+we have *at least one numerical variable*.
 
 ## 5.5 Fitting Lines to Data
 
-- motivation on why we would do this in other contexts
-- motivation on the simple case
+Suppose we want to predict how much electricity the city of Los Angeles,
+California will use based on the daily temperature. As the temperature
+goes higher, more people will turn on their air conditioners and use
+more electricity. We can look at past electricity use data and compare
+it to the temperature each day to get a sense of how these two
+attributes are related. Knowing and understanding how two variables
+relate can help you plan for future possibilities or identify and
+correct patterns that you don’t want to continue. For example, we can
+use this relationship to makes predictions of how much electricity Los
+Angeles will use in the future if we know the future temperature, and
+make sure that there is enough for the city’s needs.
 
 Let’s make two example points, point A at (1,2) and point B at (3,5). In
 R, we will save this into a data frame using a vector of the x values, 1
@@ -1135,7 +1290,7 @@ head(twopoints)
     ## 1     1     2     A
     ## 2     3     5     B
 
-We can make a fairly boring plot of these two points.
+We can make a fairly simple plot of these two points.
 
 ``` r
 twoplot <- ggplot(twopoints, aes(x=xvals, y=yvals)) + 
@@ -1146,7 +1301,7 @@ twoplot <- ggplot(twopoints, aes(x=xvals, y=yvals)) +
 twoplot
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 ### 5.5.1 Analytically Fit a Line to Two Points
 
@@ -1157,30 +1312,31 @@ $$
 y = m x + b
 $$
 
-Fitting our line to the data is easy, we can solve in a number of ways.
-We can plug both these points into the equation and then solve the
-system together.
+Fitting our line to the data is straightforward, we can solve in a
+number of ways. One way, is that we can plug both these points into the
+equation of the line and then solve the system together.
 
 $$
-2 = m + b 
-$$ $$5 = 3m+b$$Here we have a system that has two equations and two
-unknowns, $m$ and $b$. We know this has a unique solution! We can solve
-this system using a variety of techniques. Try this using a technique
-you are comfortable with and verify that the solution passes through
-each of the two points.
+2 = (1)m + b 
+$$ $$5 = (3)m+b$$Here we have a system that has two equations and two
+unknowns, $m$ and $b$. We know this system has a unique solution! Since
+we can solve this system using a variety of techniques, try to solve
+this system using a technique you are comfortable with and verify that
+the solution below passes through each of the two points.
 
 $$
 y = \frac{3}{2} x+ \frac{1}{2}
 $$
 
-We can plot the results. Here we use the `abline()` function which can
-be done in slope-intercept form.
+We can plot the results. Here we use the `abline()` function, to plot
+our linear equation which can be done by inputting the values for the
+slope and the intercept.
 
 ``` r
 twoplot + geom_abline(slope=3/2, intercept = 1/2)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
 
 ### 5.5.2 Numerically Fit a Line to Two Points
 
@@ -1196,6 +1352,15 @@ twolinear
     ## Coefficients:
     ## (Intercept)        xvals  
     ##         0.5          1.5
+
+Notice that the line above goes right through our two data points.
+
+We know that two points alone uniquely define a line, but what do we
+think will happen if we have to find a line that describes the goes
+through three data points? Let’s add the point (2,3) to our exisiting
+set and see what happens when try to draw a line through these three
+points. Below, we will use R to plot three graphs of our points, each
+attempting to find a line that goes through all three data points.
 
 ``` r
 threepoints = rbind(twopoints, data.frame(xvals = 2, yvals = 3, label='C'))
@@ -1216,9 +1381,29 @@ ncol=3
 )
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-41-1.png)<!-- --> Notice in
+all three graphs above, we can’t draw a straight line through all three
+points at the same time. The best that we can do is try to find a line
+that gets very close to all theree points, or fits these three points
+the best. But how can we define “the best” line that fits this data?
+
+To understand which line *best fits* our three data points, we need to
+talk about the **error**, which is also called the **residual** in
+statistics. The residual is the vertical distance between the predicted
+data point y (on the line) and the actual value of y our data takes on
+at that point (the value we collected) at each of our data points. In
+our data set we have the points (1,2), (2,3), and (3,5) so the only
+actual values for y in our data set are 2,3, and 5 even though our
+prediction line (our model) takes on all values of y between 0 and 6.
 
 ### 5.5.3 Numerically Fit a Line to Three Points
+
+To find the model that best fits our data, we want to make the error as
+small as possible. Linear regression is a techique that allows us to
+identify the line that minimizes our error, this line is called a
+*linear regression model* and is the line that best fits our data.
+Below, you will see R code to identify the model that best fits our
+data.
 
 ``` r
 threelinear = lm(formula=yvals~xvals, data=threepoints)
@@ -1243,9 +1428,21 @@ ggplot(threepoints, aes(x=xvals, y = yvals)) +
   geom_segment(aes(xend = xvals, yend = linfit), color='coral2')
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- --> Notice that
+the best fit linear model doesn’t go through any of our three points!
+**Why do you think that is?**
+
+Keep in mind, our goal is to minimize our error as much as we can. In
+each of the four previous graphs, the error (or the distance between the
+predicted y value and the actual y value) is shown on the graph. Of the
+four plots we just made of lines through our three data points, which
+looks like it has the smallest error?
 
 ## 5.6 Fitting a Line to Many Points: Linear Regression!
+
+Now let’s go back to our penguins data. Do you think a linear model
+might be a good way to model the data? Run the code below to create a
+scatterplot of flipper length versus body mass.
 
 ``` r
 pengscat = ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + 
@@ -1253,7 +1450,10 @@ pengscat = ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) +
 pengscat
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-44-1.png)<!-- --> Take a look
+at the scatterplot, does it look like most of the data fall along a
+straight line? If the general shape is a line, then yes, we should try
+to model this data with linear regression line.
 
 ``` r
 pengfit = lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
@@ -1268,13 +1468,29 @@ pengfit
     ## (Intercept)  body_mass_g  
     ##    137.0396       0.0152
 
+Here R givs us the slope and intercept of the straight line that best
+fits our data. Let’s graph this line together with our data using the
+code below.
+
 ``` r
 pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-46-1.png)<!-- --> - still need
+how to evaluate whether we have a good model R^2
 
 ## 5.7 Categorical Data to Numerical Representations
+
+So that we can analyze the sentencing data that we looked at earlier, we
+will need to explore scatterplots where only on variable is numerical
+and the other is categorical. Let’s compare flipper length to penguin
+species. Remember that flipper length is a numerical varible and species
+is a categorical variable with three levels (Adelie, Chinstrap, and
+Gentoo).
+
+To start, let’s consider one level at a time, so we can get a good sense
+of what is the relationship between species and flipper length. Below we
+examine Adelie penguins first.
 
 ``` r
 penguins$isAdelie = ifelse(penguins$species=='Adelie', 1, 0)
@@ -1283,7 +1499,9 @@ adelieplot = ggplot(penguins, aes(x=isAdelie, y=flipper_length_mm)) +
 adelieplot
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-46-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-47-1.png)<!-- --> Next, we
+create a linear model for the relationship between flipper length and
+whether a penguin is an Adelie penguin or not.
 
 ``` r
 amodel = lm(formula = flipper_length_mm~isAdelie, data=penguins)
@@ -1298,11 +1516,22 @@ amodel
     ## (Intercept)     isAdelie  
     ##      209.45       -19.35
 
+Then plot this best fit linear model against with our scatterplot to
+compare. Do you think that our linear model is a good representation of
+the data?
+
+As we saw before, things look a little bit different when we are dealing
+with categroical variables. In these types of scatterplots, we would
+expect the best fit model to pass through the mean values of each level
+of our categorical variable (or each ‘chunk’ of data). See below.
+
 ``` r
 adelieplot + geom_abline(slope=-19.35, intercept=209.45)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-49-1.png)<!-- --> Now we do
+the same thing for the other two species (Chinstrap and Gentoo) and plot
+all three graphs side by side.
 
 ``` r
 penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
@@ -1325,7 +1554,11 @@ gplot = speciesbase +
 grid.arrange(aplot, cplot, gplot, ncol=3)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-49-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-50-1.png)<!-- --> What would
+happen if instead of creating linear models for each level of the
+categorical variable separately, we created a single linear model for
+flipper length versus all species types? The code below allows us to
+find that model in just one step.
 
 ``` r
 linmodel <- lm(flipper_length_mm ~ species, data = penguins)
@@ -1339,6 +1572,27 @@ linmodel
     ## Coefficients:
     ##      (Intercept)  speciesChinstrap     speciesGentoo  
     ##          190.103             5.721            27.133
+
+This model will look like
+$$Flipper Length = 190.103 + 5.72*(Chinstrap) + 27.133*(Gentoo)$$ where
+the variable Chinstrap is an indicator variable that takes on the value
+of 1 when the penguin is the species Chinstrap and takes on the value of
+0 when the penguin is any other species. Similarly, the variable Gentoo
+is an indicator variable that takes on the value of 1 when the penguin
+is the species Gentoo and takes on the value of 0 when the penguin is
+any other species.
+
+So…what happened to the Adelie penguins in our model?!?! Notice the
+variable for Adelie is missing in our model. It actually got absorbed by
+the y-intercept! We only need n-1 variables to represent n levels of a
+categorical variable because we have this y-intercept. When a penguin is
+of the species Adelie and we apply this linear model, the values for
+Gentoo and Chinstrap are both equal to 0, since the penguin is an
+Adelie. Thus our model would predict a flipper length of 190.103 for all
+Adelie penguins.
+
+What is the flipper length predicted by our model for a Chinstrap
+penguin? What about a Gentoo penguin?
 
 ``` r
 peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 0 )
