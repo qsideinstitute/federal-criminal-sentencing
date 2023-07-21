@@ -86,7 +86,8 @@ us_sent %>%
   labs(x = "Sex*",
        title = "Sex* of Sentenced Individuals", 
        y = "Number of Individuals",
-       fill = "Sex*")
+       fill = "Sex*") +
+  scale_fill_viridis_d()
 ```
 
 #### Race
@@ -366,7 +367,10 @@ ggplot(us_sent) +
 ```
 ```{r}
 ggplot(us_sent) +
-  geom_bar(aes(y = fct_infreq(district)))
+  geom_bar(aes(y = fct_infreq(district))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
 ```
 
 ##### Exploring the census data
