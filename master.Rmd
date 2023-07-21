@@ -37,11 +37,8 @@ In 1987, the United States Sentencing Commission created sentencing guidelines f
 We will analyze the over one-half million sentencing records spanning the years 2006 to 2020 provided by the US Sentencing Commission.  Since we are comparing lengths of prison terms applied, we have eliminated from consideration any cases that did not result in a prison term and
 cases involving non-citizens, since the sentences in those cases frequently involve deportation, which is not comparable to prison terms.  We also removed any cases resulting in terms longer than...
 
-# Exploration of data
-
-
 ```{r child = "sentencing-eda.Rmd"}
 ```
 
-```{r child = "Exploration.Rmd"}
+```{r child = "results.Rmd"}
 ```
