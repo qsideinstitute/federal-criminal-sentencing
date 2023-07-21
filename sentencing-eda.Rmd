@@ -184,7 +184,7 @@ Bringing in the spatial district files
 
 Sentence lengths and how do they relate to policy?
 
-When we are exploring the distribution of a dataset can we can use a number of different plots
+When we are exploring the distribution of a dataset can we can use a number of different plots. To better understand sentence length data, we’ll display a histogram for this quantitative variable. A histogram gives us a visual representation of the frequency of values. With R, we can change the width of each bin or choose a number of bins, and then the plot shows us how many sentences fell within each bin range.
 
 ##### Histogram
 
@@ -216,11 +216,13 @@ ggplot(us_sent) +
 
 ```
 
-Could we add vertical bars to the plot to reflect the table and make the year marks. 
+We observe a high frequency over 0, meaning that many individuals who are convicted may in fact receive a sentence of 0 months. At the other extreme, we see cases corresponding to 470 months, representing individuals who either have been given a long sentence, meaning 39 years or possibly a life sentence.
 
-Say something about skew and also particular peaks relative to the table.
+[could further discuss skew, peaks and relate to sentencing table, etc.]
 
 ##### Violin Plot
+
+Violin plots are another way of showing the distribution data.
 
 ```{r}
 ggplot(us_sent) +
