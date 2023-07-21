@@ -1,40 +1,55 @@
-Race-Based Disparities in Federal Criminal Sentencing
+Federal District Courts and Race-Based Criminal Sentencing Disparities
 ================
-who knows
+Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik,
+Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas
+Wakefield
 July 21, 2023
 
-- [1 Acknowledgments](#1-acknowledgments)
-- [2 Background](#2-background)
-  - [2.1 Reading in the data](#21-reading-in-the-data)
-  - [2.2 Describe the structure of the
-    data](#22-describe-the-structure-of-the-data)
-    - [2.2.1 Who](#who)
-    - [2.2.2 What](#222-what)
-    - [2.2.3 When](#223-when)
-    - [2.2.4 Where](#224-where)
-    - [2.2.5](#225)
-    - [2.2.6](#226)
-    - [2.2.7](#227)
-  - [2.3 Data Types](#23-data-types)
-    - [2.3.1 Penguins Data](#231-penguins-data)
-  - [2.4 Explorations](#24-explorations)
-  - [2.5 How to make a scatter plot with quantitative
-    variables](#25-how-to-make-a-scatter-plot-with-quantitative-variables)
-  - [2.6 What happens when you try to make a scatter plot with
-    categorical
-    variables?](#26-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables)
-  - [2.7 Fitting Lines to Data](#27-fitting-lines-to-data)
-    - [2.7.1 Analytically Fit a Line to Two
-      Points](#271-analytically-fit-a-line-to-two-points)
-    - [2.7.2 Numerically Fit a Line to Two
-      Points](#272-numerically-fit-a-line-to-two-points)
-    - [2.7.3 Numerically Fit a Line to Three
-      Points](#273-numerically-fit-a-line-to-three-points)
-  - [2.8 Fitting a Line to Many Points: Linear
-    Regression!](#28-fitting-a-line-to-many-points-linear-regression)
-  - [2.9 Categorical Data to Numerical
-    Representations](#29-categorical-data-to-numerical-representations)
-- [3 Results](#3-results)
+- <a href="#1-acknowledgments" id="toc-1-acknowledgments">1
+  Acknowledgments</a>
+- <a href="#2-background" id="toc-2-background">2 Background</a>
+  - <a href="#21-reading-in-the-data" id="toc-21-reading-in-the-data">2.1
+    Reading in the data</a>
+  - <a href="#22-describe-the-structure-of-the-data"
+    id="toc-22-describe-the-structure-of-the-data">2.2 Describe the
+    structure of the data</a>
+    - <a href="#who" id="toc-who">2.2.1 Who</a>
+    - <a href="#222-what" id="toc-222-what">2.2.2 What</a>
+    - <a href="#223-when" id="toc-223-when">2.2.3 When</a>
+    - <a href="#224-where" id="toc-224-where">2.2.4 Where</a>
+    - <a href="#225" id="toc-225">2.2.5</a>
+    - <a href="#226" id="toc-226">2.2.6</a>
+    - <a href="#227" id="toc-227">2.2.7</a>
+  - <a href="#23-data-types" id="toc-23-data-types">2.3 Data Types</a>
+    - <a href="#231-penguins-data" id="toc-231-penguins-data">2.3.1 Penguins
+      Data</a>
+  - <a href="#24-explorations" id="toc-24-explorations">2.4 Explorations</a>
+  - <a href="#25-how-to-make-a-scatter-plot-with-quantitative-variables"
+    id="toc-25-how-to-make-a-scatter-plot-with-quantitative-variables">2.5
+    How to make a scatter plot with quantitative variables</a>
+  - <a
+    href="#26-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables"
+    id="toc-26-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables">2.6
+    What happens when you try to make a scatter plot with categorical
+    variables?</a>
+  - <a href="#27-fitting-lines-to-data"
+    id="toc-27-fitting-lines-to-data">2.7 Fitting Lines to Data</a>
+    - <a href="#271-analytically-fit-a-line-to-two-points"
+      id="toc-271-analytically-fit-a-line-to-two-points">2.7.1 Analytically
+      Fit a Line to Two Points</a>
+    - <a href="#272-numerically-fit-a-line-to-two-points"
+      id="toc-272-numerically-fit-a-line-to-two-points">2.7.2 Numerically Fit
+      a Line to Two Points</a>
+    - <a href="#273-numerically-fit-a-line-to-three-points"
+      id="toc-273-numerically-fit-a-line-to-three-points">2.7.3 Numerically
+      Fit a Line to Three Points</a>
+  - <a href="#28-fitting-a-line-to-many-points-linear-regression"
+    id="toc-28-fitting-a-line-to-many-points-linear-regression">2.8 Fitting
+    a Line to Many Points: Linear Regression!</a>
+  - <a href="#29-categorical-data-to-numerical-representations"
+    id="toc-29-categorical-data-to-numerical-representations">2.9
+    Categorical Data to Numerical Representations</a>
+- <a href="#3-results" id="toc-3-results">3 Results</a>
 
 ------------------------------------------------------------------------
 
@@ -44,15 +59,22 @@ license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 Citation: Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin
 Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas
-Wakefield. Institute for the Quantitative Study of Inclusion, Diversity,
-and Equity (QSIDE), with in-kind support from Institute for
-Computational and Experimental Research on Mathematics (ICERM), 2023.
+Wakefield, and Institute for the Quantitative Study of Inclusion,
+Diversity, and Equity (QSIDE), 2023.
 
 ------------------------------------------------------------------------
 
 # 1 Acknowledgments
 
-To be written.
+This project was begun at the Institute for Computational and
+Experimental Research on Mathematics (ICERM) as part of the week-long
+workshop “Educating at the Intersection of Data Science and Social
+Justice,” organized by Ron Buckmire, Drew Lewis, Omayra Ortega,
+Katharine Ott, and Matt Salamone. This workshop was part of a summer
+program on “Data Science and Social Justice: Networks, Policy, and
+Education,” organized by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis,
+Jessica Libertini, Omayra Ortega, Victor Piercey, Björn Sandstede,
+Talitha Washington, Tian An Wong, and Heather Zinn Brooks.
 
 # 2 Background
 

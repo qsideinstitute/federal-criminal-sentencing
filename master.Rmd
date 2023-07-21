@@ -1,7 +1,7 @@
 ---
-title: "Race-Based Disparities in Federal Criminal Sentencing"
-subtitle: "We'll think of one eventually"
-author: "who knows"
+title: "Federal District Courts and Race-Based Criminal Sentencing Disparities"
+subtitle: "Analysis with Linear Regression"
+author: "Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield"
 date: "`r format(Sys.Date(),'%B %d, %Y')`"
 output:
   github_document:
@@ -20,17 +20,17 @@ knitr::opts_chunk$set(fig.width=4, fig.height=4)
 
 This work is governed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-Citation: Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield. Institute for the Quantitative Study of Inclusion, Diversity, and Equity (QSIDE), with in-kind support from Institute for Computational and Experimental Research on Mathematics (ICERM), 2023.
+Citation: Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield, and Institute for the Quantitative Study of Inclusion, Diversity, and Equity (QSIDE), 2023.
 
 ---
 
 # Acknowledgments
 
-To be written.
+This project was begun at the Institute for Computational and Experimental Research on Mathematics (ICERM) as part of the week-long workshop "Educating at the Intersection of Data Science and Social Justice," organized by Ron Buckmire, Drew Lewis, Omayra Ortega, Katharine Ott, and Matt Salamone. This workshop was part of a summer program on "Data Science and Social Justice: Networks, Policy, and Education," organized by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis, Jessica Libertini, Omayra Ortega, Victor Piercey, Björn Sandstede, Talitha Washington, Tian An Wong, and Heather Zinn Brooks.
 
 # Background
 
-```{r child = "Background.Rmd"}
+```{r child = "background.Rmd"}
 ```
 
 ```{r child = "sentencing-eda.Rmd"}
