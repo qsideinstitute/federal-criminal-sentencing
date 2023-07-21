@@ -401,13 +401,3 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 #census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
 
 ```
-
-
-### 
-
-
-###
-
-
-###
-
