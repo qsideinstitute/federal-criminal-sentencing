@@ -20,7 +20,7 @@ knitr::opts_chunk$set(fig.width=4, fig.height=4)
 
 This work is governed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-Citation: Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, Jose Pabon, Chad M. Topaz, Thomas Wakefield. Institute for the Quantitative Study of Inclusion, Diversity, and Equity (QSIDE), with in-kind support from Institute for Computational and Experimental Research on Mathematics (ICERM), 2023.
+Citation: Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield. Institute for the Quantitative Study of Inclusion, Diversity, and Equity (QSIDE), with in-kind support from Institute for Computational and Experimental Research on Mathematics (ICERM), 2023.
 
 ---
 
@@ -30,15 +30,16 @@ To be written.
 
 # Background
 
-In this module, we are considering sentencing patterns, and possible bias, in criminal cases adjudicated in Federal District Courts, 2006--2020.  The cases heard in these 94 courts are restricted to those that involve federal statutes, interpretations of the US Constitution, or cases that concern more than one state.   In criminal cases resulting in conviction, the judge has literally complete freedom in setting the length of the resulting jail term.
+```{r child = "Background.Rmd"}
+```
 
-In 1987, the United States Sentencing Commission created sentencing guidelines for Federal Courts.  These guideline prescribe a range of possible prison terms, taking into account both the severity of the crime and the prior criminal history of the defendant, as well as numerous possible mitigating factors (ones that may call for shortening the sentence) and aggravating factors (ones that may call for lengthening the sentence).  Although these guidelines was initially mandatory, in 2005 a Supreme Court ruling changed them to being only advisory, returning complete freedom in sentencing to each individual judge.
-
-We will analyze the over one-half million sentencing records spanning the years 2006 to 2020 provided by the US Sentencing Commission.  Since we are comparing lengths of prison terms applied, we have eliminated from consideration any cases that did not result in a prison term and
-cases involving non-citizens, since the sentences in those cases frequently involve deportation, which is not comparable to prison terms.  We also removed any cases resulting in terms longer than...
 
 ```{r child = "sentencing-eda.Rmd"}
 ```
+
+```{r child = "Exploration.Rmd"}
+```
+
 
 ```{r child = "results.Rmd"}
 ```
