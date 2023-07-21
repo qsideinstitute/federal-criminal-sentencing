@@ -1,12 +1,62 @@
 ---
-title: "Untitled"
 output: html_document
-date: "2023-07-21"
 ---
 
-In this module, we are considering sentencing patterns, and possible bias, in criminal cases adjudicated in Federal District Courts, 2006--2020.  The cases heard in these 94 courts, which are organized into 11 districts, are restricted to those that involve federal statutes, interpretations of the US Constitution, or cases that concern more than one state.  In criminal cases resulting in a conviction, the crime statute itself may have sentencing restrictions, but beyond that judge has literally complete freedom in setting the length of the prison term.  Along with looking at this data overall, we will focus on the question of possible bias within individual districts.
+# Background
+
+Our case study centers around issues of racial disparity in criminal sentencing, and is based on research performed by one of this case study's authors. Before proceeding, take some time to read the original study, [Federal Criminal Sentencing: Race-Based Disparate Impact and Differential Treatment in Judicial Districts](https://www.nature.com/articles/s41599-023-01879-5). There may be some things in the paper that you don't understand — perhaps just a few, or perhaps many. That's ok. The goal of reading the paper is not to understand every detail, but rather, to provide a first exposure to the material you'll be working on and to get you excited about it. For convenience, here is the abstract.
+
+---
+
+**Abstract**
+
+Race-based inequity in federal criminal sentencing is widely acknowledged, and yet our understanding of it is far from complete. Inequity may arise from several sources, including direct bias of courtroom actors and structural bias that produces racially disparate impacts. Irrespective of these sources, inequity may also originate from different loci within the federal system. We bring together the questions of the sources and loci of inequity. The purpose of our study is to quantify race-based disparate impact and differential treatment at the national level and at the level of individual federal judicial districts. We analyze over one-half million sentencing records publicly available from the United States Sentencing Commission database, spanning the years 2006 to 2020. At the system-wide level, Black and Hispanic defendants receive average sentences that are approximately 19 months longer and 5 months longer, respectively. Demographic factors and sentencing guideline elements account for nearly 17 of the 19 months for Black defendants and all five of the months for Hispanic defendants, demonstrating the disparate impact of the system at the national level. At the individual district level, even after controlling for each district’s unique demographics and implementation of sentencing factors, 14 districts show significant differences for minoritized defendants as compared to white ones. These unexplained differences are evidence of possible differential treatment by judges, prosecutors, and defense attorneys.
+
+---
+
+In this case study, we won't cover all of the results, but we will cover some of the very most important ones.
+
+## Motivation
+
+What are race-based sentencing disparities, and why should we care? Race-based sentencing disparities in the United States refer to the marked and consistent differences in the severity and types of sentences given to individuals of different racial and ethnic backgrounds, convicted of the same or similar crimes. This disparity has been a subject of debate and research for many decades, as part of a broader discourse on racial bias in the criminal justice system. It has been consistently found that people of color are more likely to receive harsher sentences than their white counterparts.
+
+This phenomenon can be traced back to the historical context of the United States. Racial discrimination and bias have been entrenched in American society, and the criminal justice system is not immune to these systemic biases. The War on Drugs in the 1980s and 1990s, for example, disproportionately impacted communities of color, with crack cocaine offenses (more common among Black communities) punished far more severely than powder cocaine offenses (more common among white communities). This is despite the fact that both substances are pharmacologically identical.
+
+While legal changes have reduced some explicit forms of discrimination, research suggests that implicit bias and structural factors continue to contribute to sentencing disparities. For example, mandatory minimum sentencing laws can disproportionately impact people of color due to disparities in the types of crimes committed and the socioeconomic conditions that can lead to criminal behavior.
+
+From a social justice perspective, race-based sentencing disparities matter significantly. They reflect and perpetuate racial inequity, undermining the promise of equal treatment under the law that is a fundamental principle of democratic societies. They erode public trust in the legal system, making it more difficult for law enforcement and the courts to function effectively.
+
+Furthermore, these disparities contribute to the vicious cycle of systemic racism. Individuals who receive harsher sentences are more likely to face significant challenges in reintegrating into society post-incarceration, including limited employment opportunities, disruptions to family structures, and disenfranchisement. These challenges can increase the likelihood of recidivism, perpetuating racial disparities in economic and social outcomes.
+
+The existence of race-based sentencing disparities is a call to action for policy reform. This may include efforts to reduce mandatory minimum sentences, increase the use of alternatives to incarceration, provide bias training for judges and prosecutors, and implement more transparent, objective sentencing guidelines. Addressing these disparities is a crucial step toward realizing a more equitable and just society.
+
+In conclusion, race-based sentencing disparities in the U.S. not only reflect the systemic racism embedded within the criminal justice system but also exacerbate social and economic inequalities. Achieving social justice necessitates a comprehensive and diligent effort to rectify these disparities, creating a fair, unbiased system that upholds the tenet of equal treatment for all, regardless of race or ethnicity. Fixing our biased system can be aided by identifying the loci of racial inequity, which is the purpose of this case study.
+
+## The U.S. federal court system
+
+The United States federal court system is, at its core, a three-tiered structure, starting with district courts at the bottom, circuit courts in the middle, and the Supreme Court at the top.
+
+The district courts are the workhorses of the federal judiciary, handling the vast majority of federal cases. There are 94 federal judicial districts, including one or more districts in each state, as well as courts for the District of Columbia and Puerto Rico. Three territories of the United States -- the Virgin Islands, Guam, and the Northern Mariana Islands -- have district courts as well.
+
+Above the district courts are the United States courts of appeals. These courts are divided into 12 regional circuits across America, each of which hears appeals from the district courts located within its circuit. There's also the Court of Appeals for the Federal Circuit, which has nationwide jurisdiction to hear appeals in specialized cases, such as those involving patent laws and cases decided by the U.S. Court of International Trade and the U.S. Court of Federal Claims.
+
+At the pinnacle of the federal court system is the Supreme Court of the United States. It is currently composed of nine justices, though some argue that the court should be expanded. The Supreme Court mainly hears appeals from the circuit courts and state supreme courts, but it also has original jurisdiction over a small range of cases.
+
+Federal judges, including Supreme Court justices, are nominated by the President and confirmed by the Senate. They serve "during good behavior," which effectively means they can hold their positions for life. A federal judge may also exit office through voluntary retirement or resignation. 
+
+However, judges can be removed from office before their term ends if they're impeached and convicted. Impeachment is a political process, initiated by the House of Representatives and decided by the Senate. Impeachment of federal judges has happened 15 times in U.S. history, and of these, eight judges have been convicted and removed from office.
+
+As of 2021, there were about 677 federal district court judgeships. These judges deal with a broad range of cases, including those related to federal laws, disputes between states, and issues involving the federal government.
+
+## How federal sentencing works
+
+In this module, we are considering sentencing patterns, and possible bias, in criminal cases adjudicated in the federal district courts from 2006--2020. You might wonder what sorts of cases end up in these courts. The cases are restricted to those that involve federal statutes, interpretations of the US Constitution, or more than one state.
+
+In criminal cases resulting in a conviction, the crime statute itself may have sentencing restrictions, but beyond those, a judge has literally complete freedom in setting the length of the prison term. We will examine data at the national level as well as within individual districts, with an eye for detecting possible racial bias.
 
 In 1987, the United States Sentencing Commission created sentencing guidelines for Federal Courts.  These guidelines prescribe a range of possible prison terms, taking into account both the severity of the crime and the prior criminal history of the defendant, as well as numerous possible mitigating factors (ones that may call for shortening the sentence) and aggravating factors (ones that may call for lengthening the sentence).  Although these guidelines were initially mandatory, in 2005 a Supreme Court ruling changed them to being only advisory, returning great freedom in sentencing to each individual judge.
+
+## Introduction to the data
 
 We will analyze the over one-half million sentencing records spanning the years 2006 to 2020 provided by the US Sentencing Commission.  Publicly available data is usually quite messy, with many missing and ambiguous entries.  For this reason, you will be using a curated copy, that is, one that has been "cleaned up."  (Directions for obtaining the curated copy is in the following section of this module.)  The sentence lengths we are using are given in months and do not include probation nor alternative confinement. Since our aim is to compare lengths of prison sentences imposed, we have eliminated from the data set any cases involving non-citizens, those sentences frequently involve deportation, which is not comparable to prison terms.  We combined the information from some variables (creating new variables) and eliminated incomplete data items, that is entire records, for defendants for whom we are not given sufficient information.  We have eliminated the (relatively few) records with sentence lengths of more than 470 months, but retained those with life sentences, which have been coded by the Commission as 470 months.  Finally, because there are very few defendants sentenced in the district court of the Northern Mariana Islands, those items were also eliminated.
 

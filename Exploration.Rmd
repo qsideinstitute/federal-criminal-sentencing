@@ -1,14 +1,8 @@
-```{r echo=TRUE, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(palmerpenguins)
-library(gridExtra)
-```
-
-
 ```{r, include=FALSE}
-penguins = penguins %>% na.omit()
-knitr::opts_chunk$set(fig.width=4, fig.height=4) 
+penguins <- penguins %>% na.omit()
 ```
+
+# Statiscal Modeling Approach
 
 ## Data Types
 

@@ -1,20 +1,8 @@
 ---
-title: "Sentencing Exploratory Data Analysis"
-author: "Laurie Baker, Lily Khadjavi, and José Pabón"
-date: "2023-07-19"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r load libraries, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(readr)
-library(ggridges)
-library(tidycensus)
-```
+# Data exploration
 
 ## Reading in the data
 
@@ -50,7 +38,7 @@ glimpse(us_sent)
 - explain what glimpse is
 - explain the different columns (linking to the background)
 
-### Who {.tabset}
+### Who
 
 A key motivation for this work is exploring how our personal and racial identities influence the judicial sentencing. In a fair, democratic system this identity or perceived identity should not affect how we are treated by the justice system.
 
@@ -399,13 +387,3 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 #census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
 
 ```
-
-
-### 
-
-
-###
-
-
-###
-

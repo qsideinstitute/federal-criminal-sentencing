@@ -7,49 +7,60 @@ July 21, 2023
 
 - <a href="#1-acknowledgments" id="toc-1-acknowledgments">1
   Acknowledgments</a>
-- <a href="#2-background" id="toc-2-background">2 Background</a>
-  - <a href="#21-reading-in-the-data" id="toc-21-reading-in-the-data">2.1
+- <a href="#2-introduction" id="toc-2-introduction">2 Introduction</a>
+- <a href="#3-background" id="toc-3-background">3 Background</a>
+  - <a href="#31-motivation" id="toc-31-motivation">3.1 Motivation</a>
+  - <a href="#32-the-us-federal-court-system"
+    id="toc-32-the-us-federal-court-system">3.2 The U.S. federal court
+    system</a>
+  - <a href="#33-how-federal-sentencing-works"
+    id="toc-33-how-federal-sentencing-works">3.3 How federal sentencing
+    works</a>
+  - <a href="#34-introduction-to-the-data"
+    id="toc-34-introduction-to-the-data">3.4 Introduction to the data</a>
+- <a href="#4-data-exploration" id="toc-4-data-exploration">4 Data
+  exploration</a>
+  - <a href="#41-reading-in-the-data" id="toc-41-reading-in-the-data">4.1
     Reading in the data</a>
-  - <a href="#22-describe-the-structure-of-the-data"
-    id="toc-22-describe-the-structure-of-the-data">2.2 Describe the
+  - <a href="#42-describe-the-structure-of-the-data"
+    id="toc-42-describe-the-structure-of-the-data">4.2 Describe the
     structure of the data</a>
-    - <a href="#who" id="toc-who">2.2.1 Who</a>
-    - <a href="#222-what" id="toc-222-what">2.2.2 What</a>
-    - <a href="#223-when" id="toc-223-when">2.2.3 When</a>
-    - <a href="#224-where" id="toc-224-where">2.2.4 Where</a>
-    - <a href="#225" id="toc-225">2.2.5</a>
-    - <a href="#226" id="toc-226">2.2.6</a>
-    - <a href="#227" id="toc-227">2.2.7</a>
-  - <a href="#23-data-types" id="toc-23-data-types">2.3 Data Types</a>
-    - <a href="#231-penguins-data" id="toc-231-penguins-data">2.3.1 Penguins
+    - <a href="#421-who" id="toc-421-who">4.2.1 Who</a>
+    - <a href="#422-what" id="toc-422-what">4.2.2 What</a>
+    - <a href="#423-when" id="toc-423-when">4.2.3 When</a>
+    - <a href="#424-where" id="toc-424-where">4.2.4 Where</a>
+- <a href="#5-statiscal-modeling-approach"
+  id="toc-5-statiscal-modeling-approach">5 Statiscal Modeling Approach</a>
+  - <a href="#51-data-types" id="toc-51-data-types">5.1 Data Types</a>
+    - <a href="#511-penguins-data" id="toc-511-penguins-data">5.1.1 Penguins
       Data</a>
-  - <a href="#24-explorations" id="toc-24-explorations">2.4 Explorations</a>
-  - <a href="#25-how-to-make-a-scatter-plot-with-quantitative-variables"
-    id="toc-25-how-to-make-a-scatter-plot-with-quantitative-variables">2.5
+  - <a href="#52-explorations" id="toc-52-explorations">5.2 Explorations</a>
+  - <a href="#53-how-to-make-a-scatter-plot-with-quantitative-variables"
+    id="toc-53-how-to-make-a-scatter-plot-with-quantitative-variables">5.3
     How to make a scatter plot with quantitative variables</a>
   - <a
-    href="#26-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables"
-    id="toc-26-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables">2.6
+    href="#54-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables"
+    id="toc-54-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables">5.4
     What happens when you try to make a scatter plot with categorical
     variables?</a>
-  - <a href="#27-fitting-lines-to-data"
-    id="toc-27-fitting-lines-to-data">2.7 Fitting Lines to Data</a>
-    - <a href="#271-analytically-fit-a-line-to-two-points"
-      id="toc-271-analytically-fit-a-line-to-two-points">2.7.1 Analytically
+  - <a href="#55-fitting-lines-to-data"
+    id="toc-55-fitting-lines-to-data">5.5 Fitting Lines to Data</a>
+    - <a href="#551-analytically-fit-a-line-to-two-points"
+      id="toc-551-analytically-fit-a-line-to-two-points">5.5.1 Analytically
       Fit a Line to Two Points</a>
-    - <a href="#272-numerically-fit-a-line-to-two-points"
-      id="toc-272-numerically-fit-a-line-to-two-points">2.7.2 Numerically Fit
+    - <a href="#552-numerically-fit-a-line-to-two-points"
+      id="toc-552-numerically-fit-a-line-to-two-points">5.5.2 Numerically Fit
       a Line to Two Points</a>
-    - <a href="#273-numerically-fit-a-line-to-three-points"
-      id="toc-273-numerically-fit-a-line-to-three-points">2.7.3 Numerically
+    - <a href="#553-numerically-fit-a-line-to-three-points"
+      id="toc-553-numerically-fit-a-line-to-three-points">5.5.3 Numerically
       Fit a Line to Three Points</a>
-  - <a href="#28-fitting-a-line-to-many-points-linear-regression"
-    id="toc-28-fitting-a-line-to-many-points-linear-regression">2.8 Fitting
+  - <a href="#56-fitting-a-line-to-many-points-linear-regression"
+    id="toc-56-fitting-a-line-to-many-points-linear-regression">5.6 Fitting
     a Line to Many Points: Linear Regression!</a>
-  - <a href="#29-categorical-data-to-numerical-representations"
-    id="toc-29-categorical-data-to-numerical-representations">2.9
+  - <a href="#57-categorical-data-to-numerical-representations"
+    id="toc-57-categorical-data-to-numerical-representations">5.7
     Categorical Data to Numerical Representations</a>
-- <a href="#3-results" id="toc-3-results">3 Results</a>
+- <a href="#6-results" id="toc-6-results">6 Results</a>
 
 ------------------------------------------------------------------------
 
@@ -76,18 +87,244 @@ Education,” organized by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis,
 Jessica Libertini, Omayra Ortega, Victor Piercey, Björn Sandstede,
 Talitha Washington, Tian An Wong, and Heather Zinn Brooks.
 
-# 2 Background
+# 2 Introduction
+
+Welcome to a case study within the Data4Justice curriculum developed by
+the [Institute for the Quantitative Study of Inclusion, Diversity, and
+Equity (QSIDE)](http://www.qsideinstitute.org). This case study is
+designed to help you learn data science skills in a social justice
+context. At QSIDE, we hope that our curriculum will be used by anyone
+and everyone who is interested in helping to right wrongs by using
+quantitative tools. This case study should be accessible to advanced
+high school students, to undergraduate students, and to more experienced
+academics in any field who would like to learn new skills and ideas.
+QSIDE also envisions our case study being used by individuals working in
+industry, government, and the nonprofit sphere, as well as any hobbyists
+and other members of the general public wanting to challenge themselves.
+In short, if you are interested to and positioned to learn more about
+the interface of social justice and data science, this case study is for
+you.
+
+If you are a high school teacher, a college or university faculty
+member, or serve in any other instructional capacity, consider using
+this case study in ways that are appropriate for your audience. Less
+experienced audiences might require a step-by-step approach, proceeding
+through the case study in a linear manner at a pace that is not rushed.
+More experienced audiences could benefit from using the beginning parts
+of the case study, and then being challenged to do more open-ended
+exploration. The case study could also be used as the basis for a data
+hackathon event.
+
+If you are new to data science in R/Rstudio, before you embark on this
+case study, we strongly recommend working through the case study on
+[Diversity of Artists in Major U.S.
+Museums](https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html),
+which will provide some familiarity with R fundamentals and with
+exploratory data analysis.
+
+This case study assumes that you have access to RStudio, a programming
+environment built on the statistical computing language R. If you want
+to use RStudio on your own computer, you should first [install
+R](https://cran.r-project.org), and then [install
+RStudio](https://www.rstudio.com/products/rstudio/download/#download).
+Alternatively, you can register for a free account with [Posit
+Cloud](https://posit.cloud), an online version of RStudio that you can
+access through any standard web browser.
+
+R is a powerful language, made even more powerful by additional free
+software packages that enhance its functionality. Regardless of how you
+run RStudio, you will need access to the packages below, which are
+automatically activated in the code that produces this document. Make
+sure you download these packages using the `Packages` tab in RStudio and
+run the commands below before proceeding with this case study.
+
+``` r
+library(tidyverse)
+library(readr)
+library(ggridges)
+library(tidycensus)
+library(palmerpenguins)
+library(gridExtra)
+```
+
+QSIDE is a 501(c)3 tax-exempt nonprofit organization. Initiatives like
+our Data4Justice curriculum require resources to produce, and we depend
+on a public that is willing to support social justice initiatives.
+Anyone is welcome to use this document for free, but we ask those who
+are able to [please make a donation to
+QSIDE](https://qsideinstitute.org/support-us/donate/) so that we can
+maintain our innovative research, action, and education efforts at the
+interface of data science and social justice. Additionally, we ask
+anyone using any or all of this document to cite it properly using the
+citation above.
+
+Now let’s get to learning!
+
+# 3 Background
+
+Our case study centers around issues of racial disparity in criminal
+sentencing, and is based on research performed by one of this case
+study’s authors. Before proceeding, take some time to read the original
+study, [Federal Criminal Sentencing: Race-Based Disparate Impact and
+Differential Treatment in Judicial
+Districts](https://www.nature.com/articles/s41599-023-01879-5). There
+may be some things in the paper that you don’t understand — perhaps just
+a few, or perhaps many. That’s ok. The goal of reading the paper is not
+to understand every detail, but rather, to provide a first exposure to
+the material you’ll be working on and to get you excited about it. For
+convenience, here is the abstract.
+
+------------------------------------------------------------------------
+
+**Abstract**
+
+Race-based inequity in federal criminal sentencing is widely
+acknowledged, and yet our understanding of it is far from complete.
+Inequity may arise from several sources, including direct bias of
+courtroom actors and structural bias that produces racially disparate
+impacts. Irrespective of these sources, inequity may also originate from
+different loci within the federal system. We bring together the
+questions of the sources and loci of inequity. The purpose of our study
+is to quantify race-based disparate impact and differential treatment at
+the national level and at the level of individual federal judicial
+districts. We analyze over one-half million sentencing records publicly
+available from the United States Sentencing Commission database,
+spanning the years 2006 to 2020. At the system-wide level, Black and
+Hispanic defendants receive average sentences that are approximately 19
+months longer and 5 months longer, respectively. Demographic factors and
+sentencing guideline elements account for nearly 17 of the 19 months for
+Black defendants and all five of the months for Hispanic defendants,
+demonstrating the disparate impact of the system at the national level.
+At the individual district level, even after controlling for each
+district’s unique demographics and implementation of sentencing factors,
+14 districts show significant differences for minoritized defendants as
+compared to white ones. These unexplained differences are evidence of
+possible differential treatment by judges, prosecutors, and defense
+attorneys.
+
+------------------------------------------------------------------------
+
+In this case study, we won’t cover all of the results, but we will cover
+some of the very most important ones.
+
+## 3.1 Motivation
+
+What are race-based sentencing disparities, and why should we care?
+Race-based sentencing disparities in the United States refer to the
+marked and consistent differences in the severity and types of sentences
+given to individuals of different racial and ethnic backgrounds,
+convicted of the same or similar crimes. This disparity has been a
+subject of debate and research for many decades, as part of a broader
+discourse on racial bias in the criminal justice system. It has been
+consistently found that people of color are more likely to receive
+harsher sentences than their white counterparts.
+
+This phenomenon can be traced back to the historical context of the
+United States. Racial discrimination and bias have been entrenched in
+American society, and the criminal justice system is not immune to these
+systemic biases. The War on Drugs in the 1980s and 1990s, for example,
+disproportionately impacted communities of color, with crack cocaine
+offenses (more common among Black communities) punished far more
+severely than powder cocaine offenses (more common among white
+communities). This is despite the fact that both substances are
+pharmacologically identical.
+
+While legal changes have reduced some explicit forms of discrimination,
+research suggests that implicit bias and structural factors continue to
+contribute to sentencing disparities. For example, mandatory minimum
+sentencing laws can disproportionately impact people of color due to
+disparities in the types of crimes committed and the socioeconomic
+conditions that can lead to criminal behavior.
+
+From a social justice perspective, race-based sentencing disparities
+matter significantly. They reflect and perpetuate racial inequity,
+undermining the promise of equal treatment under the law that is a
+fundamental principle of democratic societies. They erode public trust
+in the legal system, making it more difficult for law enforcement and
+the courts to function effectively.
+
+Furthermore, these disparities contribute to the vicious cycle of
+systemic racism. Individuals who receive harsher sentences are more
+likely to face significant challenges in reintegrating into society
+post-incarceration, including limited employment opportunities,
+disruptions to family structures, and disenfranchisement. These
+challenges can increase the likelihood of recidivism, perpetuating
+racial disparities in economic and social outcomes.
+
+The existence of race-based sentencing disparities is a call to action
+for policy reform. This may include efforts to reduce mandatory minimum
+sentences, increase the use of alternatives to incarceration, provide
+bias training for judges and prosecutors, and implement more
+transparent, objective sentencing guidelines. Addressing these
+disparities is a crucial step toward realizing a more equitable and just
+society.
+
+In conclusion, race-based sentencing disparities in the U.S. not only
+reflect the systemic racism embedded within the criminal justice system
+but also exacerbate social and economic inequalities. Achieving social
+justice necessitates a comprehensive and diligent effort to rectify
+these disparities, creating a fair, unbiased system that upholds the
+tenet of equal treatment for all, regardless of race or ethnicity.
+Fixing our biased system can be aided by identifying the loci of racial
+inequity, which is the purpose of this case study.
+
+## 3.2 The U.S. federal court system
+
+The United States federal court system is, at its core, a three-tiered
+structure, starting with district courts at the bottom, circuit courts
+in the middle, and the Supreme Court at the top.
+
+The district courts are the workhorses of the federal judiciary,
+handling the vast majority of federal cases. There are 94 federal
+judicial districts, including one or more districts in each state, as
+well as courts for the District of Columbia and Puerto Rico. Three
+territories of the United States – the Virgin Islands, Guam, and the
+Northern Mariana Islands – have district courts as well.
+
+Above the district courts are the United States courts of appeals. These
+courts are divided into 12 regional circuits across America, each of
+which hears appeals from the district courts located within its circuit.
+There’s also the Court of Appeals for the Federal Circuit, which has
+nationwide jurisdiction to hear appeals in specialized cases, such as
+those involving patent laws and cases decided by the U.S. Court of
+International Trade and the U.S. Court of Federal Claims.
+
+At the pinnacle of the federal court system is the Supreme Court of the
+United States. It is currently composed of nine justices, though some
+argue that the court should be expanded. The Supreme Court mainly hears
+appeals from the circuit courts and state supreme courts, but it also
+has original jurisdiction over a small range of cases.
+
+Federal judges, including Supreme Court justices, are nominated by the
+President and confirmed by the Senate. They serve “during good
+behavior,” which effectively means they can hold their positions for
+life. A federal judge may also exit office through voluntary retirement
+or resignation.
+
+However, judges can be removed from office before their term ends if
+they’re impeached and convicted. Impeachment is a political process,
+initiated by the House of Representatives and decided by the Senate.
+Impeachment of federal judges has happened 15 times in U.S. history, and
+of these, eight judges have been convicted and removed from office.
+
+As of 2021, there were about 677 federal district court judgeships.
+These judges deal with a broad range of cases, including those related
+to federal laws, disputes between states, and issues involving the
+federal government.
+
+## 3.3 How federal sentencing works
 
 In this module, we are considering sentencing patterns, and possible
-bias, in criminal cases adjudicated in Federal District Courts,
-2006–2020. The cases heard in these 94 courts, which are organized into
-11 districts, are restricted to those that involve federal statutes,
-interpretations of the US Constitution, or cases that concern more than
-one state. In criminal cases resulting in a conviction, the crime
-statute itself may have sentencing restrictions, but beyond that judge
-has literally complete freedom in setting the length of the prison term.
-Along with looking at this data overall, we will focus on the question
-of possible bias within individual districts.
+bias, in criminal cases adjudicated in the federal district courts from
+2006–2020. You might wonder what sorts of cases end up in these courts.
+The cases are restricted to those that involve federal statutes,
+interpretations of the US Constitution, or more than one state.
+
+In criminal cases resulting in a conviction, the crime statute itself
+may have sentencing restrictions, but beyond those, a judge has
+literally complete freedom in setting the length of the prison term. We
+will examine data at the national level as well as within individual
+districts, with an eye for detecting possible racial bias.
 
 In 1987, the United States Sentencing Commission created sentencing
 guidelines for Federal Courts. These guidelines prescribe a range of
@@ -99,6 +336,8 @@ lengthening the sentence). Although these guidelines were initially
 mandatory, in 2005 a Supreme Court ruling changed them to being only
 advisory, returning great freedom in sentencing to each individual
 judge.
+
+## 3.4 Introduction to the data
 
 We will analyze the over one-half million sentencing records spanning
 the years 2006 to 2020 provided by the US Sentencing Commission.
@@ -157,21 +396,16 @@ Probation Office and/or the Presiding Judge. There are 43 levels with,
 for example, first degree murder having a base level (that is, level
 prior to adjustments) of 43 and trespass having a base level of 4.
 
-``` r
-library(tidyverse)
-library(readr)
-library(ggridges)
-library(tidycensus)
-```
+# 4 Data exploration
 
-## 2.1 Reading in the data
+## 4.1 Reading in the data
 
 First you will want to read in your data. You can do this using
 `read_csv`. To open the data you can “uncomment” (delete the hash tag
 \#) to view the data file. Note that you will need to “recomment” this
 out in order to knit your file again.
 
-## 2.2 Describe the structure of the data
+## 4.2 Describe the structure of the data
 
 In a tidy dataset, each row is an observation, each column is a
 variable, and each cell is a value.
@@ -297,7 +531,7 @@ glimpse(us_sent)
 - explain what glimpse is
 - explain the different columns (linking to the background)
 
-### 2.2.1 Who
+### 4.2.1 Who
 
 A key motivation for this work is exploring how our personal and racial
 identities influence the judicial sentencing. In a fair, democratic
@@ -316,7 +550,7 @@ to create unique dynamics and effects” (Ref: [Center for Intersectional
 Justice](https://www.intersectionaljustice.org/what-is-intersectionality),
 July 20, 2023).
 
-#### 2.2.1.1 Sex
+#### 4.2.1.1 Sex
 
 Sex has been coded as a binary variable 0 and 1, where 0 is “Male” and 1
 is “Female”.
@@ -364,9 +598,9 @@ us_sent %>%
        fill = "Sex*")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
-#### 2.2.1.2 Race
+#### 4.2.1.2 Race
 
 ``` r
 us_sent %>%
@@ -394,9 +628,9 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
-#### 2.2.1.3 Race and Sex
+#### 4.2.1.3 Race and Sex
 
 ``` r
 us_sent %>%
@@ -430,9 +664,9 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-#### 2.2.1.4 Proportional Race and Sex
+#### 4.2.1.4 Proportional Race and Sex
 
 We can also create a proportional bar plot
 
@@ -451,7 +685,7 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> \#### Age
+![](master_files/figure-gfm/unnamed-chunk-14-1.png)<!-- --> \#### Age
 
 We might want to explore what the age of different individuals is across
 districts. Let’s explore the districts of Maine, Rhode Island, and
@@ -496,16 +730,16 @@ Bringing in the spatial district files
 - Other potential things to mention (the affect of aggregation and
   spatial scale).
 
-### 2.2.2 What
+### 4.2.2 What
 
-#### 2.2.2.1 How does sentence length correlate with criminal history?
+#### 4.2.2.1 How does sentence length correlate with criminal history?
 
 Sentence lengths and how do they relate to policy?
 
 When we are exploring the distribution of a dataset can we can use a
 number of different plots
 
-##### 2.2.2.1.1 Histogram
+##### 4.2.2.1.1 Histogram
 
 ``` r
 ggplot(us_sent) +
@@ -517,7 +751,7 @@ ggplot(us_sent) +
   geom_vline(aes(xintercept = 240), color = "red", linetype = 2)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-14-1.png)<!-- --> \#####
+![](master_files/figure-gfm/unnamed-chunk-16-1.png)<!-- --> \#####
 Histogram
 
 ``` r
@@ -531,7 +765,7 @@ ggplot(us_sent) +
   labs(title = "Distribution of number of individuals by ")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Could we add vertical bars to the plot to reflect the table and make the
 year marks.
@@ -539,7 +773,7 @@ year marks.
 Say something about skew and also particular peaks relative to the
 table.
 
-##### 2.2.2.1.2 Violin Plot
+##### 4.2.2.1.2 Violin Plot
 
 ``` r
 ggplot(us_sent) +
@@ -547,7 +781,7 @@ ggplot(us_sent) +
   labs(fill = "Criminal History", y = "Sentence length in months", x = "Criminal History")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-16-1.png)<!-- --> \##### Ridge
+![](master_files/figure-gfm/unnamed-chunk-18-1.png)<!-- --> \##### Ridge
 plot
 
 ``` r
@@ -570,7 +804,7 @@ ggplot(us_sent) +
 
     ## Picking joint bandwidth of 5.47
 
-![](master_files/figure-gfm/unnamed-chunk-17-1.png)<!-- --> What is the
+![](master_files/figure-gfm/unnamed-chunk-19-1.png)<!-- --> What is the
 relationship between `base_chapter2_3_adjustment` and `sentence_length`?
 
 ``` r
@@ -584,7 +818,7 @@ ggplot(us_sent) +
   scale_color_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
 ggplot(us_sent) +
@@ -596,9 +830,9 @@ ggplot(us_sent) +
   scale_color_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
-#### 2.2.2.2 How does the age range vary with criminal history?
+#### 4.2.2.2 How does the age range vary with criminal history?
 
 ``` r
 ggplot(us_sent) +
@@ -612,11 +846,11 @@ ggplot(us_sent) +
 
     ## Picking joint bandwidth of 0.989
 
-![](master_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
-### 2.2.3 When
+### 4.2.3 When
 
-### 2.2.4 Where
+### 4.2.4 Where
 
 Let’s check what districts we have in the data. We can do this using
 `distinct(district)`.
@@ -675,76 +909,76 @@ the question “Where did those sentences occur” in a visual way.
 - We may also want to reverse the order to see the districts which have
   the most sentences at the top of our plot using `fct_rev`.
 
-#### 2.2.4.1 Number of individuals sentences across districts
+#### 4.2.4.1 Number of individuals sentences across districts
 
-##### 2.2.4.1.1 Base Bar Plot
+##### 4.2.4.1.1 Base Bar Plot
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(x = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
-##### 2.2.4.1.2 District on the y-axis
+##### 4.2.4.1.2 District on the y-axis
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(y = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
-##### 2.2.4.1.3 Ordered by number of sentences
+##### 4.2.4.1.3 Ordered by number of sentences
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(y = fct_infreq(district)))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
-##### 2.2.4.1.4 Ordering from high to low
+##### 4.2.4.1.4 Ordering from high to low
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(y = fct_rev(fct_infreq(district))))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
-
-##### 2.2.4.1.5 Add title and axes labels
-
-``` r
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-       y = "Federal District Court",
-       x = "Number of individuals")
-```
-
-![](master_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
-
-##### 2.2.4.1.6 Making the plot more readable with subsetting
-
-``` r
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-       y = "Federal District Court",
-       x = "Number of individuals")
-```
-
 ![](master_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+
+##### 4.2.4.1.5 Add title and axes labels
+
+``` r
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
+```
+
+![](master_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+
+##### 4.2.4.1.6 Making the plot more readable with subsetting
+
+``` r
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
+```
+
+![](master_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(y = fct_infreq(district)))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
-##### 2.2.4.1.7 Exploring the census data
+##### 4.2.4.1.7 Exploring the census data
 
 **To Do**:
 
@@ -777,19 +1011,9 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 #census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
 ```
 
-### 2.2.5
+# 5 Statiscal Modeling Approach
 
-### 2.2.6
-
-### 2.2.7
-
-``` r
-library(tidyverse)
-library(palmerpenguins)
-library(gridExtra)
-```
-
-## 2.3 Data Types
+## 5.1 Data Types
 
 What is halfway between 0 and 1? It is 1/2. What is halfway between
 horse and dog? There is no such thing! Thinking about each type of data
@@ -811,7 +1035,7 @@ which is a number, but you can’t live in the zip code 90210.3. Only
 whole numbers, and specific ones at that, make sense here. We will learn
 more about using numbers to represent categorical data in this lesson.
 
-### 2.3.1 Penguins Data
+### 5.1.1 Penguins Data
 
 Take a look at the penguin data. There are 8 columns in the table, each
 giving an attribute about penguins. Can you identify which data type
@@ -832,7 +1056,7 @@ head(penguins)
     ## 6 Adelie  Torgersen           38.9          17.8               181        3625
     ## # ℹ 2 more variables: sex <fct>, year <int>
 
-## 2.4 Explorations
+## 5.2 Explorations
 
 A good practice to do with a new data set is to explore it through
 visualization. We will walk through a few graphs in R so you can see how
@@ -840,7 +1064,7 @@ to plot. We will examine each of these so we can see relationships and
 learn more about our data. Then, explore on your own by modifying this
 code!
 
-## 2.5 How to make a scatter plot with quantitative variables
+## 5.3 How to make a scatter plot with quantitative variables
 
 In this first plot, we will look at numerical variables only. We will
 see how each penguin’s flipper length relates to its body mass.
@@ -858,11 +1082,11 @@ penguin data set.
 ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
-## 2.6 What happens when you try to make a scatter plot with categorical variables?
+## 5.4 What happens when you try to make a scatter plot with categorical variables?
 
 We just created a scatter plot with two numerical variables. Now we will
 see what happens if one variable is numerical and the other is
@@ -873,7 +1097,7 @@ variable) against flipper length (a numerical variable).
 ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
@@ -885,7 +1109,7 @@ against species (both categorical variables).
 ggplot(penguins, aes(x=species, y=sex)) + geom_point(color='coral2', alpha=0.7)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
@@ -893,7 +1117,7 @@ Scatter plots of two categorical variables are not that useful for
 analysis and inference. In the remainder of this lesson we will focus on
 comparisons where we have at least one numerical variable.
 
-## 2.7 Fitting Lines to Data
+## 5.5 Fitting Lines to Data
 
 - motivation on why we would do this in other contexts
 - motivation on the simple case
@@ -922,9 +1146,9 @@ twoplot <- ggplot(twopoints, aes(x=xvals, y=yvals)) +
 twoplot
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
-### 2.7.1 Analytically Fit a Line to Two Points
+### 5.5.1 Analytically Fit a Line to Two Points
 
 In order to create a linear regression on these two points, we can think
 back to algebra and use the formula for a line.
@@ -956,9 +1180,9 @@ be done in slope-intercept form.
 twoplot + geom_abline(slope=3/2, intercept = 1/2)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
-### 2.7.2 Numerically Fit a Line to Two Points
+### 5.5.2 Numerically Fit a Line to Two Points
 
 ``` r
 twolinear <- lm(formula = yvals ~ xvals, data=twopoints)
@@ -992,9 +1216,9 @@ ncol=3
 )
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
-### 2.7.3 Numerically Fit a Line to Three Points
+### 5.5.3 Numerically Fit a Line to Three Points
 
 ``` r
 threelinear = lm(formula=yvals~xvals, data=threepoints)
@@ -1019,9 +1243,9 @@ ggplot(threepoints, aes(x=xvals, y = yvals)) +
   geom_segment(aes(xend = xvals, yend = linfit), color='coral2')
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
 
-## 2.8 Fitting a Line to Many Points: Linear Regression!
+## 5.6 Fitting a Line to Many Points: Linear Regression!
 
 ``` r
 pengscat = ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + 
@@ -1029,7 +1253,7 @@ pengscat = ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) +
 pengscat
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
 
 ``` r
 pengfit = lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
@@ -1048,9 +1272,9 @@ pengfit
 pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-44-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
 
-## 2.9 Categorical Data to Numerical Representations
+## 5.7 Categorical Data to Numerical Representations
 
 ``` r
 penguins$isAdelie = ifelse(penguins$species=='Adelie', 1, 0)
@@ -1059,7 +1283,7 @@ adelieplot = ggplot(penguins, aes(x=isAdelie, y=flipper_length_mm)) +
 adelieplot
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-46-1.png)<!-- -->
 
 ``` r
 amodel = lm(formula = flipper_length_mm~isAdelie, data=penguins)
@@ -1078,7 +1302,7 @@ amodel
 adelieplot + geom_abline(slope=-19.35, intercept=209.45)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
 
 ``` r
 penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
@@ -1101,7 +1325,7 @@ gplot = speciesbase +
 grid.arrange(aplot, cplot, gplot, ncol=3)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-49-1.png)<!-- -->
 
 ``` r
 linmodel <- lm(flipper_length_mm ~ species, data = penguins)
@@ -1133,7 +1357,7 @@ head(peng_encoded)
     ## # ℹ 6 more variables: isAdelie <dbl>, isChinstrap <dbl>, isGentoo <dbl>,
     ## #   Adelie <dbl>, Chinstrap <dbl>, Gentoo <dbl>
 
-# 3 Results
+# 6 Results
 
 With all of our work constructing the regression complete, we are now
 ready to interpret the results of Table 1. The baseline model assumes
