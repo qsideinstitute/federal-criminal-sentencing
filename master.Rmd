@@ -11,9 +11,10 @@ output:
 ---
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache = TRUE)
-knitr::opts_chunk$set(fig.width=4, fig.height=4) 
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      fig.width = 4,
+                      fig.height = 4)
 ```
 
 ---
