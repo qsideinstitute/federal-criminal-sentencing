@@ -6,12 +6,14 @@ output: html_document
 
 ## Reading in the data
 
-First you will want to read in your data. You can do this using `read_csv`. To open the data you can "uncomment" (delete the hash tag #) to view the data file. Note that you will need to "recomment" this out in order to knit your file again.
+First you will want to read in your data. You can do this using `read_csv()`. To view the data as a spreadsheet in a new tab within RStudio, you can use the `View()` function. Because this is an interactive RStudio function that doesn't work when we knit the document, we have set up our document so that the code can be viewed below but not actually run when we knit (specifically, we used the code chunk option `eval = FALSE`). 
 
-```{r read in data, message=FALSE, warning=FALSE, echo=FALSE}
-
+```{r read in data, include = FALSE}
 us_sent <- read_csv("data/cleaned_data_renamed.csv")
-#View(us_sent)
+```
+
+```{r view data, eval = FALSE}
+View(us_sent)
 ```
 
 ## Describe the structure of the data
@@ -22,29 +24,58 @@ In this case each row represents an individual who was sentenced in the federal 
 
 When we start with a dataset we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred.
 
-Let's inspect our variables which are in the columns.
+Let's inspect our variables which are in the columns. There are several different functions we can use to do this:
 
-```{r check column names}
-names(us_sent)
+* `names()` will provide the names of the columns in the dataset
+    ```{r check column names}
+    names(us_sent)
+    ```
+    
+* `summary()` will provide the names of the columns in the dataset along with a brief numeric or qualitative summary of each variable
 
-summary(us_sent)
+    ```{r check column summaries}
+    summary(us_sent)
+    ```
 
-str(us_sent)
+* `str()` will display (sometimes complex) details of the internal structure of the R object, including the table dimensions, variable names, variable types, and the first 10 observations for each variable within a data table
 
-glimpse(us_sent)
+    ```{r check object structure}
+    str(us_sent)
+    ```
+    
+* `glimpse()` is a simplified version of `str()` that only displays the dimensions, variable names, variable types, and the first set of observations for each variable within a data table (how many observations depends on the width of your output)
 
-```
+    ```{r get glimpse of data}
+    glimpse(us_sent)
+    ```
+    
+> Note: You can use the built in R help documentation to learn more about each function by typing a question mark followed by the name of the function in the console, e.g. `?str()` 
 
-- explain what glimpse is
-- explain the different columns (linking to the background)
 
-### Who
+<!-- - explain the different columns (linking to the background) -->
+Using this final output from `glimpse()` we can try to identify which variables are of interest. Remember, we want to know *who* is in our dataset, *what* the sentence was, *when* the individual was sentenced and *where* the sentence occurred. Can you identify some of the variables that might correspond with each of these questions? We'll define and explore variables in more detail next.
+
+<!-- https://www.nature.com/articles/s41599-023-01879-5 -->
+
+|Who | What| When | Where |
+|:---|:---|:---|:---|
+| `age` | `sentence_length` | `year` | `district` |
+| `sex` | `mandatory_min` | | |
+| `educ` | |||
+| `race` | |||
+| `criminal_history` | |||
+| `guilty_plea` | |||
+
+
+
+
+### Who {.tabset}
 
 A key motivation for this work is exploring how our personal and racial identities influence the judicial sentencing. In a fair, democratic system this identity or perceived identity should not affect how we are treated by the justice system.
 
-In this dataset, we have four variables that are related to identity: `age`, `sex`, `educ`: education, and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination “intersect” to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023).
+In this dataset, as you may have guessed, we have four variables that are related to identity: `age`, `sex`, `educ` (education), and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination “intersect” to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023).
 
-#### Sex
+#### Sex 
 
 Sex has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female".
 
@@ -141,6 +172,7 @@ us_sent %>%
        fill = "Sex*")  +
   scale_fill_viridis_d()
 ```
+
 #### Age
 
 We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont.
@@ -220,6 +252,7 @@ ggplot(us_sent) +
   labs(fill = "Criminal History", y = "Sentence length in months", x = "Criminal History")
 
 ```
+
 ##### Ridge plot
 
 ```{r}
