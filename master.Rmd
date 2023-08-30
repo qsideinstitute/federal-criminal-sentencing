@@ -41,5 +41,8 @@ This project was begun at the Institute for Computational and Experimental Resea
 ```{r child = "Exploration.Rmd"}
 ```
 
+```{r child = "analysis.Rmd"}
+```
+
 ```{r child = "results.Rmd"}
 ```
