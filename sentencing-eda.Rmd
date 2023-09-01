@@ -6,7 +6,7 @@ output: html_document
 
 ## Reading in the data
 
-First you will want to read in your data. You can do this using `read_csv()`. To view the data as a spreadsheet in a new tab within RStudio, you can use the `View()` function. Because this is an interactive RStudio function that doesn't work when we knit the document, we have set up our document so that the code can be viewed below but not actually run when we knit (specifically, we used the code chunk option `eval = FALSE`). 
+First you will want to read in your data. You can do this using `read_csv()` and creating a variable named `us_sent` that refers to the dataset. To view the data as a spreadsheet in a new tab within RStudio, you can use the `View()` function. Because this is an interactive RStudio function that doesn't work when we knit the document, we have set up our document so that the code can be viewed below but not actually run when we knit (specifically, we used the code chunk option `eval = FALSE`). 
 
 ```{r read in data, include = FALSE}
 us_sent <- read_csv("data/cleaned_data_renamed.csv")
@@ -20,11 +20,11 @@ View(us_sent)
 
 In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
 
-In this case each row represents an individual who was sentenced in the federal district court system in the U.S. in one of the 94 districts in the U.S.
+In the case of the federal criminal sentencing data, each row represents an individual who was sentenced in the federal district court system in the U.S. in one of the country's 94 districts.
 
-When we start with a dataset we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred.
+When we start with a dataset, we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred.
 
-Let's inspect our variables which are in the columns. There are several different functions we can use to do this:
+Let's inspect our variables which are in the columns. There are several functions we can use to do this:
 
 * `names()` will provide the names of the columns in the dataset
     ```{r check column names}
@@ -73,7 +73,7 @@ Using this final output from `glimpse()` we can try to identify which variables 
 
 A key motivation for this work is exploring how our personal and racial identities influence the judicial sentencing. In a fair, democratic system this identity or perceived identity should not affect how we are treated by the justice system.
 
-In this dataset, as you may have guessed, we have four variables that are related to identity: `age`, `sex`, `educ` (education), and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination “intersect” to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023).
+In this dataset, as you may have guessed, we have four variables that are related to identity: `age`, `sex`, `educ` (education), and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination 'intersect' to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023).
 
 #### Sex 
 
@@ -215,7 +215,7 @@ ggplot(us_sent) +
   labs(x = "Sentence length in months", y = "Number of individuals")  +
   geom_vline(aes(xintercept = 12), color = "red", linetype = 2) +
   geom_vline(aes(xintercept = 60), color = "red", linetype = 2) +
-   geom_vline(aes(xintercept = 120), color = "red", linetype = 2) +
+  geom_vline(aes(xintercept = 120), color = "red", linetype = 2) +
   geom_vline(aes(xintercept = 240), color = "red", linetype = 2)
 
 
@@ -248,8 +248,12 @@ Violin plots are another way of showing the distribution data.
 
 ```{r}
 ggplot(us_sent) +
-  geom_violin(aes(x = as.factor(criminal_history), y = sentence_length, fill = as.factor(criminal_history))) +
-  labs(fill = "Criminal History", y = "Sentence length in months", x = "Criminal History")
+  geom_violin(aes(x = as.factor(criminal_history), 
+                  y = sentence_length, 
+                  fill = as.factor(criminal_history))) +
+  labs(fill = "Criminal History", 
+       y = "Sentence length in months", 
+       x = "Criminal History")
 
 ```
 
@@ -262,17 +266,18 @@ ggplot(us_sent) +
                           fill = as.factor(criminal_history))) +
   labs(title = "Distribution of sentence length in months by criminal history",
        subtitle = "Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences",
-    fill = "Criminal History",
+       fill = "Criminal History",
        x = "Sentence length in months",
        y = "Criminal History") +
   geom_vline(aes(xintercept = 12), color = "black", linetype = 2) +
   geom_vline(aes(xintercept = 60), color = "black", linetype = 2) +
-   geom_vline(aes(xintercept = 120), color = "black", linetype = 2) +
+  geom_vline(aes(xintercept = 120), color = "black", linetype = 2) +
   geom_vline(aes(xintercept = 180), color = "black", linetype = 2) +
   geom_vline(aes(xintercept = 240), color = "black", linetype = 2) +
   scale_fill_viridis_d()
 
 ```
+
 What is the relationship between `all_adjustments` and `sentence_length`?
 
 ```{r}
@@ -322,32 +327,33 @@ We do remember; we can use the names() routine to remind ourselves.
 ```{r check the columns, i.e. names}
 names(us_sent)
 ```
-We can see the fifteen column names in that output.  Awesome.  Looks like our time data, as far as 'when' these convicted individuals in our data were convited, is in the 'year' column.  Let's see what we're working with here.  Let's use the pipe distinct() routine again.
+
+We can see the fifteen column names in that output.  Awesome.  Looks like our time data, as far as 'when' these convicted individuals in our data were convicted, is in the `year` column.  Let's see what we're working with here.  Let's use the pipe `distinct()` routine again.
 
 ```{r Segregate and list the data in the column year}
 us_sent %>% distinct(year)
 ```
 
-Excellent.  So we have years from 2006 from 2020 in our data, 15 rows worth of data.  It is worth noticing that although 2020-2006 = 14, when we cound each year as a whole year of data 'inclusively', we have 15 distinct instances, which the distinct command helpfully listed out for us.
+Excellent. So we have years from 2006 to 2020 in our data, or 15 rows worth of data.  It is worth noticing that although 2020-2006 = 14, when we count each year as a whole year of data 'inclusively', we have 15 distinct instances, which the distinct command helpfully listed out for us.
 
-Now each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the 'sapply()' routine.
+Now each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the `sapply()` routine.
 
 
 ```{r}
-sapply(us_sent,is.numeric)
+sapply(us_sent, is.numeric)
 ```
 
-In the output we can indeed see `TRUE' for the column 'year'.  As we progress in our educational journey, learn about different numeric variables, including double precision floating point arithmetic numeric variables.  Is our 'year' data in this format?  Let's use the same command with a different argument:
+In the output we can indeed see `TRUE` for the column `year`.  As we progress in our educational journey, learn about different numeric variables, including double precision floating point arithmetic numeric variables.  Is our `year` data in this format? Let's use the same command with a different argument:
 
 
 ```{r use sapply() to verify the year data is indeed numero}
-sapply(us_sent,is.double)
+sapply(us_sent, is.double)
 ```
 
-Nice, we can see that our 'year' data is indeed a double precision floating point number.
+Nice, we can see that our `year` data is indeed a double precision floating point number.
 
 
-Let's do a graph of our 'year' data, where we have each year on the vertical (y) axis and the sentences on the horizonal (x) axis.  
+Let's do a graph of our `year` data, where we have each year on the vertical (y) axis and the sentences on the horizontal (x) axis.  
 
 ```{r Bar chart of year data}
 ggplot(us_sent) +
@@ -358,7 +364,9 @@ ggplot(us_sent) +
 
 If we wanted to use a scatter plot, which could be a bit 'messier', one way to do so would be:
 ```{r graph our year data- scatter plot}
-ggplot(us_sent, aes(x=sentence_length, y=year)) + geom_point()
+ggplot(us_sent, aes(x = sentence_length, 
+                    y = year)) + 
+  geom_point()
 ```
 
 ### Where
@@ -377,7 +385,7 @@ Q: If you live in the United States, can you identify which district you live in
 
 We can use `distinct` to figure out what distinct districts we have in our dataset, but we are also interested in finding out how many sentences were made in each district and we will want to think about this question in relation to the population of those districts, which can be quite nuanced and we will come back to this later.
 
-Our goals in this next section are to think about ways we can explore the question "Where did those sentences occur" in a visual way.
+Our goals in this next section are to think about ways we can explore the question "Where did those sentences occur?" in a visual way.
 
 **Learning aims**
 
