@@ -62,8 +62,14 @@ We will analyze the over one-half million sentencing records spanning the years 
 
 The data come from two sources: the pre-sentencing report and the Statement of Reasons. The pre-sentencing report is prepared by the District's Probation Office and based on a post-trial, pre-sentencing investigation including an interview with the defendant. A draft of this report is issued to the attorneys for comments and corrections and a final version is given to the attorneys and judge. The Statement of Reasons is a form filled out by the judge explaining/supporting the sentence imposed.
 
+### Variable explanation
+
 The two main variables used in the non-mandatory guidelines for sentencing are criminal history (`criminal_history`) and an indicator of the severity of the crime (`all_adjustments`). The two variables are combined, using a table, to determine the recommended range of the sentence.
 
 The variable `criminal_history` is coded as a value 1--6, with 1 including a defendant with at most one conviction, where that conviction resulted in a sentence of less than 60 days.  Prior convictions are assigned "points," depending on the number of prior convictions, length(s) of sentence(s), and whether or not past crimes involved violence.  The points are then summed and translated into a "criminal history category," represented by the `criminal_history` values 1 through 6.  As an additional example, a defendant who has three prior convictions with sentences of over 13 months and two with sentences between 2 and 13 months would be assigned a total of 13 points, yielding the criminal history category 6. With only one prior conviction of each type, the category would be 3. The calculation is not quite this simple, with many adjustments and some types of convictions and very old convictions being ignored.
 
 The variable `all_adjustments` is a rating of the offense level (how severe the crime is) with adjustments (added considerations that call for higher or lower offense level), as defined by the US Sentencing Commission's Sentencing Guidelines Manual and interpreted by the US Probation Office and/or the Presiding Judge. There are 43 levels where, for example, first degree murder has a base level (that is, level prior to adjustments) of 43 and trespassing has a base level of 4.
+
+Apart from `criminal_history` and `all_adjustments`, there are several variables related to identity: `age`, `sex`, `educ`, and `race`. `age` refers to a defendant's age in years. `sex` has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female". `educ` refers to a defendant's educational attainment which consists of 6 levels FINISH EXPLAINING HERE. `race` refers to a defendant's race ADD HERE.
+
+Other variables in the dataset include `year`, `sentence_length`, `guilty_plea`, `base_chapter2_adjustments`, `base_chapter2_3_adjustments`, `grid_cell`, `mandatory_min`, `gov_departures`, and `district`. 
