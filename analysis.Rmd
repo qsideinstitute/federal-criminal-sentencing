@@ -1,2 +1,222 @@
 # Statiscal Modeling Approach
 
+## How to make a scatter plot with quantitative variables
+
+In this first plot, we will look at numerical variables only. We will see how each penguin's flipper length relates to its body mass.
+
+Each dot in the scatter plot we produce with the ggplot command represents a row in our penguin data. Scatter plots help us to visualize and understand numerical data better. We will compare each penguin's body mass to their flipper length through visualization and observation. We will use this scatterplot to identify any patterns that exist in our penguin data set.
+
+%%%%%%%%% come back to this to explain R code %%%%%%%%%%%
+
+```{r}
+ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
+```
+
+What do you notice in this scatter plot? What do you wonder?
+
+## What happens when you try to make a scatter plot with categorical variables?
+
+We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical? Run the code below that plots species (a categorical variable) against flipper length (a numerical variable).
+
+```{r}
+ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
+```
+
+What do you notice in this scatter plot? What do you wonder?
+
+Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex against species (both categorical variables).
+
+```{r}
+ggplot(penguins, aes(x=species, y=sex)) + geom_point(color='coral2', alpha=0.7)
+```
+
+What do you notice in this scatter plot? What do you wonder?
+
+Scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables or bar graphs are a better visualization to use. In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
+
+## Fitting Lines to Data
+
+Suppose we want to predict how much electricity the city of Los Angeles, California will use based on the daily temperature. As the temperature goes higher, more people will turn on their air conditioners and use more electricity. We can look at past electricity use data and compare it to the temperature each day to get a sense of how these two attributes are related. Knowing and understanding how two variables relate can help you plan for future possibilities or identify and correct patterns that you don't want to continue. For example, we can use this relationship to makes predictions of how much electricity Los Angeles will use in the future if we know the future temperature, and make sure that there is enough for the city's needs.
+
+Let's make two example points, point A at (1,2) and point B at (3,5). In R, we will save this into a data frame using a vector of the x values, 1 and 3, and a vector of the matching y values, 2 and 5.
+
+```{r}
+twopoints <- data.frame(xvals = c(1,3), yvals = c(2,5), label = c('A','B'))
+head(twopoints)
+```
+
+We can make a fairly simple plot of these two points.
+
+```{r}
+twoplot <- ggplot(twopoints, aes(x=xvals, y=yvals)) + 
+  geom_point(color='coral2') + 
+  geom_text(aes(label=label), nudge_y = .3 ) +
+  xlim(0,6) + 
+  ylim(0,6)
+twoplot
+```
+
+### Analytically Fit a Line to Two Points
+
+In order to create a linear regression on these two points, we can think back to algebra and use the formula for a line.
+
+$$ 
+y = m x + b
+$$
+
+Fitting our line to the data is straightforward, we can solve in a number of ways. One way, is that we can plug both these points into the equation of the line and then solve the system together.
+
+$$
+2 = (1)m + b 
+$$ $$5 = (3)m+b$$Here we have a system that has two equations and two unknowns, $m$ and $b$. We know this system has a unique solution! Since we can solve this system using a variety of techniques, try to solve this system using a technique you are comfortable with and verify that the solution below passes through each of the two points.
+
+$$
+y = \frac{3}{2} x+ \frac{1}{2}
+$$
+
+We can plot the results. Here we use the `abline()` function, to plot our linear equation which can be done by inputting the values for the slope and the intercept.
+
+```{r}
+twoplot + geom_abline(slope=3/2, intercept = 1/2)
+```
+
+### Numerically Fit a Line to Two Points
+
+```{r}
+twolinear <- lm(formula = yvals ~ xvals, data=twopoints)
+twolinear
+```
+
+
+Notice that the line above goes right through our two data points.
+
+We know that two points alone uniquely define a line, but what do we think will happen if we have to find a line that describes the goes through three data points? Let's add the point (2,3) to our exisiting set and see what happens when try to draw a line through these three points. Below, we will use R to plot three graphs of our points, each attempting to find a line that goes through all three data points.
+
+```{r, fig.width=12}
+threepoints = rbind(twopoints, data.frame(xvals = 2, yvals = 3, label='C'))
+threepoints$yfit1 = threepoints$xvals*3/2+1/2
+threepoints$yfit2 = threepoints$xvals+1
+threepoints$yfit3 = threepoints$xvals*2-1
+
+threeplot = ggplot(threepoints, aes(x=xvals, y = yvals)) + 
+  geom_point(color = 'coral2')  + 
+  geom_text(aes(label=label), nudge_y = 0.3, check_overlap = TRUE) +
+  xlim(0,6) + ylim(0,6)
+
+grid.arrange(
+  threeplot + geom_abline(slope=3/2, intercept = 1/2) + geom_segment(aes(xend = xvals, yend = yfit1), color='coral2'),
+  threeplot + geom_abline(slope=1, intercept = 1) + geom_segment(aes(xend = xvals, yend = yfit2), color='coral2'),
+  threeplot + geom_abline(slope=2, intercept = -1) +  geom_segment(aes(xend = xvals, yend = yfit3), color='coral2'),
+ncol=3
+)
+```
+Notice in all three graphs above, we can't draw a straight line through all three points at the same time. The best that we can do is try to find a line that gets very close to all theree points, or fits these three points the best. But how can we define "the best" line that fits this data?
+
+To understand which line *best fits* our three data points, we need to talk about the **error**, which is also called the **residual** in statistics. The residual is the vertical distance between the predicted data point y (on the line) and the actual value of y our data takes on at that  point (the value we collected) at each of our data points. In our data set we have the points (1,2), (2,3), and (3,5) so the only actual values for y in our data set are 2,3, and 5 even though our prediction line (our model) takes on all values of y between 0 and 6.
+
+
+### Numerically Fit a Line to Three Points
+To find the model that best fits our data, we want to make the error as small as possible. Linear regression is a techique that allows us to identify the line that minimizes our error, this line is called a *linear regression model* and is the line that best fits our data. Below, you will see R code to identify the model that best fits our data.
+
+```{r}
+threelinear = lm(formula=yvals~xvals, data=threepoints)
+threelinear
+```
+
+```{r}
+threepoints$linfit = 1.5*threepoints$xvals + 0.3333
+ggplot(threepoints, aes(x=xvals, y = yvals)) + 
+  geom_point(color='coral2')  + 
+  geom_text(aes(label=label), nudge_y = -0.4 ) +
+  xlim(0,6) + ylim(0,6)+ 
+  geom_abline(slope=1.5, intercept=0.3333) + 
+  geom_segment(aes(xend = xvals, yend = linfit), color='coral2')
+```
+Notice that the best fit linear model doesn't go through any of our three points! **Why do you think that is?**
+
+Keep in mind, our goal is to minimize our error as much as we can. In each of the four previous graphs, the error (or the distance between the predicted y value and the actual y value) is shown on the graph. Of the four plots we just made of lines through our three data points, which looks like it has the smallest error?
+
+## Fitting a Line to Many Points: Linear Regression!
+Now let's go back to our penguins data. Do you think a linear model might be a good way to model the data? Run the code below to create a scatterplot of flipper length versus body mass. 
+
+```{r}
+pengscat = ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + 
+  geom_point(color='coral2', alpha=0.7)
+pengscat
+```
+Take a look at the scatterplot, does it look like most of the data fall along a straight line? If the general shape is a line, then yes, we should try to model this data with linear regression line.
+
+```{r}
+pengfit = lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
+pengfit
+```
+Here R givs us the slope and intercept of the straight line that best fits our data. Let's graph this line together with our data using the code below. 
+
+```{r}
+pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
+```
+- still need how to evaluate whether we have a good model R^2
+
+## Categorical Data to Numerical Representations
+So that we can analyze the sentencing data that we looked at earlier, we will need to explore scatterplots where only on variable is numerical and the other is categorical. Let's compare flipper length to penguin species. Remember that flipper length is a numerical varible and species is a categorical variable with three levels (Adelie, Chinstrap, and Gentoo).
+
+To start, let's consider one level at a time, so we can get a good sense of what is the relationship between species and flipper length. Below we examine Adelie penguins first.
+
+```{r}
+penguins$isAdelie = ifelse(penguins$species=='Adelie', 1, 0)
+adelieplot = ggplot(penguins, aes(x=isAdelie, y=flipper_length_mm)) + 
+  geom_point(color='coral2', alpha=0.7)
+adelieplot
+```
+Next, we create a linear model for the relationship between flipper length and whether a penguin is an Adelie penguin or not.
+
+```{r}
+amodel = lm(formula = flipper_length_mm~isAdelie, data=penguins)
+amodel
+```
+Then plot this best fit linear model against with our scatterplot to compare. Do you think that our linear model is a good representation of the data?
+
+As we saw before, things look a little bit different when we are dealing with categroical variables. In these types of scatterplots, we would expect the best fit model  to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
+
+```{r}
+adelieplot + geom_abline(slope=-19.35, intercept=209.45)
+```
+Now we do the same thing for the other two species (Chinstrap and Gentoo) and plot all three graphs side by side.
+
+```{r, fig.width=12}
+penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
+penguins$isGentoo = ifelse(penguins$species=='Gentoo',1,0)
+
+cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
+gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
+
+speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
+aplot = speciesbase + 
+  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
+  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
+cplot = speciesbase + 
+  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
+  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
+gplot = speciesbase + 
+  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
+  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
+
+grid.arrange(aplot, cplot, gplot, ncol=3)
+```
+What would happen if instead of creating linear models for each level of the categorical variable separately, we created a single linear model for flipper length versus all species types? The code below allows us to find that model in just one step.
+
+```{r}
+linmodel <- lm(flipper_length_mm ~ species, data = penguins)
+linmodel
+```
+
+This model will look like $$Flipper Length = 190.103 + 5.72*(Chinstrap) + 27.133*(Gentoo)$$ where the variable Chinstrap is an indicator variable that takes on the value of 1 when the penguin is the species Chinstrap and takes on the value of 0 when the penguin is any other species. Similarly, the variable Gentoo is an indicator variable that takes on the value of 1 when the penguin is the species Gentoo and takes on the value of 0 when the penguin is any other species.
+
+So...what happened to the Adelie penguins in our model?!?! Notice the variable for Adelie is missing in our model. It actually got absorbed by the y-intercept! We only need n-1 variables to represent n levels of a categorical variable because we have this y-intercept. When a penguin is of the species Adelie and we apply this linear model, the values for Gentoo and Chinstrap are both equal to 0, since the penguin is an Adelie. Thus our model would predict a flipper length of 190.103 for all Adelie penguins.
+
+What is the flipper length predicted by our model for a Chinstrap penguin? What about a Gentoo penguin?
+
+```{r}
+peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 0 )
+head(peng_encoded)
+```

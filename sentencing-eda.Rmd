@@ -4,7 +4,7 @@ output: html_document
 
 # Data exploration
 
-When given a new dataset, you want to read in the data so you can view it in RStudio and perform an Exploratory Data Analysis (EDA). 
+Whenever you are handed a new dataset, you want to read in the data so you can view it in RStudio and perform an Exploratory Data Analysis (EDA). 
 
 ## Reading in the data
 
@@ -52,6 +52,62 @@ Let's inspect our variables which are in the columns. There are several function
     ```
     
 > Note: You can use the built in R help documentation to learn more about each function by typing a question mark followed by the name of the function in the console, e.g. `?str()` 
+
+## Data Types
+
+What is halfway between 0 and 1? It is 1/2. What is halfway between horse and dog? There is no such thing! Thinking about each type of data is very important so that we don't code silly things like the mean of animal species!
+
+There are two main types of data: **categorical data** and **numerical data**. Some examples of categorical data would be color, ethnicity, employment status, or states/countries. These have unique values, like California or Oregon.
+
+Some examples of numerical data are temperature, height and salary. It makes perfect sense to be 165.8 cm tall or for the temperature to be 82.4 degrees outside.
+
+There are some confusing data types that use numbers to *represent* categorical data, like zip code. You may live in the zip code 90201, which is a number, but you can't live in the zip code 90210.3. Only whole numbers, and specific ones at that, make sense here. We will learn more about using numbers to represent categorical data in this lesson.
+
+Take a look at the penguin data. There are 8 columns in the table, each giving an attribute about penguins. Can you identify which data type each variable is?
+
+## Explorations
+
+A good practice to do with a new data set is to explore it through visualization. We will walk through a few graphs in R so you can see how to plot. We will examine each of these so we can see relationships and learn more about our data. Then, explore on your own by modifying this code!
+
+
+## How to make a scatter plot with quantitative variables
+
+In this first plot, we will look at numerical variables only. We will see how each penguin's flipper length relates to its body mass.
+
+Each dot in the scatter plot we produce with the ggplot command represents a row in our penguin data. Scatter plots help us to visualize and understand numerical data better. We will compare each penguin's body mass to their flipper length through visualization and observation. We will use this scatterplot to identify any patterns that exist in our penguin data set.
+
+%%%%%%%%% come back to this to explain R code %%%%%%%%%%%
+
+```{r}
+ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
+```
+
+What do you notice in this scatter plot? What do you wonder?
+
+## What happens when you try to make a scatter plot with categorical variables?
+
+We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical? Run the code below that plots species (a categorical variable) against flipper length (a numerical variable).
+
+```{r}
+ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
+```
+
+What do you notice in this scatter plot? What do you wonder?
+
+Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex against species (both categorical variables).
+
+```{r}
+ggplot(penguins, aes(x=species, y=sex)) + geom_point(color='coral2', alpha=0.7)
+```
+
+What do you notice in this scatter plot? What do you wonder?
+
+Scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables or bar graphs are a better visualization to use. In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
+
+
+<!-- explain copied over penguin explanation above in context -->
+
+
 
 
 <!-- - explain the different columns (linking to the background) -->
