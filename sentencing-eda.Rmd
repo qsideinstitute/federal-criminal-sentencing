@@ -4,11 +4,11 @@ output: html_document
 
 # Data exploration
 
-Whenever you are handed a new dataset, you want to read in the data so you can view it in RStudio and perform an Exploratory Data Analysis (EDA). 
+Alright, let's start digging into the data. Whenever you are handed a new dataset, you want to read in the data so you can view it in RStudio and perform an Exploratory Data Analysis (EDA). 
 
 ## Reading in the data
 
-First you will want to read in your data. You can do this using `read_csv()` and creating a variable named `us_sent` that refers to the dataset. To view the data as a spreadsheet in a new tab within RStudio, you can use the `View()` function. Because this is an interactive RStudio function that doesn't work when we knit the document, we have set up our document so that the code can be viewed below but not actually run when we knit (specifically, we used the code chunk option `eval = FALSE`). 
+You can read in your data using `read_csv()` and creating a variable named `us_sent` that refers to the dataset. To view the data as a spreadsheet in a new tab within RStudio, you can use the `View()` function. Because this is an interactive RStudio function that doesn't work when we knit the document, we have set up our document so that the code can be viewed below but not actually run when we knit (specifically, we used the code chunk option `eval = FALSE`). 
 
 ```{r read in data, include = FALSE}
 us_sent <- read_csv("data/cleaned_data_renamed.csv")
@@ -18,15 +18,15 @@ us_sent <- read_csv("data/cleaned_data_renamed.csv")
 View(us_sent)
 ```
 
-## Describe the structure of the data
+## Structure of the data
 
 In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
 
 In the case of the federal criminal sentencing data, each row represents an individual who was sentenced in the federal district court system in the U.S. in one of the country's 94 districts.
 
-When we start with a dataset, we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred.
+When we start with a dataset, we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred. Can you guess which variables pertain to each question?
 
-Let's inspect our variables which are in the columns. There are several functions we can use to do this:
+Let's inspect our variables, which are in the columns, and see if that helps. There are several functions we can use to do this:
 
 * `names()` will provide the names of the columns in the dataset
     ```{r check column names}
@@ -63,7 +63,7 @@ Some examples of numerical data are temperature, height and salary. It makes per
 
 There are some confusing data types that use numbers to *represent* categorical data, like zip code. You may live in the zip code 90201, which is a number, but you can't live in the zip code 90210.3. Only whole numbers, and specific ones at that, make sense here. We will learn more about using numbers to represent categorical data in this lesson.
 
-Take a look at the penguin data. There are 8 columns in the table, each giving an attribute about penguins. Can you identify which data type each variable is?
+Can you identify which data type each variable in the federal criminal sentencing data is?
 
 ## Explorations
 
@@ -72,41 +72,58 @@ A good practice to do with a new data set is to explore it through visualization
 
 ## How to make a scatter plot with quantitative variables
 
-In this first plot, we will look at numerical variables only. We will see how each penguin's flipper length relates to its body mass.
+In this first plot, we will look at numerical variables only. We will see how each the age of a defendant relates to sentence length. 
 
-Each dot in the scatter plot we produce with the ggplot command represents a row in our penguin data. Scatter plots help us to visualize and understand numerical data better. We will compare each penguin's body mass to their flipper length through visualization and observation. We will use this scatterplot to identify any patterns that exist in our penguin data set.
+Each dot in the scatter plot we produce with the `ggplot` command represents a row in our `us_sent` data. Scatter plots help us to visualize and understand numerical data better. We will compare each defendant's age to their sentence length through visualization and observation. We will use this scatter plot to identify any patterns that exist in our data set.
 
-%%%%%%%%% come back to this to explain R code %%%%%%%%%%%
+To use `ggplot`, we start by indicating what dataset we want to plot then what our variables of interest are--in this case, we are interested in `age` and `sentence_length`. `geom_point` specifies that we are interested in using a scatter plot to represent our data. There are many fun and useful modifications that change the way a scatter plot looks. For example, you can change the color of data points using `color`, you can change the size of data points using `size`, and you can specify the transparency of data points using `alpha`. It's also good practice to come up with a useful title and good axis labels using the `labs` command.
 
-```{r}
-ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
+```{r sentence length by age}
+ggplot(us_sent, aes(x = age, 
+                    y = sentence_length)) + 
+  geom_point(color = 'coral2',
+             size = 0.5,
+             alpha = 0.4) +
+  labs(title = "Sentence Length by Age",
+       x = "Age (Years)",
+       y = "Sentence Length (Months)")
 ```
 
 What do you notice in this scatter plot? What do you wonder?
 
 ## What happens when you try to make a scatter plot with categorical variables?
 
-We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical? Run the code below that plots species (a categorical variable) against flipper length (a numerical variable).
+We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical. Run the code below that plots `criminal_history` (a categorical variable) against `age` (a numerical variable).
 
-```{r}
-ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
+```{r criminal history by age}
+ggplot(us_sent, aes(x = age, 
+                    y = criminal_history)) + 
+  geom_point(color = 'coral2', 
+             alpha = 0.7) +
+  labs(title = "Criminal history by age",
+       x = "Age (Years)",
+       y = "Criminal History (1-6 levels)") # come back to this
 ```
 
 What do you notice in this scatter plot? What do you wonder?
+
+## What happens when you try to make a scatterplot with two catergoical variables?
 
 Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex against species (both categorical variables).
 
-```{r}
-ggplot(penguins, aes(x=species, y=sex)) + geom_point(color='coral2', alpha=0.7)
+```{r race by sex}
+ggplot(us_sent, aes(x = race,
+                    y = sex)) + 
+  geom_point(color = 'coral2', 
+             alpha = 0.7) +
+  labs(title = "Age by Sex",
+       x = "Age (Years)",
+       y = "Sex (Male or Female)")
 ```
 
 What do you notice in this scatter plot? What do you wonder?
 
-Scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables or bar graphs are a better visualization to use. In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
-
-
-<!-- explain copied over penguin explanation above in context -->
-
+As you may have noted, scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables or bar graphs are a better visualization to use. In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
 
 
 
