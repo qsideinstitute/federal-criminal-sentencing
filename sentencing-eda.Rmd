@@ -126,9 +126,9 @@ What do you notice in this scatter plot? What do you wonder?
 As you may have noted, scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables or bar graphs are a better visualization to use. In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
 
 
-
+### Explanatory Data Analysis
 <!-- - explain the different columns (linking to the background) -->
-Using this final output from `glimpse()` we can try to identify which variables are of interest. Remember, we want to know *who* is in our dataset, *what* the sentence was, *when* the individual was sentenced and *where* the sentence occurred. Can you identify some of the variables that might correspond with each of these questions? We'll define and explore variables in more detail next.
+Now, let's return to exploring the variables of interest. Remember, we want to know *who* is in our dataset, *what* the sentence was, *when* the individual was sentenced and *where* the sentence occurred. Can you identify some of the variables that might correspond with each of these questions? We'll define and explore variables in more detail next.
 
 <!-- https://www.nature.com/articles/s41599-023-01879-5 -->
 
@@ -142,17 +142,15 @@ Using this final output from `glimpse()` we can try to identify which variables 
 | `guilty_plea` | |||
 
 
-
-
-### Who {.tabset}
+<!-- ### Who {.tabset}
 
 A key motivation for this work is exploring how our personal and racial identities influence the judicial sentencing. In a fair, democratic system this identity or perceived identity should not affect how we are treated by the justice system.
 
-In this dataset, as you may have guessed, we have four variables that are related to identity: `age`, `sex`, `educ` (education), and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination 'intersect' to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023). 
+In this dataset, as you may have guessed, we have four variables that are related to identity: `age`, `sex`, `educ` (education), and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination 'intersect' to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023). -->
 
 #### Sex 
 
-Sex has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female".
+Remember that `sex` has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female".
 
 ```{r}
 us_sent %>%
@@ -186,6 +184,8 @@ us_sent %>%
 
 #### Race
 
+Now let's explore the `race` variable in a similar way. 
+
 ```{r}
 us_sent %>%
   distinct(race)
@@ -207,13 +207,14 @@ us_sent %>%
 
 #### Race and Sex
 
+Now let's look at how `race` and `sex` relate to one another. First, let's look at the number of people in each combination using `count` again. 
 
 ```{r}
 us_sent %>%
   count(race, sex)
 ```
 
-
+We can represent these two variables using a bar graph. Once again we will use `ggplot` to create this plot... 
 
 ```{r}
 us_sent %>%
@@ -232,7 +233,8 @@ us_sent %>%
 
 #### Proportional Race and Sex
 
-We can also create a proportional bar plot
+We can also create a proportional bar plot. 
+
 ```{r}
 us_sent %>%
   mutate(race = case_when(race == "other" ~ "ari",
@@ -250,7 +252,7 @@ us_sent %>%
 
 #### Age
 
-We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont.
+We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont. We can use the `filter` command to look at only these three districts of interest. 
 
 ```{r}
 us_sent %>%
@@ -294,9 +296,6 @@ ggplot(us_sent) +
   geom_vline(aes(xintercept = 60), color = "red", linetype = 2) +
   geom_vline(aes(xintercept = 120), color = "red", linetype = 2) +
   geom_vline(aes(xintercept = 240), color = "red", linetype = 2)
-
-
-
 ```
 
 ##### Histogram
@@ -355,7 +354,7 @@ ggplot(us_sent) +
 
 ```
 
-What is the relationship between `all_adjustments` and `sentence_length`?
+#### What is the relationship between `all_adjustments` and `sentence_length`?
 
 ```{r}
 ggplot(us_sent) +
@@ -398,7 +397,7 @@ Let's explore the time data found in our US sentencing data set. How many column
 Do we remember?
 
 
-We do remember; we can use the names() routine to remind ourselves.
+We do remember; we can use the `names()` routine to remind ourselves.
 
 
 ```{r check the columns, i.e. names}
@@ -454,6 +453,7 @@ Let's check what districts we have in the data. We can do this using `distinct(d
 us_sent %>%
   distinct(district)
 ```
+
 You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North).  
 
 Q: If you live in the United States, can you identify which district you live in?
