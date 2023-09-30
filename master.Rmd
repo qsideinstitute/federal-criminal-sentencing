@@ -27,7 +27,7 @@ Citation: Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, A
 
 # Acknowledgments
 
-This project was begun at the Institute for Computational and Experimental Research on Mathematics (ICERM) as part of the week-long workshop "Educating at the Intersection of Data Science and Social Justice," organized by Ron Buckmire, Drew Lewis, Omayra Ortega, Katharine Ott, and Matt Salamone. This workshop was part of a summer program on "Data Science and Social Justice: Networks, Policy, and Education," organized by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis, Jessica Libertini, Omayra Ortega, Victor Piercey, Björn Sandstede, Talitha Washington, Tian An Wong, and Heather Zinn Brooks.
+This project started at the Institute for Computational and Experimental Research on Mathematics (ICERM) as part of the week-long workshop "Educating at the Intersection of Data Science and Social Justice," organized by Ron Buckmire, Drew Lewis, Omayra Ortega, Katharine Ott, and Matt Salamone. This workshop was part of a summer program on "Data Science and Social Justice: Networks, Policy, and Education," organized by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis, Jessica Libertini, Omayra Ortega, Victor Piercey, Björn Sandstede, Talitha Washington, Tian An Wong, and Heather Zinn Brooks.
 
 ```{r child = "introduction.Rmd"}
 ```
