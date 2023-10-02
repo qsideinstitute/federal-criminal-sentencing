@@ -3,7 +3,7 @@ Federal District Courts and Race-Based Criminal Sentencing Disparities
 Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik,
 Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas
 Wakefield
-September 30, 2023
+October 01, 2023
 
 - [1 Acknowledgments](#1-acknowledgments)
 - [2 Introduction](#2-introduction)
@@ -26,28 +26,28 @@ September 30, 2023
   - [4.7 What happens when you try to make a scatterplot with two
     catergoical
     variables?](#47-what-happens-when-you-try-to-make-a-scatterplot-with-two-catergoical-variables)
-    - [4.7.1 Explanatory Data Analysis](#471-explanatory-data-analysis)
-    - [4.7.2 What](#472-what)
-    - [4.7.3 When](#473-when)
-    - [4.7.4 Where](#474-where)
-- [5 Statiscal Modeling Approach](#5-statiscal-modeling-approach)
-  - [5.1 How to make a scatter plot with quantitative
-    variables](#51-how-to-make-a-scatter-plot-with-quantitative-variables)
-  - [5.2 What happens when you try to make a scatter plot with
+- [5 Explanatory Data Analysis](#5-explanatory-data-analysis)
+  - [5.0.1 What](#501-what)
+  - [5.0.2 When](#502-when)
+  - [5.0.3 Where](#503-where)
+- [6 Statiscal Modeling Approach](#6-statiscal-modeling-approach)
+  - [6.1 How to make a scatter plot with quantitative
+    variables](#61-how-to-make-a-scatter-plot-with-quantitative-variables)
+  - [6.2 What happens when you try to make a scatter plot with
     categorical
-    variables?](#52-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables)
-  - [5.3 Fitting Lines to Data](#53-fitting-lines-to-data)
-    - [5.3.1 Analytically Fit a Line to Two
-      Points](#531-analytically-fit-a-line-to-two-points)
-    - [5.3.2 Numerically Fit a Line to Two
-      Points](#532-numerically-fit-a-line-to-two-points)
-    - [5.3.3 Numerically Fit a Line to Three
-      Points](#533-numerically-fit-a-line-to-three-points)
-  - [5.4 Fitting a Line to Many Points: Linear
-    Regression!](#54-fitting-a-line-to-many-points-linear-regression)
-  - [5.5 Categorical Data to Numerical
-    Representations](#55-categorical-data-to-numerical-representations)
-- [6 Results](#6-results)
+    variables?](#62-what-happens-when-you-try-to-make-a-scatter-plot-with-categorical-variables)
+  - [6.3 Fitting Lines to Data](#63-fitting-lines-to-data)
+    - [6.3.1 Analytically Fit a Line to Two
+      Points](#631-analytically-fit-a-line-to-two-points)
+    - [6.3.2 Numerically Fit a Line to Two
+      Points](#632-numerically-fit-a-line-to-two-points)
+    - [6.3.3 Numerically Fit a Line to Three
+      Points](#633-numerically-fit-a-line-to-three-points)
+  - [6.4 Fitting a Line to Many Points: Linear
+    Regression!](#64-fitting-a-line-to-many-points-linear-regression)
+  - [6.5 Categorical Data to Numerical
+    Representations](#65-categorical-data-to-numerical-representations)
+- [7 Results](#7-results)
 
 ------------------------------------------------------------------------
 
@@ -64,15 +64,15 @@ Diversity, and Equity (QSIDE), 2023.
 
 # 1 Acknowledgments
 
-This project was begun at the Institute for Computational and
-Experimental Research on Mathematics (ICERM) as part of the week-long
-workshop “Educating at the Intersection of Data Science and Social
-Justice,” organized by Ron Buckmire, Drew Lewis, Omayra Ortega,
-Katharine Ott, and Matt Salamone. This workshop was part of a summer
-program on “Data Science and Social Justice: Networks, Policy, and
-Education,” organized by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis,
-Jessica Libertini, Omayra Ortega, Victor Piercey, Björn Sandstede,
-Talitha Washington, Tian An Wong, and Heather Zinn Brooks.
+This project started at the Institute for Computational and Experimental
+Research on Mathematics (ICERM) as part of the week-long workshop
+“Educating at the Intersection of Data Science and Social Justice,”
+organized by Ron Buckmire, Drew Lewis, Omayra Ortega, Katharine Ott, and
+Matt Salamone. This workshop was part of a summer program on “Data
+Science and Social Justice: Networks, Policy, and Education,” organized
+by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis, Jessica Libertini,
+Omayra Ortega, Victor Piercey, Björn Sandstede, Talitha Washington, Tian
+An Wong, and Heather Zinn Brooks.
 
 # 2 Introduction
 
@@ -88,8 +88,8 @@ academics in any field who would like to learn new skills and ideas.
 QSIDE also envisions our case study being used by individuals working in
 industry, government, and the nonprofit sphere, as well as any hobbyists
 and other members of the general public wanting to challenge themselves.
-In short, if you are interested to and positioned to learn more about
-the interface of social justice and data science, this case study is for
+In short, if you are interested and positioned to learn more about the
+interface of social justice and data science, this case study is for
 you.
 
 If you are a high school teacher, a college or university faculty
@@ -107,7 +107,9 @@ case study, we strongly recommend working through the case study on
 [Diversity of Artists in Major U.S.
 Museums](https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html),
 which will provide some familiarity with R fundamentals and with
-exploratory data analysis.
+exploratory data analysis. This current case study can be viewed as a
+tool to cement and expand upon the concepts shared in the previous
+Diversity of Artists in Major U.S. Museums case study.
 
 This case study assumes that you have access to RStudio, a programming
 environment built on the statistical computing language R. If you want
@@ -191,8 +193,12 @@ attorneys.
 
 ------------------------------------------------------------------------
 
-In this case study, we won’t cover all of the results, but we will cover
-some of the most important ones.
+In this case study, we won’t cover all of the results described in this
+paper, but we will cover some of the most important ones. Thinking about
+the distinction between observational and experimental case studies,
+this case study can be viewed as an observational study because the
+researchers are attempting to learn about the population of interest by
+sampling and observing patterns without manipulating any variables.
 
 ## 3.1 Motivation
 
@@ -257,9 +263,12 @@ inequity, which is the purpose of this case study.
 
 ## 3.2 The U.S. federal court system
 
-The United States federal court system is, at its core, a three-tiered
-structure, starting with district courts at the bottom, circuit courts
-in the middle, and the Supreme Court at the top.
+Before we dive into understanding race-based sentencing disparities in
+the United States, let’s understand some important context about the
+U.S. federal court system and federal sentencing. The United States
+federal court system is, at its core, a three-tiered structure, starting
+with district courts at the bottom, circuit courts in the middle, and
+the Supreme Court at the top.
 
 The district courts are the workhorses of the federal judiciary,
 handling the vast majority of federal cases. There are 94 federal
@@ -329,7 +338,7 @@ We will analyze the over one-half million sentencing records spanning
 the years 2006 to 2020 provided by the U.S. Sentencing Commission.
 Publicly available data is usually quite messy, with many missing and
 ambiguous entries. For this reason, you will be using a curated copy,
-that is, one that has been “cleaned up” (Directions for obtaining the
+that is, one that has been “cleaned up” (directions for obtaining the
 curated copy is in the following section of this module). The sentence
 lengths we are using are given in months and do not include probation
 nor alternative confinement. Since our aim is to compare lengths of
@@ -383,50 +392,87 @@ for higher or lower offense level), as defined by the US Sentencing
 Commission’s Sentencing Guidelines Manual and interpreted by the US
 Probation Office and/or the Presiding Judge. There are 43 levels where,
 for example, first degree murder has a base level (that is, level prior
-to adjustments) of 43 and trespassing has a base level of 4.
+to adjustments) of 43 and trespassing has a base level of 4. Two
+additional variables, `base_chapter2_adjustments` and
+`base_chapter2_3_adjustments`, have to do with the derivation of
+`all_adjustments`, but you can ignore these for the purposes of this
+case study.
 
 Apart from `criminal_history` and `all_adjustments`, there are several
-variables related to identity: `age`, `sex`, `educ`, and `race`. `age`
-refers to a defendant’s age in years. `sex` has been coded as a binary
-variable 0 and 1, where 0 is “Male” and 1 is “Female”. `educ` refers to
-a defendant’s educational attainment which consists of 6 levels FINISH
-EXPLAINING HERE. `race` refers to a defendant’s race ADD HERE.
+variables related to identity of defendants:
 
-Other variables in the dataset include `year`, `sentence_length`,
-`guilty_plea`, `base_chapter2_adjustments`,
-`base_chapter2_3_adjustments`, `grid_cell`, `mandatory_min`,
-`gov_departures`, and `district`.
+- `age`, which refers to a defendant’s age in years.
+- `sex`, which has been coded as a binary variable 0 and 1, where 0 is
+  “Male” and 1 is “Female”. FINISH EXPLAINING HERE.
+- `educ`, which refers to a defendant’s educational attainment which
+  consists of 4 levels (1 refers to a defendant having less than high
+  school graduation, 3 refers to a high school graduate, 5 means having
+  some college, and 6 means college graduate), and
+- `race`, which refers to a defendant’s race and has levels “black”,
+  “hispanic”, “white” and “other”.
 
 A key motivation for this work is exploring how our personal and racial
 identities influence the judicial sentencing. In a fair, democratic
 system this identity or perceived identity should not affect how we are
-treated by the justice system.
-
-In this dataset, as you may have guessed, we have four variables that
-are related to identity: `age`, `sex`, `educ` (education), and `race`.
-It is important to note that these characteristics are not independent
-of one another but can intersect and interact with one another. This
-combined effect is known as intersectionality. The Center for
-Intersectional Justice describes the concept of intersectionality as:
-“the ways in which systems of inequality based on gender, race,
-ethnicity, sexual orientation, gender identity, disability, class and
-other forms of discrimination ‘intersect’ to create unique dynamics and
-effects” (Ref: [Center for Intersectional
+treated by the justice system. It is important to note that these
+characteristics are not independent of one another but can intersect and
+interact with one another. This combined effect is known as
+intersectionality. The Center for Intersectional Justice describes the
+concept of intersectionality as: “the ways in which systems of
+inequality based on gender, race, ethnicity, sexual orientation, gender
+identity, disability, class and other forms of discrimination
+‘intersect’ to create unique dynamics and effects” (Ref: [Center for
+Intersectional
 Justice](https://www.intersectionaljustice.org/what-is-intersectionality),
 July 20, 2023). `sex` has been coded as a binary variable 0 and 1, where
 0 is “Male” and 1 is “Female”.
 
+<!-- **To add**
+&#10;- Add how sex was defined (sex is defined in pre-sentencing report that comes out of the investigation done by the probation office. This goes to the attorneys and also comes out of an interview with the individual. It should be noted that there are only two categories, so it is likely that there might be only two options possible). See Background section or link to official report for more information.
+- Discuss how a binary variable will not reflect sentenced individuals gender identity and excludes several groups. It is also limiting in nature.
+- Discuss difference between sex and gender
+- Discuss who has defined this variable and why this is problematic
+- Discuss the limitations and how this affects the analysis and inferences we can make.
+- Update sex label with more appropriate label based on Background research. -->
+
+The nine other variables in the dataset refer to information about the
+court cases themselves:
+
+- `year`, which describes the year in which the court case took place,
+- `sentence_length`, the length prescribed to a defendant in months,
+- `guilty_plea`, where 0 means the defendant did not plead guilty and 1
+  means the defendant did plead guilty, <!-- check this! -->
+- `grid_cell`,
+- `mandatory_min`,
+- `gov_departures`, and
+- `district`, which refers to the district where the trial took place.
+
 # 4 Data exploration
 
 Alright, let’s start digging into the data. Whenever you are handed a
-new dataset, you want to read in the data so you can view it in RStudio
+new data set, you want to read in the data so you can view it in RStudio
 and perform an Exploratory Data Analysis (EDA).
 
 ## 4.1 Reading in the data
 
 You can read in your data using `read_csv()` and creating a variable
-named `us_sent` that refers to the dataset. To view the data as a
-spreadsheet in a new tab within RStudio, you can use the `View()`
+named `us_sent` that refers to the data set.
+
+``` r
+us_sent <- read_csv("data/cleaned_data_renamed.csv")
+```
+
+    ## Rows: 518719 Columns: 15
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (3): grid_cell, district, race
+    ## dbl (10): sentence_length, age, sex, educ, year, guilty_plea, base_chapter2_...
+    ## lgl  (2): mandatory_min, gov_departures
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+To view the data in a new tab within RStudio, you can use the `View()`
 function. Because this is an interactive RStudio function that doesn’t
 work when we knit the document, we have set up our document so that the
 code can be viewed below but not actually run when we knit
@@ -438,22 +484,22 @@ View(us_sent)
 
 ## 4.2 Structure of the data
 
-In a tidy dataset, each row is an observation, each column is a
-variable, and each cell is a value.
+As you may remember, in a tidy data set, each row is an observation,
+each column is a variable, and each cell is a value. In the case of the
+federal criminal sentencing data, each row represents an individual who
+was sentenced in the federal district court system in the U.S. in one of
+the country’s 94 districts.
 
-In the case of the federal criminal sentencing data, each row represents
-an individual who was sentenced in the federal district court system in
-the U.S. in one of the country’s 94 districts.
+When we start exploring a data set, we will want to think about some key
+questions using the four W’s: who, what, when, and where. Specifically,
+you might ask: who is in our data set? What was the sentence? When was
+the individual was sentenced? Where did the sentence occur?
 
-When we start with a dataset, we will want to think about and explore
-some key questions related to who is in our dataset, what the sentence
-was, when the individual was sentenced and where the sentence occurred.
-Can you guess which variables pertain to each question?
+Can you guess which variables pertain to each question? Let’s inspect
+our variables, which are in the columns, and see if that helps. There
+are several functions we can use to do this:
 
-Let’s inspect our variables, which are in the columns, and see if that
-helps. There are several functions we can use to do this:
-
-- `names()` will provide the names of the columns in the dataset
+- `names()` will provide the names of the columns in the data set
 
   ``` r
   names(us_sent)
@@ -468,8 +514,8 @@ helps. There are several functions we can use to do this:
       ## [13] "district"                    "race"                       
       ## [15] "criminal_history"
 
-- `summary()` will provide the names of the columns in the dataset along
-  with a brief numeric or qualitative summary of each variable
+- `summary()` will provide the names of the columns in the data set
+  along with a brief numeric or qualitative summary of each variable
 
   ``` r
   summary(us_sent)
@@ -585,16 +631,18 @@ helps. There are several functions we can use to do this:
 What is halfway between 0 and 1? It is 1/2. What is halfway between
 horse and dog? There is no such thing! Thinking about each type of data
 is very important so that we don’t code silly things like the mean of
-animal species!
+animal species.
 
 There are two main types of data: **categorical data** and **numerical
 data**. Some examples of categorical data would be color, ethnicity,
 employment status, or states/countries. These have unique values, like
-California or Oregon.
+California or Oregon. In other words, categorical variables take on
+discrete, finite values.
 
-Some examples of numerical data are temperature, height and salary. It
-makes perfect sense to be 165.8 cm tall or for the temperature to be
-82.4 degrees outside.
+On the other hand, numerical data is in number form. Some examples of
+numerical data are temperature, height, and salary. It makes perfect
+sense to be 165.8 cm tall or for the temperature to be 82.4 degrees
+outside.
 
 There are some confusing data types that use numbers to *represent*
 categorical data, like zip code. You may live in the zip code 90201,
@@ -615,26 +663,24 @@ code!
 
 ## 4.5 How to make a scatter plot with quantitative variables
 
-In this first plot, we will look at numerical variables only. We will
-see how each the age of a defendant relates to sentence length.
+In this first plot, we will look at numerical variables only using a
+scatter plot. Scatter plots help us to visualize and understand
+numerical data better. We will compare each defendant’s age to their
+sentence length through visualization and observation, and we will use
+this scatter plot to identify any patterns that exist in our data set.
+Each dot in the scatter plot we produce with the `ggplot()` command from
+the **ggplot2** package represents a row in our `us_sent` data.
 
-Each dot in the scatter plot we produce with the `ggplot` command
-represents a row in our `us_sent` data. Scatter plots help us to
-visualize and understand numerical data better. We will compare each
-defendant’s age to their sentence length through visualization and
-observation. We will use this scatter plot to identify any patterns that
-exist in our data set.
-
-To use `ggplot`, we start by indicating what dataset we want to plot
-then what our variables of interest are–in this case, we are interested
-in `age` and `sentence_length`. `geom_point` specifies that we are
-interested in using a scatter plot to represent our data. There are many
-fun and useful modifications that change the way a scatter plot looks.
-For example, you can change the color of data points using `color`, you
-can change the size of data points using `size`, and you can specify the
-transparency of data points using `alpha`. It’s also good practice to
-come up with a useful title and good axis labels using the `labs`
-command.
+To use `ggplot()`, we start by indicating what data set we want to plot,
+`us_sent`. Then, we sepcify what our variables of interest are–in this
+case, we are interested in `age` and `sentence_length`. `geom_point()`
+specifies that we are interested in using a scatter plot to represent
+our data. There are many fun and useful modifications that change the
+way a scatter plot looks. For example, you can change the color of data
+points using `color`, you can change the size of data points using
+`size`, and you can specify the transparency of data points using
+`alpha`. It’s also good practice to come up with a useful title and good
+axis labels using the `labs` command.
 
 ``` r
 ggplot(us_sent, aes(x = age, 
@@ -663,7 +709,7 @@ ggplot(us_sent, aes(x = age,
                     y = criminal_history)) + 
   geom_point(color = 'coral2', 
              alpha = 0.7) +
-  labs(title = "Criminal history by age",
+  labs(title = "Criminal History by Age",
        x = "Age (Years)",
        y = "Criminal History (1-6 levels)") # come back to this
 ```
@@ -679,12 +725,15 @@ categorical variables against each other? Run the code below to plot sex
 against species (both categorical variables).
 
 ``` r
-ggplot(us_sent, aes(x = race,
+us_sent1 <- us_sent %>% 
+  mutate(sex = as.factor(sex)) ## COME BACK TO THIS
+
+ggplot(us_sent1, aes(x = race,
                     y = sex)) + 
   geom_point(color = 'coral2', 
              alpha = 0.7) +
-  labs(title = "Age by Sex",
-       x = "Age (Years)",
+  labs(title = "Race by Sex",
+       x = "Race",
        y = "Sex (Male or Female)")
 ```
 
@@ -699,15 +748,15 @@ compare two categorical variables frequency tables or bar graphs are a
 better visualization to use. In the remainder of this lesson we will
 focus on comparisons where we have *at least one numerical variable*.
 
-### 4.7.1 Explanatory Data Analysis
+# 5 Explanatory Data Analysis
 
 <!-- - explain the different columns (linking to the background) -->
 
 Now, let’s return to exploring the variables of interest. Remember, we
-want to know *who* is in our dataset, *what* the sentence was, *when*
-the individual was sentenced and *where* the sentence occurred. Can you
+want to know *who* is in our data set, *what* the sentence was, *when*
+the individual was sentenced and *where* the sentence occurred. Did you
 identify some of the variables that might correspond with each of these
-questions? We’ll define and explore variables in more detail next.
+questions? You might have classified the variables as follows:
 
 <!-- https://www.nature.com/articles/s41599-023-01879-5 -->
 
@@ -720,14 +769,11 @@ questions? We’ll define and explore variables in more detail next.
 | `criminal_history` |                   |        |            |
 | `guilty_plea`      |                   |        |            |
 
-<!-- ### Who {.tabset}
-&#10;A key motivation for this work is exploring how our personal and racial identities influence the judicial sentencing. In a fair, democratic system this identity or perceived identity should not affect how we are treated by the justice system.
-&#10;In this dataset, as you may have guessed, we have four variables that are related to identity: `age`, `sex`, `educ` (education), and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination 'intersect' to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023). -->
-
-#### 4.7.1.1 Sex
+#### 5.0.0.1 Sex
 
 Remember that `sex` has been coded as a binary variable 0 and 1, where 0
-is “Male” and 1 is “Female”.
+is “Male” and 1 is “Female”. We can confirm this using `distinct()`, a
+function that displays all unique values under a specified column.
 
 ``` r
 us_sent %>%
@@ -740,25 +786,14 @@ us_sent %>%
     ## 1     0
     ## 2     1
 
-We can recode this variable using `mutate` and `case_when`
-
-**To add**
-
-- Add how sex was defined (sex is defined in pre-sentencing report that
-  comes out of the investigation done by the probation office. This goes
-  to the attorneys and also comes out of an interview with the
-  individual. It should be noted that there are only two categories, so
-  it is likely that there might be only two options possible). See
-  Background section or link to official report for more information.
-- Discuss how a binary variable will not reflect sentenced individuals
-  gender identity and excludes several groups. It is also limiting in
-  nature.
-- Discuss difference between sex and gender
-- Discuss who has defined this variable and why this is problematic
-- Discuss the limitations and how this affects the analysis and
-  inferences we can make.
-- Update sex label with more appropriate label based on Background
-  research.
+We can recode this variable using `mutate` and `case_when`, so that we
+simply see the words “Male” and “Female”, rather than the coded numbers.
+Let’s also use `ggplot()` to view the distribution of `sex` within our
+data set, this time using `geom_bar()` to display the data in a bar
+graph. Another difference from when we made a scatter plot above using
+`geom_point()` is that we are adding `fill` to make sure the bars in the
+bar graph are colored in. We can also add `scale_fill_viridis_d()` to
+automatically apply a certain color scheme to our plot.
 
 ``` r
 us_sent %>%
@@ -773,11 +808,15 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](master_files/figure-gfm/sex%20of%20sentenced%20individuals-1.png)<!-- -->
 
-#### 4.7.1.2 Race
+From this graph, we can see that there are far more males than females
+in our data set.
 
-Now let’s explore the `race` variable in a similar way.
+#### 5.0.0.2 Race
+
+Let’s continue exploring through turning toward the `race` variable. We
+will start our exploration of `race` by using `distinct`.
 
 ``` r
 us_sent %>%
@@ -792,6 +831,11 @@ us_sent %>%
     ## 3 other   
     ## 4 hispanic
 
+We can once again use `ggplot()` to make a bar graph displaying the
+`race` variable. We can make use of `fct_infreq()` when choosing `race`
+as our x variable, which makes sure the bars in the plot are ordered by
+largest to smallest from left to right.
+
 ``` r
 us_sent %>%
   mutate(race = case_when(race == "other" ~ "ari",
@@ -805,9 +849,9 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](master_files/figure-gfm/race%20of%20sentenced%20individuals-1.png)<!-- -->
 
-#### 4.7.1.3 Race and Sex
+#### 5.0.0.3 Race and Sex
 
 Now let’s look at how `race` and `sex` relate to one another. First,
 let’s look at the number of people in each combination using `count`
@@ -815,23 +859,28 @@ again.
 
 ``` r
 us_sent %>%
+  mutate(sex = case_when(sex == 0 ~ "Male",
+                         sex == 1 ~ "Female")) %>% 
   count(race, sex)
 ```
 
     ## # A tibble: 8 × 3
-    ##   race       sex      n
-    ##   <chr>    <dbl>  <int>
-    ## 1 black        0 160152
-    ## 2 black        1  23500
-    ## 3 hispanic     0  85305
-    ## 4 hispanic     1  18603
-    ## 5 other        0  22036
-    ## 6 other        1   5654
-    ## 7 white        0 164017
-    ## 8 white        1  39452
+    ##   race     sex         n
+    ##   <chr>    <chr>   <int>
+    ## 1 black    Female  23500
+    ## 2 black    Male   160152
+    ## 3 hispanic Female  18603
+    ## 4 hispanic Male    85305
+    ## 5 other    Female   5654
+    ## 6 other    Male    22036
+    ## 7 white    Female  39452
+    ## 8 white    Male   164017
 
 We can represent these two variables using a bar graph. Once again we
-will use `ggplot` to create this plot…
+will use `ggplot` to create this plot. This time, since we are creating
+a bar graph displaying two different variables, we can define `race` as
+the x variable and have the colors of the bar graph correspond to the
+`sex` variable.
 
 ``` r
 us_sent %>%
@@ -848,11 +897,10 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
-#### 4.7.1.4 Proportional Race and Sex
-
-We can also create a proportional bar plot.
+We can also create a proportional bar plot. All we need to add to our
+previous `ggplot()` is `position = "fill"` within `geom_bar()`.
 
 ``` r
 us_sent %>%
@@ -869,9 +917,9 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-#### 4.7.1.5 Age
+#### 5.0.0.4 Age
 
 We might want to explore what the age of different individuals is across
 districts. Let’s explore the districts of Maine, Rhode Island, and
@@ -884,23 +932,22 @@ us_sent %>%
 ```
 
     ## # A tibble: 5,257 × 15
-    ##    sentence_le…¹   age   sex  educ  year guilt…² base_…³ base_…⁴ all_a…⁵ grid_…⁶
-    ##            <dbl> <dbl> <dbl> <dbl> <dbl>   <dbl>   <dbl>   <dbl>   <dbl> <chr>  
-    ##  1            10    28     0     1  2006       0      13      13      11 XFOLSO…
-    ##  2            18    20     0     3  2006       0      18      18      15 XFOLSO…
-    ##  3           184    22     0     1  2006       0      25      25      22 XFOLSO…
-    ##  4            44    37     0     3  2006       0      16      16      14 XFOLSO…
-    ##  5            42    27     0     5  2006       0      20      20      17 XFOLSO…
-    ##  6           210    45     0     5  2006       1      32      34      34 XFOLSO…
-    ##  7           108    27     0     3  2006       0      31      31      29 XFOLSO…
-    ##  8           130    22     0     1  2006       0      23      23      20 XFOLSO…
-    ##  9             0    38     0     6  2006       0      10      10       8 XFOLSO…
-    ## 10            19    27     0     3  2006       0      16      16      13 XFOLSO…
-    ## # … with 5,247 more rows, 5 more variables: mandatory_min <lgl>,
-    ## #   gov_departures <lgl>, district <chr>, race <chr>, criminal_history <dbl>,
-    ## #   and abbreviated variable names ¹​sentence_length, ²​guilty_plea,
-    ## #   ³​base_chapter2_adjustments, ⁴​base_chapter2_3_adjustments, ⁵​all_adjustments,
-    ## #   ⁶​grid_cell
+    ##    sentence_length   age   sex  educ  year guilty_plea base_chapter2_adjustments
+    ##              <dbl> <dbl> <dbl> <dbl> <dbl>       <dbl>                     <dbl>
+    ##  1              10    28     0     1  2006           0                        13
+    ##  2              18    20     0     3  2006           0                        18
+    ##  3             184    22     0     1  2006           0                        25
+    ##  4              44    37     0     3  2006           0                        16
+    ##  5              42    27     0     5  2006           0                        20
+    ##  6             210    45     0     5  2006           1                        32
+    ##  7             108    27     0     3  2006           0                        31
+    ##  8             130    22     0     1  2006           0                        23
+    ##  9               0    38     0     6  2006           0                        10
+    ## 10              19    27     0     3  2006           0                        16
+    ## # ℹ 5,247 more rows
+    ## # ℹ 8 more variables: base_chapter2_3_adjustments <dbl>, all_adjustments <dbl>,
+    ## #   grid_cell <chr>, mandatory_min <lgl>, gov_departures <lgl>, district <chr>,
+    ## #   race <chr>, criminal_history <dbl>
 
 **To add**: - what do we divide by? - You may look at this plot and say
 that whites are sentenced at the federal district court more than black
@@ -918,24 +965,24 @@ Bringing in the spatial district files
 - Other potential things to mention (the affect of aggregation and
   spatial scale).
 
-### 4.7.2 What
+### 5.0.1 What
 
 Moving on to answering the “What?” question about our data. You might
 have guessed that `sentence_length` and `mandatory_min` are the
 variables that fall under this category.
 
-#### 4.7.2.1 How does sentence length correlate with criminal history?
+#### 5.0.1.1 How does sentence length correlate with criminal history?
 
 Sentence lengths and how do they relate to policy?
 
-When we are exploring the distribution of a dataset can we can use a
+When we are exploring the distribution of a data set can we can use a
 number of different plots. To better understand sentence length data,
 we’ll display a histogram for this quantitative variable. A histogram
 gives us a visual representation of the frequency of values. With R, we
 can change the width of each bin or choose a number of bins, and then
 the plot shows us how many sentences fell within each bin range.
 
-##### 4.7.2.1.1 Histogram
+##### 5.0.1.1.1 Histogram
 
 ``` r
 ggplot(us_sent) +
@@ -947,9 +994,9 @@ ggplot(us_sent) +
   geom_vline(aes(xintercept = 240), color = "red", linetype = 2)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
-##### 4.7.2.1.2 Histogram
+##### 5.0.1.1.2 Histogram
 
 ``` r
 ggplot(us_sent) +
@@ -962,7 +1009,7 @@ ggplot(us_sent) +
   labs(title = "Distribution of number of individuals by ")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 We observe a high frequency over 0, meaning that many individuals who
 are convicted may in fact receive a sentence of 0 months. At the other
@@ -973,7 +1020,7 @@ or possibly a life sentence.
 $$could further discuss skew, peaks and relate to sentencing table,
 etc.$$
 
-##### 4.7.2.1.3 Violin Plot
+##### 5.0.1.1.3 Violin Plot
 
 Violin plots are another way of showing the distribution data.
 
@@ -987,9 +1034,9 @@ ggplot(us_sent) +
        x = "Criminal History")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
-##### 4.7.2.1.4 Ridge plot
+##### 5.0.1.1.4 Ridge plot
 
 ``` r
 ggplot(us_sent) +
@@ -1011,9 +1058,9 @@ ggplot(us_sent) +
 
     ## Picking joint bandwidth of 5.47
 
-![](master_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
-#### 4.7.2.2 What is the relationship between `all_adjustments` and `sentence_length`?
+#### 5.0.1.2 What is the relationship between `all_adjustments` and `sentence_length`?
 
 ``` r
 ggplot(us_sent) +
@@ -1026,7 +1073,7 @@ ggplot(us_sent) +
   scale_color_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
 ggplot(us_sent) +
@@ -1038,9 +1085,9 @@ ggplot(us_sent) +
   scale_color_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
-#### 4.7.2.3 How does the age range vary with criminal history?
+#### 5.0.1.3 How does the age range vary with criminal history?
 
 ``` r
 ggplot(us_sent) +
@@ -1054,9 +1101,9 @@ ggplot(us_sent) +
 
     ## Picking joint bandwidth of 0.989
 
-![](master_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
-### 4.7.3 When
+### 5.0.2 When
 
 Let’s explore the time data found in our US sentencing data set. How
 many columns of data did we have again? This seems like a good place to
@@ -1189,7 +1236,7 @@ ggplot(us_sent, aes(x = sentence_length,
 
 ![](master_files/figure-gfm/graph%20our%20year%20data-%20scatter%20plot-1.png)<!-- -->
 
-### 4.7.4 Where
+### 5.0.3 Where
 
 Let’s check what districts we have in the data. We can do this using
 `distinct(district)`.
@@ -1212,7 +1259,7 @@ us_sent %>%
     ##  8 New York East   
     ##  9 New York North  
     ## 10 New York South  
-    ## # … with 83 more rows
+    ## # ℹ 83 more rows
 
 You’ll notice that certain states are a single district on their own.
 Other larger states are split into several districts (e.g. New York
@@ -1225,7 +1272,7 @@ live in?
 district their town/city is in.
 
 We can use `distinct` to figure out what distinct districts we have in
-our dataset, but we are also interested in finding out how many
+our data set, but we are also interested in finding out how many
 sentences were made in each district and we will want to think about
 this question in relation to the population of those districts, which
 can be quite nuanced and we will come back to this later.
@@ -1248,67 +1295,67 @@ the question “Where did those sentences occur?” in a visual way.
 - We may also want to reverse the order to see the districts which have
   the most sentences at the top of our plot using `fct_rev`.
 
-#### 4.7.4.1 Number of individuals sentences across districts
+#### 5.0.3.1 Number of individuals sentences across districts
 
-##### 4.7.4.1.1 Base Bar Plot
+##### 5.0.3.1.1 Base Bar Plot
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(x = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
-##### 4.7.4.1.2 District on the y-axis
+##### 5.0.3.1.2 District on the y-axis
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(y = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
-##### 4.7.4.1.3 Ordered by number of sentences
+##### 5.0.3.1.3 Ordered by number of sentences
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(y = fct_infreq(district)))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
-##### 4.7.4.1.4 Ordering from high to low
+##### 5.0.3.1.4 Ordering from high to low
 
 ``` r
 ggplot(us_sent) +
   geom_bar(aes(y = fct_rev(fct_infreq(district))))
 ```
 
+![](master_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+
+##### 5.0.3.1.5 Add title and axes labels
+
+``` r
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
+```
+
+![](master_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+
+##### 5.0.3.1.6 Making the plot more readable with subsetting
+
+``` r
+ggplot(us_sent) +
+  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
+  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+       y = "Federal District Court",
+       x = "Number of individuals")
+```
+
 ![](master_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
-
-##### 4.7.4.1.5 Add title and axes labels
-
-``` r
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-       y = "Federal District Court",
-       x = "Number of individuals")
-```
-
-![](master_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
-
-##### 4.7.4.1.6 Making the plot more readable with subsetting
-
-``` r
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-       y = "Federal District Court",
-       x = "Number of individuals")
-```
-
-![](master_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 ``` r
 ggplot(us_sent) +
@@ -1318,9 +1365,9 @@ ggplot(us_sent) +
        x = "Number of individuals")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
-##### 4.7.4.1.7 Exploring the census data
+##### 5.0.3.1.7 Exploring the census data
 
 **To Do**:
 
@@ -1337,7 +1384,7 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 ## guide to spatial units: https://api.census.gov/data/2016/acs/acs5/geography.html
 ## variable of interest --> population
 ## vars <- load_variables(year = 2013,
-                      # dataset = "acs5",
+                      # data set = "acs5",
                       # cache = TRUE)
 
 # B02001_001: Total
@@ -1353,9 +1400,9 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 #census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
 ```
 
-# 5 Statiscal Modeling Approach
+# 6 Statiscal Modeling Approach
 
-## 5.1 How to make a scatter plot with quantitative variables
+## 6.1 How to make a scatter plot with quantitative variables
 
 In this first plot, we will look at numerical variables only. We will
 see how each penguin’s flipper length relates to its body mass.
@@ -1375,11 +1422,11 @@ ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point(color='co
 
     ## Warning: Removed 2 rows containing missing values (`geom_point()`).
 
-![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
-## 5.2 What happens when you try to make a scatter plot with categorical variables?
+## 6.2 What happens when you try to make a scatter plot with categorical variables?
 
 We just created a scatter plot with two numerical variables. Now we will
 see what happens if one variable is numerical and the other is
@@ -1392,7 +1439,7 @@ ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point(color='coral2
 
     ## Warning: Removed 2 rows containing missing values (`geom_point()`).
 
-![](master_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
@@ -1404,7 +1451,7 @@ against species (both categorical variables).
 ggplot(penguins, aes(x=species, y=sex)) + geom_point(color='coral2', alpha=0.7)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
 What do you notice in this scatter plot? What do you wonder?
 
@@ -1415,7 +1462,7 @@ variables frequency tables or bar graphs are a better visualization to
 use. In the remainder of this lesson we will focus on comparisons where
 we have *at least one numerical variable*.
 
-## 5.3 Fitting Lines to Data
+## 6.3 Fitting Lines to Data
 
 Suppose we want to predict how much electricity the city of Los Angeles,
 California will use based on the daily temperature. As the temperature
@@ -1453,9 +1500,9 @@ twoplot <- ggplot(twopoints, aes(x=xvals, y=yvals)) +
 twoplot
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
-### 5.3.1 Analytically Fit a Line to Two Points
+### 6.3.1 Analytically Fit a Line to Two Points
 
 In order to create a linear regression on these two points, we can think
 back to algebra and use the formula for a line.
@@ -1488,9 +1535,9 @@ slope and the intercept.
 twoplot + geom_abline(slope=3/2, intercept = 1/2)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
-### 5.3.2 Numerically Fit a Line to Two Points
+### 6.3.2 Numerically Fit a Line to Two Points
 
 ``` r
 twolinear <- lm(formula = yvals ~ xvals, data=twopoints)
@@ -1533,7 +1580,7 @@ ncol=3
 )
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-40-1.png)<!-- --> Notice in
+![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- --> Notice in
 all three graphs above, we can’t draw a straight line through all three
 points at the same time. The best that we can do is try to find a line
 that gets very close to all theree points, or fits these three points
@@ -1548,7 +1595,7 @@ our data set we have the points (1,2), (2,3), and (3,5) so the only
 actual values for y in our data set are 2,3, and 5 even though our
 prediction line (our model) takes on all values of y between 0 and 6.
 
-### 5.3.3 Numerically Fit a Line to Three Points
+### 6.3.3 Numerically Fit a Line to Three Points
 
 To find the model that best fits our data, we want to make the error as
 small as possible. Linear regression is a techique that allows us to
@@ -1580,7 +1627,7 @@ ggplot(threepoints, aes(x=xvals, y = yvals)) +
   geom_segment(aes(xend = xvals, yend = linfit), color='coral2')
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-42-1.png)<!-- --> Notice that
+![](master_files/figure-gfm/unnamed-chunk-40-1.png)<!-- --> Notice that
 the best fit linear model doesn’t go through any of our three points!
 **Why do you think that is?**
 
@@ -1590,7 +1637,7 @@ predicted y value and the actual y value) is shown on the graph. Of the
 four plots we just made of lines through our three data points, which
 looks like it has the smallest error?
 
-## 5.4 Fitting a Line to Many Points: Linear Regression!
+## 6.4 Fitting a Line to Many Points: Linear Regression!
 
 Now let’s go back to our penguins data. Do you think a linear model
 might be a good way to model the data? Run the code below to create a
@@ -1604,7 +1651,7 @@ pengscat
 
     ## Warning: Removed 2 rows containing missing values (`geom_point()`).
 
-![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- --> Take a look
+![](master_files/figure-gfm/unnamed-chunk-41-1.png)<!-- --> Take a look
 at the scatterplot, does it look like most of the data fall along a
 straight line? If the general shape is a line, then yes, we should try
 to model this data with linear regression line.
@@ -1632,10 +1679,10 @@ pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
 
     ## Warning: Removed 2 rows containing missing values (`geom_point()`).
 
-![](master_files/figure-gfm/unnamed-chunk-45-1.png)<!-- --> - still need
+![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- --> - still need
 how to evaluate whether we have a good model R^2
 
-## 5.5 Categorical Data to Numerical Representations
+## 6.5 Categorical Data to Numerical Representations
 
 So that we can analyze the sentencing data that we looked at earlier, we
 will need to explore scatterplots where only on variable is numerical
@@ -1657,7 +1704,7 @@ adelieplot
 
     ## Warning: Removed 2 rows containing missing values (`geom_point()`).
 
-![](master_files/figure-gfm/unnamed-chunk-46-1.png)<!-- --> Next, we
+![](master_files/figure-gfm/unnamed-chunk-44-1.png)<!-- --> Next, we
 create a linear model for the relationship between flipper length and
 whether a penguin is an Adelie penguin or not.
 
@@ -1689,7 +1736,7 @@ adelieplot + geom_abline(slope=-19.35, intercept=209.45)
 
     ## Warning: Removed 2 rows containing missing values (`geom_point()`).
 
-![](master_files/figure-gfm/unnamed-chunk-48-1.png)<!-- --> Now we do
+![](master_files/figure-gfm/unnamed-chunk-46-1.png)<!-- --> Now we do
 the same thing for the other two species (Chinstrap and Gentoo) and plot
 all three graphs side by side.
 
@@ -1718,7 +1765,7 @@ grid.arrange(aplot, cplot, gplot, ncol=3)
     ## Removed 2 rows containing missing values (`geom_point()`).
     ## Removed 2 rows containing missing values (`geom_point()`).
 
-![](master_files/figure-gfm/unnamed-chunk-49-1.png)<!-- --> What would
+![](master_files/figure-gfm/unnamed-chunk-47-1.png)<!-- --> What would
 happen if instead of creating linear models for each level of the
 categorical variable separately, we created a single linear model for
 flipper length versus all species types? The code below allows us to
@@ -1775,7 +1822,7 @@ head(peng_encoded)
     ## # ℹ 6 more variables: isAdelie <dbl>, isChinstrap <dbl>, isGentoo <dbl>,
     ## #   Adelie <dbl>, Chinstrap <dbl>, Gentoo <dbl>
 
-# 6 Results
+# 7 Results
 
 With all of our work constructing the regression complete, we are now
 ready to interpret the results of Table 1. The baseline model assumes
