@@ -426,24 +426,29 @@ Nice, we can see that our `year` data is indeed a double precision floating poin
 
 Let's do a graph of our `year` data, where we have each year on the vertical y axis and the sentences on the horizontal x axis.  
 
-```{r Bar chart of year data}
+```{r Bar chart of year data, fig.width = 6, fig.height = 5}
 ggplot(us_sent) +
-  geom_bar(aes(y = year)) %>% 
-  
+  geom_bar(aes(y = year)) +
+  labs(title = "Observations by Year",
+       x = "Count",
+       y = "Year")
 ```
 
 
 If we wanted to use a scatter plot, which could be a bit 'messier', one way to do so would be to use `geom_point()` again:
 
-```{r graph our year data- scatter plot}
+```{r graph our year data- scatter plot, fig.width = 6, fig.height = 5}
 ggplot(us_sent, aes(x = sentence_length, 
                     y = year)) + 
-  geom_point()
+  geom_point() +
+  labs(title = "Observations by Year",
+       x = "Count",
+       y = "Year")
 ```
 
 ### Where
 
-Let's check what districts we have in the data. We can do this using `distinct(district)`.
+Now that we've explored the "who?", "what?", and "when?" questions about our data set, let's finish off our EDA by understanding the "where?" question. Let's check what districts we have in the data. We can do this using `distinct()` again.
 
 ```{r}
 us_sent %>%
@@ -452,11 +457,11 @@ us_sent %>%
 
 You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North).  
 
-Q: If you live in the United States, can you identify which district you live in?
+If you live in the United States, do you know which district you live in?
 
-**To Do** Add a link to a reference where someone could also find which district their town/city is in.
+If not, you can look it up at [the United States Department of Justice's website](https://www.justice.gov/ust/locate-your-judicial-district).
 
-We can use `distinct` to figure out what distinct districts we have in our data set, but we are also interested in finding out how many sentences were made in each district and we will want to think about this question in relation to the population of those districts, which can be quite nuanced and we will come back to this later.
+Apart from using `distinct` to figure out what districts we have in our data set,  we are also interested in finding out how many sentences were made in each district. We also will want to think about this question in relation to the population of those districts, which can be quite nuanced and we will come back to this later.
 
 Our goals in this next section are to think about ways we can explore the question "Where did those sentences occur?" in a visual way.
 
