@@ -1,38 +1,8 @@
-# Statiscal Modeling Approach
+---
+output: html_document
+---
 
-## How to make a scatter plot with quantitative variables
-
-In this first plot, we will look at numerical variables only. We will see how each penguin's flipper length relates to its body mass.
-
-Each dot in the scatter plot we produce with the ggplot command represents a row in our penguin data. Scatter plots help us to visualize and understand numerical data better. We will compare each penguin's body mass to their flipper length through visualization and observation. We will use this scatterplot to identify any patterns that exist in our penguin data set.
-
-%%%%%%%%% come back to this to explain R code %%%%%%%%%%%
-
-```{r}
-ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
-```
-
-What do you notice in this scatter plot? What do you wonder?
-
-## What happens when you try to make a scatter plot with categorical variables?
-
-We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical? Run the code below that plots species (a categorical variable) against flipper length (a numerical variable).
-
-```{r}
-ggplot(penguins, aes(x=species, y=flipper_length_mm)) + geom_point(color='coral2', alpha=0.7)
-```
-
-What do you notice in this scatter plot? What do you wonder?
-
-Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex against species (both categorical variables).
-
-```{r}
-ggplot(penguins, aes(x=species, y=sex)) + geom_point(color='coral2', alpha=0.7)
-```
-
-What do you notice in this scatter plot? What do you wonder?
-
-Scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables or bar graphs are a better visualization to use. In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
+# Analysis
 
 ## Fitting Lines to Data
 
