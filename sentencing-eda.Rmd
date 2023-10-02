@@ -129,7 +129,7 @@ As you may have noted, scatter plots of two categorical variables are not that u
 
 # Explanatory Data Analysis
 <!-- - explain the different columns (linking to the background) -->
-Now, let's return to exploring the variables of interest. Remember, we want to know *who* is in our data set, *what* the sentence was, *when* the individual was sentenced and *where* the sentence occurred. Did you identify some of the variables that might correspond with each of these questions? You might have classified the variables as follows: 
+Now, let's return to exploring the variables of interest. Remember, we want to know *who* is in our data set, *what* the sentence was, *when* the individual was sentenced and *where* the sentence occurred. Did you identify how our variables might correspond with each of these questions? You might have classified the variables as follows: 
 
 <!-- https://www.nature.com/articles/s41599-023-01879-5 -->
 
@@ -142,8 +142,11 @@ Now, let's return to exploring the variables of interest. Remember, we want to k
 | `criminal_history` | |||
 | `guilty_plea` | |||
 
+Let's start exploring the variables that fall under each of these key questions.
 
-#### Sex 
+## Who
+
+**Sex**
 
 Remember that `sex` has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female". We can confirm this using `distinct()`, a function that displays all unique values under a specified column. 
 
@@ -152,9 +155,9 @@ us_sent %>%
   distinct(sex)
 ```
 
-We can recode this variable using `mutate` and `case_when`, so that we simply see the words "Male" and "Female", rather than the coded numbers. Let's also use `ggplot()` to view the distribution
+We can recode this variable using `mutate` and `case_when`, so that we simply see the words "Male" and "Female", rather than the coded numbers. Let's also use `ggplot()` to view the distribution of `sex` within our data set, this time using `geom_bar()` to display the data in a bar graph. Another difference from when we made a scatter plot above using `geom_point()` is that we are adding `fill` to make sure the bars in the bar graph are colored in. We can also add `scale_fill_viridis_d()` to automatically apply a certain color scheme to our plot.
 
-```{r}
+```{r sex of sentenced individuals, fig.width = 5, fig.height = 5}
 us_sent %>%
   mutate(sex = case_when(sex == 0 ~ "Male",
                          sex == 1 ~ "Female")) %>%
@@ -167,17 +170,20 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-#### Race
+From this graph, we can see that there are far more males than females in our data set. 
 
-Now let's explore the `race` variable in a similar way. 
+**Race**
+
+Let's continue exploring through turning toward the `race` variable. We will start our exploration of `race` by using `distinct`.
 
 ```{r}
 us_sent %>%
   distinct(race)
 ```
 
+We can once again use `ggplot()` to make a bar graph displaying the `race` variable. We can make use of `fct_infreq()` when choosing `race` as our x variable, which makes sure the bars in the plot are ordered by largest to smallest from left to right. 
 
-```{r}
+```{r race of sentenced individuals, fig.width = 5, fig.height = 5}
 us_sent %>%
   mutate(race = case_when(race == "other" ~ "ari",
                          TRUE ~ race)) %>%
@@ -190,18 +196,20 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-#### Race and Sex
+**Race and Sex**
 
 Now let's look at how `race` and `sex` relate to one another. First, let's look at the number of people in each combination using `count` again. 
 
 ```{r}
 us_sent %>%
+  mutate(sex = case_when(sex == 0 ~ "Male",
+                         sex == 1 ~ "Female")) %>% 
   count(race, sex)
 ```
 
-We can represent these two variables using a bar graph. Once again we will use `ggplot` to create this plot... 
+We can represent these two variables using a bar graph. Once again we will use `ggplot` to create this plot. This time, since we are creating a bar graph displaying two different variables, we can define `race` as the x variable and have the colors of the bar graph correspond to the `sex` variable. 
 
-```{r}
+```{r, , fig.width = 5, fig.height = 5}
 us_sent %>%
   mutate(race = case_when(race == "other" ~ "ari",
                          TRUE ~ race)) %>%
@@ -216,11 +224,9 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-#### Proportional Race and Sex
+We can also create a proportional bar plot. All we need to add to our previous `ggplot()` is `position = "fill"` within `geom_bar()`. 
 
-We can also create a proportional bar plot. 
-
-```{r}
+```{r, fig.width = 5, fig.height = 5}
 us_sent %>%
   mutate(race = case_when(race == "other" ~ "ari",
                          TRUE ~ race)) %>%
@@ -235,13 +241,18 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-#### Age
+**Age**
 
 We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont. We can use the `filter` command to look at only these three districts of interest. 
 
-```{r}
+```{r, eval = FALSE}
 us_sent %>%
-  filter(district %in% c("Maine", "Rhode Island", "Vermont"))
+  filter(district %in% c("Maine", "Rhode Island", "Vermont")) %>%  
+  ggplot() +
+  geom_bar(aes(x = age, fill = district)) +
+  labs(title = "Age in Maine, Rhode Island, and Vermont",
+       x = "Age",
+       y = "Count")
 ```
 
 
@@ -263,17 +274,17 @@ Bringing in the spatial district files
 
 ### What
 
-Moving on to answering the "What?" question about our data. You might have guessed that `sentence_length` and `mandatory_min` are the variables that fall under this category. 
+Now that we explored the "Who?" question about our data, let's move on to answering the "What?" question. You might have guessed that `sentence_length` and `mandatory_min` are the variables that fall under this category. 
 
 #### How does sentence length correlate with criminal history? {.tabset}
 
-Sentence lengths and how do they relate to policy?
+> How do sentence lengths relate to policy? <!--- insert blurb here? -->
 
-When we are exploring the distribution of a data set can we can use a number of different plots. To better understand sentence length data, we’ll display a histogram for this quantitative variable. A histogram gives us a visual representation of the frequency of values. With R, we can change the width of each bin or choose a number of bins, and then the plot shows us how many sentences fell within each bin range.
+To better understand `sentence_length`, we’ll display a histogram for this quantitative variable. A histogram gives us a visual representation of the frequency of values. With R, we can change the width of each bin or choose a number of bins, and then the plot shows us how many sentences fell within each bin range.
 
 ##### Histogram
 
-```{r}
+```{r, fig.width = 6, fig.height = 5}
 ggplot(us_sent) +
   geom_histogram(aes(x = sentence_length), binwidth = 12) +
   labs(x = "Sentence length in months", y = "Number of individuals")  +
@@ -285,7 +296,7 @@ ggplot(us_sent) +
 
 ##### Histogram
 
-```{r}
+```{r, fig.width = 6, fig.height = 5}
 ggplot(us_sent) +
   geom_histogram(aes(x = sentence_length/12), binwidth = 1) +
   labs(x = "Sentence length in years", y = "Number of individuals") +
@@ -307,7 +318,7 @@ We observe a high frequency over 0, meaning that many individuals who are convic
 
 Violin plots are another way of showing the distribution data.
 
-```{r}
+```{r, fig.width = 6, fig.height = 5}
 ggplot(us_sent) +
   geom_violin(aes(x = as.factor(criminal_history), 
                   y = sentence_length, 
@@ -320,7 +331,7 @@ ggplot(us_sent) +
 
 ##### Ridge plot
 
-```{r}
+```{r, fig.width = 6, fig.height = 5}
 ggplot(us_sent) +
   geom_density_ridges(aes(y = as.factor(criminal_history),
                           x = sentence_length,
@@ -341,7 +352,7 @@ ggplot(us_sent) +
 
 #### What is the relationship between `all_adjustments` and `sentence_length`?
 
-```{r}
+```{r, fig.width = 7, fig.height = 6}
 ggplot(us_sent) +
   geom_point(aes(y = sentence_length,
                  x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
@@ -352,7 +363,7 @@ ggplot(us_sent) +
   scale_color_viridis_d()
 ```
 
-```{r}
+```{r, fig.width = 6, fig.height = 5}
 ggplot(us_sent) +
   geom_point(aes(y = sentence_length,
                  x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
@@ -364,7 +375,7 @@ ggplot(us_sent) +
 
 #### How does the age range vary with criminal history?
 
-```{r}
+```{r, , fig.width = 6, fig.height = 5}
 ggplot(us_sent) +
   geom_density_ridges(aes(y = as.factor(criminal_history),
                           x = age,
@@ -382,29 +393,29 @@ Let's explore the time data found in our US sentencing data set. How many column
 Do we remember?
 
 
-We do remember; we can use the `names()` routine to remind ourselves.
+We do remember: we can use the `names()` routine to remind ourselves.
 
 
 ```{r check the columns, i.e. names}
 names(us_sent)
 ```
 
-We can see the fifteen column names in that output.  Awesome.  Looks like our time data, as far as 'when' these convicted individuals in our data were convicted, is in the `year` column.  Let's see what we're working with here.  Let's use the pipe `distinct()` routine again.
+We can see the fifteen column names in that output. Awesome. It looks like our time data, as far as "when" these convicted individuals in our data were convicted, is in the `year` column. Let's see what we're working with here by using `distinct()` again.
 
 ```{r Segregate and list the data in the column year}
-us_sent %>% distinct(year)
+us_sent %>% 
+  distinct(year)
 ```
 
-Excellent. So we have years from 2006 to 2020 in our data, or 15 rows worth of data.  It is worth noticing that although 2020-2006 = 14, when we count each year as a whole year of data 'inclusively', we have 15 distinct instances, which the distinct command helpfully listed out for us.
+Excellent. So we know we have years from 2006 to 2020 in our data, or 15 rows worth of data.  It is worth noticing that although 2020-2006 = 14, when we count each year as a whole year of data *inclusively*, we have 15 distinct instances, which the distinct command helpfully listed out for us.
 
-Now each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the `sapply()` routine.
-
+Now, each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the `sapply()` routine again.
 
 ```{r}
 sapply(us_sent, is.numeric)
 ```
 
-In the output we can indeed see `TRUE` for the column `year`.  As we progress in our educational journey, learn about different numeric variables, including double precision floating point arithmetic numeric variables.  Is our `year` data in this format? Let's use the same command with a different argument:
+In the output we can indeed see `TRUE` for the column `year`. As we progress in our educational journey, we will learn about different numeric variables, including double precision floating point arithmetic numeric variables. Is our `year` data in this format? Let's use the same command with a different argument:
 
 
 ```{r use sapply() to verify the year data is indeed numero}
@@ -413,17 +424,17 @@ sapply(us_sent, is.double)
 
 Nice, we can see that our `year` data is indeed a double precision floating point number.
 
-
-Let's do a graph of our `year` data, where we have each year on the vertical (y) axis and the sentences on the horizontal (x) axis.  
+Let's do a graph of our `year` data, where we have each year on the vertical y axis and the sentences on the horizontal x axis.  
 
 ```{r Bar chart of year data}
 ggplot(us_sent) +
-  geom_bar(aes(y = year))
+  geom_bar(aes(y = year)) %>% 
+  
 ```
 
 
+If we wanted to use a scatter plot, which could be a bit 'messier', one way to do so would be to use `geom_point()` again:
 
-If we wanted to use a scatter plot, which could be a bit 'messier', one way to do so would be:
 ```{r graph our year data- scatter plot}
 ggplot(us_sent, aes(x = sentence_length, 
                     y = year)) + 
