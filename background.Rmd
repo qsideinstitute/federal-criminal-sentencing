@@ -73,7 +73,7 @@ The variable `all_adjustments` is a rating of the offense level (how severe the 
 Apart from `criminal_history` and `all_adjustments`, there are several variables related to identity of defendants: 
 
 * `age`, which refers to a defendant's age in years.
-* `sex`, which has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female". FINISH EXPLAINING HERE.
+* `sex`, which has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female". 
 * `educ`, which refers to a defendant's educational attainment which consists of 4 levels (1 refers to a defendant having less than high school graduation, 3 refers to a high school graduate, 5 means having some college, and 6 means college graduate), and 
 * `race`, which refers to a defendant's race and has levels "black", "hispanic", "white" and "other".
 
@@ -86,15 +86,17 @@ A key motivation for this work is exploring how our personal and racial identiti
 - Discuss difference between sex and gender
 - Discuss who has defined this variable and why this is problematic
 - Discuss the limitations and how this affects the analysis and inferences we can make.
-- Update sex label with more appropriate label based on Background research. -->
+- Update sex label with more appropriate label based on Background research. 
+
+Also to add: explaining why we are going to use "ARI" rather than "other" for the race category -->
 
 The nine other variables in the dataset refer to information about the court cases themselves: 
 
 * `year`, which describes the year in which the court case took place, 
 * `sentence_length`, the length prescribed to a defendant in months,
 * `guilty_plea`, where 0 means the defendant did not plead guilty and 1 means the defendant did plead guilty, <!-- check this! -->
-* `grid_cell`, 
-* `mandatory_min`, 
-* `gov_departures`, and 
+* `grid_cell`, which is a term that represents the interaction between `criminal_history` and `all_adjustments`,
+* `mandatory_min`, which signifies whether or not the court case included a mandatory minimum sentence, 
+* `gov_departures`, which tracks government sponsored downward departures, and 
 * `district`, which refers to the district where the trial took place. 
 
