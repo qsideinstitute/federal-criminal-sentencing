@@ -399,7 +399,7 @@ variables related to identity of defendants:
 
 - `age`, which refers to a defendant’s age in years.
 - `sex`, which has been coded as a binary variable 0 and 1, where 0 is
-  “Male” and 1 is “Female”. FINISH EXPLAINING HERE.
+  “Male” and 1 is “Female”.
 - `educ`, which refers to a defendant’s educational attainment which
   consists of 4 levels (1 refers to a defendant having less than high
   school graduation, 3 refers to a high school graduate, 5 means having
@@ -429,7 +429,8 @@ July 20, 2023). `sex` has been coded as a binary variable 0 and 1, where
 - Discuss difference between sex and gender
 - Discuss who has defined this variable and why this is problematic
 - Discuss the limitations and how this affects the analysis and inferences we can make.
-- Update sex label with more appropriate label based on Background research. -->
+- Update sex label with more appropriate label based on Background research. 
+&#10;Also to add: explaining why we are going to use "ARI" rather than "other" for the race category -->
 
 The nine other variables in the dataset refer to information about the
 court cases themselves:
@@ -438,9 +439,12 @@ court cases themselves:
 - `sentence_length`, the length prescribed to a defendant in months,
 - `guilty_plea`, where 0 means the defendant did not plead guilty and 1
   means the defendant did plead guilty, <!-- check this! -->
-- `grid_cell`,
-- `mandatory_min`,
-- `gov_departures`, and
+- `grid_cell`, which is a term that represents the interaction between
+  `criminal_history` and `all_adjustments`,
+- `mandatory_min`, which signifies whether or not the court case
+  included a mandatory minimum sentence,
+- `gov_departures`, which tracks government sponsored downward
+  departures, and
 - `district`, which refers to the district where the trial took place.
 
 # 4 Data exploration
@@ -716,7 +720,7 @@ glimpse(us_sent)
     ## $ race                        <chr> "white", "black", "black", "black", "black…
     ## $ criminal_history            <dbl> 5, 4, 2, 3, 5, 1, 5, 6, 4, 1, 1, 1, 2, 1, …
 
-Great! It worked, `sex` is now of the `fct` data type. Now we can use
+Great! It worked. `sex` is now of the `fct` data type. Now we can use
 this process to change the rest of the variables with incorrect data
 types. You can see that we don’t always need to add labels, just when we
 think it might be useful.
@@ -1508,60 +1512,11 @@ ggplot(us_sent) +
 
 ![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
-<!--##### Making the plot more readable with subsetting
-&#10;
-```r
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-       y = "Federal District Court",
-       x = "Number of individuals")
-
-![](master_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
-
-    ``` r
-    ggplot(us_sent) +
-      geom_bar(aes(y = fct_infreq(district))) +
-      labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-           y = "Federal District Court",
-           x = "Number of individuals")
-
-![](master_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
-
-##### 5.4.0.1.6 Exploring the census data
-
-**To Do**:
-
-- If we want to get out the district populations, we will probably need
-  to download the data by the county level.
-- Decision points: we could download the data in categories by age and
-  sex and race: e.g. 5-9, 10-14 etc. This might get a little
-
-``` r
-# apply unique census api key
-census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
-
-# import census data
-## guide to spatial units: https://api.census.gov/data/2016/acs/acs5/geography.html
-## variable of interest -> population
-## vars <- load_variables(year = 2013,
-                      # data set = "acs5",
-                      # cache = TRUE)
-
-# B02001_001: Total
-# B03002_003: White alone (Not Hispanic or Latino)
-# B03002_004 Black or African American alone (Not Hispanic or Latino)
-# B03002_012: Hispanic or Latino
-# B03002_005: Native American alone (Not Hispanic or Latino)
-# B03002_006: Asian alone (Not Hispanic or Latino)
-# B03002_007: Native Hawaiian or Pacific Islander alone (Not Hispanic or Latino)
-# B03002_009: Multiple Races (Not Hispanic or Latino)
-# B03002_008: Other (Not Hispanic or Latino)
-
-#census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
-```
-
-–\>
+<!--##### Making the plot more readable with subsetting -->
+<!--##### Exploring the census data
+&#10;**To Do**:
+&#10;- If we want to get out the district populations, we will probably need to download the data by the county level.
+- Decision points: we could download the data in categories by age and sex and race: e.g. 5-9, 10-14 etc. This might get a little -->
 
 # 6 Analysis
 

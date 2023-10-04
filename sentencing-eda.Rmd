@@ -624,7 +624,7 @@ ggplot(us_sent) +
        x = "Number of individuals")
 ```
 
-```{r}
+```{r, include = FALSE, eval = FALSE}
 ggplot(us_sent) +
   geom_bar(aes(y = fct_infreq(district))) +
   labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
