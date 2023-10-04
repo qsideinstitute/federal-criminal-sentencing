@@ -57,13 +57,37 @@ Can you guess which variables pertain to each question? Let's inspect our variab
 
 What is halfway between 0 and 1? It is 1/2. What is halfway between horse and dog? There is no such thing! Thinking about each type of data is very important so that we don't code silly things like the mean of animal species.
 
-There are two main types of data: **categorical data** and **numerical data**. Some examples of categorical data would be color, ethnicity, employment status, or states/countries. These have unique values, like California or Oregon. In other words, categorical variables take on discrete, finite values. 
+There are two main types of data: **categorical data** and **numerical data**. Some examples of categorical data would be color, ethnicity, employment status, or states/countries. These have unique values, like California or Oregon. In other words, categorical variables take on discrete, finite values. In R, these variables might show up as characters (`chr`), `TRUE` or `FALSE` statements which are called logical vectors (`lgl`), coded as the integers (`int`) 0 and 1, or factors (`fct`).
 
-On the other hand, numerical data is in number form. Some examples of numerical data are temperature, height, and salary. It makes perfect sense to be 165.8 cm tall or for the temperature to be 82.4 degrees outside.
+On the other hand, numerical data is in number form. Some examples of numerical data are temperature, height, and salary. It makes perfect sense to be 165.8 cm tall or for the temperature to be 82.4 degrees outside. In R, these variables might show up as doubles (`dbl`) or integers (`int`). 
 
 There are some confusing data types that use numbers to *represent* categorical data, like zip code. You may live in the zip code 90201, which is a number, but you can't live in the zip code 90210.3. Only whole numbers, and specific ones at that, make sense here. We will learn more about using numbers to represent categorical data in this lesson.
 
 Can you identify which data type each variable in the federal criminal sentencing data is?
+
+You may notice that some variables' data types are not what you would expect. Oftentimes, R will automatically assign data types to variables in ways you don't want. To deal with this, we can change the data types of variables using two important functions: `mutate()` and `factor()`. 
+
+Let's take the variable `sex`, for example, which we know has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female". We can see that `sex` is currently classified as a `dbl`, but we want to change that to the `fct` data type. You can think of `mutate()` as being a function that essentially replaces the a column in the data set with a new one. In this case, we are replacing the `sex` variable column that is coded as `dbl`, with a new column of `sex` coded as `fct`. We can use the function `factor()` to specify the two levels of `sex`, 0 and 1, and labeling each level as "Male" and "Female" respectively. Using this process, we are telling R to consider `sex` to be a categorical variable with two levels. 
+
+
+```{r}
+us_sent <- us_sent %>% 
+  mutate(sex = factor(sex, levels = c(0,1),
+                      labels = c("Male", "Female")))
+```
+
+We can use this process to change the rest of the variables with incorrect data types. You can see that we don't always need to add labels, just when we think it might be useful. 
+
+```{r}
+us_sent <- us_sent %>% 
+  mutate(educ = factor(educ, levels = c(1, 3, 5, 6),
+                      labels = c("Less than HS", "HS Grad", "Some College", "College Grad")),
+         year = factor(year),
+         criminal_history = factor(criminal_history),
+         guilty_plea = factor(guilty_plea))
+```
+
+Now that we have our data types sorted out, we can start exploring the data!
 
 ## Explorations
 
@@ -110,9 +134,6 @@ What do you notice in this scatter plot? What do you wonder?
 Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex against species (both categorical variables).
 
 ```{r race by sex, fig.width = 6, fig.height = 6}
-us_sent1 <- us_sent %>% 
-  mutate(sex = as.factor(sex)) ## COME BACK TO THIS
-
 ggplot(us_sent1, aes(x = race,
                     y = sex)) + 
   geom_point(color = 'coral2', 
@@ -159,8 +180,6 @@ We can recode this variable using `mutate` and `case_when`, so that we simply se
 
 ```{r sex of sentenced individuals, fig.width = 5, fig.height = 5}
 us_sent %>%
-  mutate(sex = case_when(sex == 0 ~ "Male",
-                         sex == 1 ~ "Female")) %>%
   ggplot() +
   geom_bar(aes(x = sex, fill = sex)) +
   labs(x = "Sex*",
@@ -272,7 +291,7 @@ Bringing in the spatial district files
 - Other potential things to mention (the affect of aggregation and spatial scale).
 
 
-### What
+## What
 
 Now that we explored the "Who?" question about our data, let's move on to answering the "What?" question. You might have guessed that `sentence_length` and `mandatory_min` are the variables that fall under this category. 
 
@@ -385,7 +404,7 @@ ggplot(us_sent) +
        y = "Criminal History")
 ```
 
-### When
+## When
 
 Let's explore the time data found in our US sentencing data set. How many columns of data did we have again? This seems like a good place to start digging into what kind of time data we have in this data set. Which tool can we use to find out?
 
@@ -446,7 +465,7 @@ ggplot(us_sent, aes(x = sentence_length,
        y = "Year")
 ```
 
-### Where
+## Where
 
 Now that we've explored the "who?", "what?", and "when?" questions about our data set, let's finish off our EDA by understanding the "where?" question. Let's check what districts we have in the data. We can do this using `distinct()` again.
 
