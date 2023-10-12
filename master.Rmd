@@ -1,7 +1,7 @@
 ---
 title: "Federal District Courts and Race-Based Criminal Sentencing Disparities"
 subtitle: "Analysis with Linear Regression"
-author: "Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield"
+author: "Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield \n"
 date: "`r format(Sys.Date(),'%B %d, %Y')`"
 output:
   github_document:

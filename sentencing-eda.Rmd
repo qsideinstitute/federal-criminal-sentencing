@@ -2,7 +2,7 @@
 output: html_document
 ---
 
-# Data exploration
+# Explanatory Data Analysis
 
 Alright, let's start digging into the data. Whenever you are handed a new data set, you want to read in the data so you can view it in RStudio and perform an Exploratory Data Analysis (EDA). 
 
@@ -115,7 +115,7 @@ You can use the `View(us_sent)` function again to take a look at all the alterat
 
 Now that we have our data types sorted out, we can start exploring the data!
 
-## Explorations
+## Data Exploration Methods
 
 A good practice to do with a new data set is to explore it through visualization. We can get a sense of the distributions of the different variables and look at the relationships among different variables. We will walk through a few graphs in R so you can see how to plot. We will examine each of these so we can see relationships and learn more about our data. Then, explore on your own by modifying this code!
 
@@ -186,7 +186,7 @@ What do you notice in this scatter plot? What do you wonder?
 As you may have noted, scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables or bar graphs are a better visualization to use. In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
 
 
-# Explanatory Data Analysis
+## Federal Sentencing Data EDA
 <!-- - explain the different columns (linking to the background) -->
 Now, let's return to exploring the variables of interest. Remember, we want to know *who* is in our data set, *what* the sentence was, *when* the individual was sentenced and *where* the sentence occurred. Did you identify how our variables might correspond with each of these questions? 
 
@@ -205,7 +205,7 @@ You might have classified the variables as follows:
 
 Let's start exploring the variables that fall under each of these key questions.
 
-## Who
+### Who
 
 **Sex**
 
@@ -313,7 +313,7 @@ Bringing in the spatial district files
 - Other potential things to mention (the affect of aggregation and spatial scale). -->
 
 
-## What
+### What
 
 Now that we explored the "Who?" question about our data, let's move on to answering the "What?" question. You might have guessed that `sentence_length` and `mandatory_min` are the variables that fall under this category. 
 
@@ -472,7 +472,7 @@ ggplot(us_sent) +
        y = "Criminal History")
 ```
 
-## When
+### When
 
 Let's turn to the final question we are asking about our dataset, which is encompassed in the "When?" question. Specifically, let's explore the time data found in our US sentencing data set. How many columns of data did we have again? Which tool can we use to find out? Do we remember?
 
@@ -532,7 +532,7 @@ ggplot(us_sent, aes(x = year,
 ```
 <!-- could include more information on interpreting boxplots, explaining what outliers are, etc. would likely write about this above where we first introduce boxplots. We could also consider adding in information about examining center, spread, etc. -->
 
-## Where
+### Where
 
 Now that we've explored the "who?", "what?", and "when?" questions about our data set, let's finish off our EDA by understanding the "where?" question. Let's check what districts we have in the data. We can do this using `distinct()` again.
 

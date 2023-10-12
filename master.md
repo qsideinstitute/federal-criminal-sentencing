@@ -3,7 +3,8 @@ Federal District Courts and Race-Based Criminal Sentencing Disparities
 Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik,
 Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas
 Wakefield
-October 04, 2023
+
+October 12, 2023
 
 - [1 Acknowledgments](#1-acknowledgments)
 - [2 Introduction](#2-introduction)
@@ -13,11 +14,11 @@ October 04, 2023
   - [3.3 How federal sentencing works](#33-how-federal-sentencing-works)
   - [3.4 Introduction to the data](#34-introduction-to-the-data)
     - [3.4.1 Variable explanation](#341-variable-explanation)
-- [4 Data exploration](#4-data-exploration)
+- [4 Explanatory Data Analysis](#4-explanatory-data-analysis)
   - [4.1 Reading in the data](#41-reading-in-the-data)
   - [4.2 Structure of the data](#42-structure-of-the-data)
   - [4.3 Data Types](#43-data-types)
-  - [4.4 Explorations](#44-explorations)
+  - [4.4 Data Exploration Methods](#44-data-exploration-methods)
     - [4.4.1 How to make a scatter plot with quantitative
       variables](#441-how-to-make-a-scatter-plot-with-quantitative-variables)
     - [4.4.2 What happens when you try to make a scatter plot with
@@ -26,24 +27,24 @@ October 04, 2023
     - [4.4.3 What happens when you try to make a scatterplot with two
       catergoical
       variables?](#443-what-happens-when-you-try-to-make-a-scatterplot-with-two-catergoical-variables)
-- [5 Explanatory Data Analysis](#5-explanatory-data-analysis)
-  - [5.1 Who](#51-who)
-  - [5.2 What](#52-what)
-  - [5.3 When](#53-when)
-  - [5.4 Where](#54-where)
-- [6 Analysis](#6-analysis)
-  - [6.1 Fitting Lines to Data](#61-fitting-lines-to-data)
-    - [6.1.1 Analytically Fit a Line to Two
-      Points](#611-analytically-fit-a-line-to-two-points)
-    - [6.1.2 Numerically Fit a Line to Two
-      Points](#612-numerically-fit-a-line-to-two-points)
-    - [6.1.3 Numerically Fit a Line to Three
-      Points](#613-numerically-fit-a-line-to-three-points)
-  - [6.2 Fitting a Line to Many Points: Linear
-    Regression!](#62-fitting-a-line-to-many-points-linear-regression)
-  - [6.3 Categorical Data to Numerical
-    Representations](#63-categorical-data-to-numerical-representations)
-- [7 Results](#7-results)
+  - [4.5 Federal Sentencing Data EDA](#45-federal-sentencing-data-eda)
+    - [4.5.1 Who](#451-who)
+    - [4.5.2 What](#452-what)
+    - [4.5.3 When](#453-when)
+    - [4.5.4 Where](#454-where)
+- [5 Analysis](#5-analysis)
+  - [5.1 Fitting Lines to Data](#51-fitting-lines-to-data)
+    - [5.1.1 Analytically Fit a Line to Two
+      Points](#511-analytically-fit-a-line-to-two-points)
+    - [5.1.2 Numerically Fit a Line to Two
+      Points](#512-numerically-fit-a-line-to-two-points)
+    - [5.1.3 Numerically Fit a Line to Three
+      Points](#513-numerically-fit-a-line-to-three-points)
+  - [5.2 Fitting a Line to Many Points: Linear
+    Regression!](#52-fitting-a-line-to-many-points-linear-regression)
+  - [5.3 Categorical Data to Numerical
+    Representations](#53-categorical-data-to-numerical-representations)
+- [6 Results](#6-results)
 
 ------------------------------------------------------------------------
 
@@ -447,7 +448,7 @@ court cases themselves:
   departures, and
 - `district`, which refers to the district where the trial took place.
 
-# 4 Data exploration
+# 4 Explanatory Data Analysis
 
 Alright, let’s start digging into the data. Whenever you are handed a
 new data set, you want to read in the data so you can view it in RStudio
@@ -754,7 +755,7 @@ alterations we made to the dataset.
 Now that we have our data types sorted out, we can start exploring the
 data!
 
-## 4.4 Explorations
+## 4.4 Data Exploration Methods
 
 A good practice to do with a new data set is to explore it through
 visualization. We can get a sense of the distributions of the different
@@ -866,7 +867,7 @@ compare two categorical variables frequency tables or bar graphs are a
 better visualization to use. In the remainder of this lesson we will
 focus on comparisons where we have *at least one numerical variable*.
 
-# 5 Explanatory Data Analysis
+## 4.5 Federal Sentencing Data EDA
 
 <!-- - explain the different columns (linking to the background) -->
 
@@ -892,7 +893,7 @@ You might have classified the variables as follows:
 Let’s start exploring the variables that fall under each of these key
 questions.
 
-## 5.1 Who
+### 4.5.1 Who
 
 **Sex**
 
@@ -1046,14 +1047,14 @@ three we’ve chosen for this plot?
 - Limitations of census data
 - Other potential things to mention (the affect of aggregation and spatial scale). -->
 
-## 5.2 What
+### 4.5.2 What
 
 Now that we explored the “Who?” question about our data, let’s move on
 to answering the “What?” question. You might have guessed that
 `sentence_length` and `mandatory_min` are the variables that fall under
 this category.
 
-#### 5.2.0.1 How does sentence length correlate with criminal history?
+#### 4.5.2.1 How does sentence length correlate with criminal history?
 
 > How do sentence lengths relate to policy? <!--- insert blurb here? -->
 
@@ -1065,7 +1066,7 @@ sentences fell within each bin range. We can also use `geom_vline()` to
 add some red lines on the graph as a guide to think about common
 sentence lengths of 12, 60, 120, or 240 months.
 
-##### 5.2.0.1.1 Histogram
+##### 4.5.2.1.1 Histogram
 
 ``` r
 ggplot(us_sent) +
@@ -1132,7 +1133,7 @@ or possibly a life sentence.
 
 <!-- [could further discuss skew, peaks and relate to sentencing table, etc.] -->
 
-##### 5.2.0.1.2 Violin Plot
+##### 4.5.2.1.2 Violin Plot
 
 Violin plots are another useful way of showing the distribution data.
 Let’s use a violin plot to compare `criminal_history` and
@@ -1152,7 +1153,7 @@ ggplot(us_sent) +
 
 ![](master_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
-##### 5.2.0.1.3 Ridge plot
+##### 4.5.2.1.3 Ridge plot
 
 Apart from historgrams and violin plots, ridge plots are another useful
 way to represent data. We can use similar code as for the violin plots
@@ -1191,7 +1192,7 @@ ggplot(us_sent) +
 
 ![](master_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
-#### 5.2.0.2 What is the relationship between `all_adjustments`, `sentence_length`, and `criminal_history`?
+#### 4.5.2.2 What is the relationship between `all_adjustments`, `sentence_length`, and `criminal_history`?
 
 Now that we understand some useful plots for examining our data. Let’s
 return to using scatterplots to examine three important variables
@@ -1241,7 +1242,7 @@ is a super powerful tool. What do you notice about the plots above?
 
 <!-- #### How does the age range vary with criminal history? -->
 
-## 5.3 When
+### 4.5.3 When
 
 Let’s turn to the final question we are asking about our dataset, which
 is encompassed in the “When?” question. Specifically, let’s explore the
@@ -1378,7 +1379,7 @@ ggplot(us_sent, aes(x = year,
 ![](master_files/figure-gfm/graph%20our%20year%20data-%20scatter%20plot-1.png)<!-- -->
 <!-- could include more information on interpreting boxplots, explaining what outliers are, etc. would likely write about this above where we first introduce boxplots. We could also consider adding in information about examining center, spread, etc. -->
 
-## 5.4 Where
+### 4.5.4 Where
 
 Now that we’ve explored the “who?”, “what?”, and “when?” questions about
 our data set, let’s finish off our EDA by understanding the “where?”
@@ -1432,12 +1433,12 @@ the question “Where did those sentences occur?” in a visual way.
 - This is a good example for when you might want to order it in terms of frequency (i.e. the count) using `fct_infreq`
 - We may also want to reverse the order to see the districts which have the most sentences at the top of our plot using `fct_rev`. -->
 
-#### 5.4.0.1 Number of individuals sentences across districts
+#### 4.5.4.1 Number of individuals sentences across districts
 
 Let’s start looking at the number of individual sentences across
 districtsby using a bar plot.
 
-##### 5.4.0.1.1 Base Bar Plot
+##### 4.5.4.1.1 Base Bar Plot
 
 ``` r
 ggplot(us_sent) +
@@ -1450,7 +1451,7 @@ We can see immediately that, given the large number of districts, a
 simple bar graph makes it super hard to interpret the data. Let’s go
 through some ways we can improve this plot.
 
-##### 5.4.0.1.2 District on the y-axis
+##### 4.5.4.1.2 District on the y-axis
 
 First, we can change our plot so that `district` is on the y-axis so
 there is more room for the text, and let’s not worry about presenting
@@ -1469,7 +1470,7 @@ can think about ordering the districts in such a way that is useful for
 us. For example, we might be interested in seeing the districts with the
 most amount of sentences.
 
-##### 5.4.0.1.3 Ordered by number of sentences
+##### 4.5.4.1.3 Ordered by number of sentences
 
 To answer this question, we can use `fct_infreq()`, as we did earlier in
 our EDA, to order the districts from the least to the most number of
@@ -1482,7 +1483,7 @@ ggplot(us_sent) +
 
 ![](master_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
-##### 5.4.0.1.4 Ordering from high to low
+##### 4.5.4.1.4 Ordering from high to low
 
 Alternatively, we can order the districts from the most to the least
 amount of sentences in our data set by using `fct_rev()` in conjunction
@@ -1495,7 +1496,7 @@ ggplot(us_sent) +
 
 ![](master_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
-##### 5.4.0.1.5 Add title and axes labels
+##### 4.5.4.1.5 Add title and axes labels
 
 Now that we have our plot data organized in a readable and useful way,
 let’s add useful title and axis titles. When we have longer titles, you
@@ -1518,9 +1519,9 @@ ggplot(us_sent) +
 &#10;- If we want to get out the district populations, we will probably need to download the data by the county level.
 - Decision points: we could download the data in categories by age and sex and race: e.g. 5-9, 10-14 etc. This might get a little -->
 
-# 6 Analysis
+# 5 Analysis
 
-## 6.1 Fitting Lines to Data
+## 5.1 Fitting Lines to Data
 
 Suppose we want to predict how much electricity the city of Los Angeles,
 California will use based on the daily temperature. As the temperature
@@ -1560,7 +1561,7 @@ twoplot
 
 ![](master_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
-### 6.1.1 Analytically Fit a Line to Two Points
+### 5.1.1 Analytically Fit a Line to Two Points
 
 In order to create a linear regression on these two points, we can think
 back to algebra and use the formula for a line.
@@ -1595,7 +1596,7 @@ twoplot + geom_abline(slope=3/2, intercept = 1/2)
 
 ![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
-### 6.1.2 Numerically Fit a Line to Two Points
+### 5.1.2 Numerically Fit a Line to Two Points
 
 ``` r
 twolinear <- lm(formula = yvals ~ xvals, data=twopoints)
@@ -1653,7 +1654,7 @@ our data set we have the points (1,2), (2,3), and (3,5) so the only
 actual values for y in our data set are 2,3, and 5 even though our
 prediction line (our model) takes on all values of y between 0 and 6.
 
-### 6.1.3 Numerically Fit a Line to Three Points
+### 5.1.3 Numerically Fit a Line to Three Points
 
 To find the model that best fits our data, we want to make the error as
 small as possible. Linear regression is a techique that allows us to
@@ -1695,7 +1696,7 @@ predicted y value and the actual y value) is shown on the graph. Of the
 four plots we just made of lines through our three data points, which
 looks like it has the smallest error?
 
-## 6.2 Fitting a Line to Many Points: Linear Regression!
+## 5.2 Fitting a Line to Many Points: Linear Regression!
 
 Now let’s go back to our penguins data. Do you think a linear model
 might be a good way to model the data? Run the code below to create a
@@ -1740,7 +1741,7 @@ pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
 ![](master_files/figure-gfm/unnamed-chunk-45-1.png)<!-- --> - still need
 how to evaluate whether we have a good model R^2
 
-## 6.3 Categorical Data to Numerical Representations
+## 5.3 Categorical Data to Numerical Representations
 
 So that we can analyze the sentencing data that we looked at earlier, we
 will need to explore scatterplots where only on variable is numerical
@@ -1880,7 +1881,7 @@ head(peng_encoded)
     ## # ℹ 6 more variables: isAdelie <dbl>, isChinstrap <dbl>, isGentoo <dbl>,
     ## #   Adelie <dbl>, Chinstrap <dbl>, Gentoo <dbl>
 
-# 7 Results
+# 6 Results
 
 With all of our work constructing the regression complete, we are now
 ready to interpret the results of Table 1. The baseline model assumes
