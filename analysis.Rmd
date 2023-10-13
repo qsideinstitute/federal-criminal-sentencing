@@ -167,7 +167,7 @@ pengfit
 Here R gives us the slope and intercept of the straight line that best fits our data. Let's graph this line together with our data using the code below. 
 
 ```{r, warning = FALSE}
-pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
+pengscat + geom_abline(slope = 0.0152, intercept = 137.0396)
 ```
 
 That looks like a pretty good fit, right? But how do we evaluate how good of a fit the linear regression provides? One function we can use in R is `msummary()`. This function provides an overview of the fitted model.  
@@ -184,28 +184,43 @@ There is a lot of information that comes out of this function, but just focus on
 You probably found 0.759 on the table. This means that 75.9% of the variation in flipper length can be explained by the body mass of penguins. That is a pretty high $R^2$, especially for observational data. Therefore, we can consider this model to be quite good for modeling flipper length. 
 
 ## Categorical Data to Numerical Representations
-So far we've only explored linear regression with numerical variables, but we can use categorical variables as well. Let's compare flipper length to penguin species. Remember that flipper length is a numerical varible and species is a categorical variable with three levels (Adelie, Chinstrap, and Gentoo).
+So far we've only explored linear regression with numerical variables, but we can certainly use categorical variables in our model as well. Continuing with our penguins data, let's compare flipper length to penguin species. Remember that flipper length is a numerical variable and species is a categorical variable (with three levels: Adelie, Chinstrap, and Gentoo).
 
-To start, let's consider one level at a time, so we can get a good sense of what is the relationship between species and flipper length. Below we examine Adelie penguins first.
+To start, let's consider one level at a time, so we can get a good sense of the relationship between species and flipper length. Below we examine Adelie penguins first. We start off by using `mutate()` again to label our species as either "Adelie" or "Not Adelie". Then, we create a side-by-side boxplot using `geom_boxplot()` again. 
 
-```{r}
-penguins$isAdelie = ifelse(penguins$species=='Adelie', 1, 0)
-adelieplot = ggplot(penguins, aes(x=isAdelie, y=flipper_length_mm)) + 
-  geom_point(color='coral2', alpha=0.7)
+```{r, warning = FALSE}
+#penguins$isAdelie = ifelse(penguins$species == 'Adelie', 1, 0)
+
+pengAdelie <- penguins %>% 
+  mutate(species = case_when(species != "Adelie" ~ "Not Adelie",
+                            TRUE ~ "Adelie"))
+
+adelieplot <- ggplot(pengAdelie, aes(x = species,
+                                     y = flipper_length_mm)) + 
+  geom_boxplot(color = 'coral2', 
+               alpha = 0.7) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)")
 adelieplot
 ```
+
+We can see that Adelie penguins seem to have a shorter flipper length, on average, than non-Adelie penguins. 
+
 Next, we create a linear model for the relationship between flipper length and whether a penguin is an Adelie penguin or not.
 
 ```{r}
-amodel = lm(formula = flipper_length_mm~isAdelie, data=penguins)
+amodel <- lm(formula = flipper_length_mm ~ species, 
+             data = pengAdelie)
 amodel
 ```
 Then plot this best fit linear model against with our scatterplot to compare. Do you think that our linear model is a good representation of the data?
 
-As we saw before, things look a little bit different when we are dealing with categroical variables. In these types of scatterplots, we would expect the best fit model  to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
+<!-- FIX THIS SECTION WITH THE REGRESSION LINE-->
+
+As we saw before, things look a little bit different when we are dealing with categorical variables. In these types of scatterplots, we would expect the best fit model  to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
 
 ```{r}
-adelieplot + geom_abline(slope=-19.35, intercept=209.45)
+adelieplot + geom_abline(slope = 19.63, intercept = 189.95)
 ```
 Now we do the same thing for the other two species (Chinstrap and Gentoo) and plot all three graphs side by side.
 
