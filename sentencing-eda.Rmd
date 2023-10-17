@@ -103,12 +103,13 @@ us_sent <- us_sent %>%
          guilty_plea = factor(guilty_plea))
 ```
 
-Now that our variable data types are sorted out, let's change one final component of our data set. Let's change the `other` level under the `race` variable to "ARI", which stands for "another racial identity", to clarify what we mean. To do this, we can use `mutate()` again in combination when `case_when()`, a function that allows you to condition an action on something between true. In this case, we are saying that we only want to change a value to "ARI" *if* `race` equals "other". 
+Now that our variable data types are sorted out, let's change one final component of our data set. Let's change the `other` level under the `race` variable to "ARI", which stands for "another racial identity", to clarify what we mean. To do this, we can use `mutate()` again in combination when `case_when()`, a function that allows you to condition an action on something being true. In this case, we are saying that we only want to change a value to "ARI" *if* `race` equals "other". 
 
 ```{r}
 us_sent <- us_sent %>% 
   mutate(race = case_when(race == "other" ~ "ARI",
-                          TRUE ~ race))
+                          TRUE ~ race),
+         race = factor(race, levels = c("white", "black", "hispanic", "ARI")))
 ```
 
 You can use the `View(us_sent)` function again to take a look at all the alterations we made to the dataset. 
