@@ -261,3 +261,43 @@ What is the flipper length predicted by our model for a Chinstrap penguin? What 
 peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 0 )
 head(peng_encoded)
 ```
+
+## Using Linear Regression with the Federal Criminal Sentencing Data
+
+Now that we've explored the basics of linear regression using both numerical and categorical variables, let's return to the goal of this project: to explore patterns in federal criminal sentencing data from 2006-2020. We will show how to create relevant linear models for this case study, and discuss the results of these models in the following section. We won't dive into the specifics of why, based on the EDA, we will include certain variables over others in the linear regression. Rather, we will simply replicate the results of the paper mentioned at the beginning of this case study. For more information on how the researchers of that paper arrived their final models, please read the paper.
+
+### Baseline Model
+
+Let's try a model of `sentence_length` based on the variable `race`, using the same methods we used above.
+```{r}
+baselinemod <- lm(sentence_length ~ race,
+                  data = us_sent)
+msummary(baselinemod)
+```
+<!-- How should we do confidence intervals in this case?
+
+We can also figure out confidence intervals using the following code:
+
+```{r}
+library(DescTools)
+
+us_sent %>% 
+  drop_na(race) %>%
+  count(race) %>%
+  data.frame(MultinomCI(.$n, conf.level = 0.95))
+```
+
+-->
+
+### District I Model
+The first model includes defendant demographics, sentencing year, whether or not there was a guilty plea, relevant cell on the U.S. sentencing grid, whether there was a mandatory minimum sentence, presence of government-sponsored downward departures, and the interaction of judicial district and defendant race. An interaction term is employed when the one variable impacts another variable in some wayFor our dataset this includes the following variables: `age`, `sex`, and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`, `gov_departures`, and the interaction of `district` and `race`. In this model, all terms except for the interaction derive from nationwide data. For example, this model assumes that all districts, on average, apply the U.S. sentencing grid in the same way. The code for formulating this linear regression model would follow the same format as the other linear models we've made:
+
+```{r, eval = FALSE}
+lm1 <- lm(sentence_length ~ age + sex + educ + year + guilty_plea + grid_cell + mandatory_min + 
+            gov_departures + district:race,
+          data = us_sent)
+```
+
+### District II Model
+The second model relies on the same variables as in the District I Model plus `race` on its own. However, a regression is performed within each district, rather than across all districts represented in the data set. This model allows for variations in grid application, defendant demographics, and more. To perform this form of regression in R, you would create a subset of `us_sent` for each district, and then employ the same code as above but with each smaller data set. 
+
