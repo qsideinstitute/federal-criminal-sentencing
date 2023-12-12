@@ -91,7 +91,7 @@ Let's take a moment to also consider how these identity-based variables were def
 
 Also to possibly add: explaining why we are going to use "ARI" rather than "other" for the race category -->
 
-The nine other variables in the dataset refer to information about the court cases themselves: 
+The nine other variables in the data set refer to information about the court cases themselves: 
 
 * `year`, which describes the year in which the court case took place, 
 * `sentence_length`, the length prescribed to a defendant in months,
