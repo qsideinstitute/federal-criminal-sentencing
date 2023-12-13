@@ -4,7 +4,7 @@ Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik,
 Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas
 Wakefield
 
-October 12, 2023
+December 12, 2023
 
 - [1 Acknowledgments](#1-acknowledgments)
 - [2 Introduction](#2-introduction)
@@ -38,12 +38,18 @@ October 12, 2023
       Points](#511-analytically-fit-a-line-to-two-points)
     - [5.1.2 Numerically Fit a Line to Two
       Points](#512-numerically-fit-a-line-to-two-points)
-    - [5.1.3 Numerically Fit a Line to Three
-      Points](#513-numerically-fit-a-line-to-three-points)
+    - [5.1.3 Analytically Fit a Line to Three
+      Points](#513-analytically-fit-a-line-to-three-points)
+    - [5.1.4 Numerically Fit a Line to Three
+      Points](#514-numerically-fit-a-line-to-three-points)
   - [5.2 Fitting a Line to Many Points: Linear
     Regression!](#52-fitting-a-line-to-many-points-linear-regression)
   - [5.3 Categorical Data to Numerical
     Representations](#53-categorical-data-to-numerical-representations)
+  - [5.4 Using Linear Regression with the Federal Criminal Sentencing
+    Data](#54-using-linear-regression-with-the-federal-criminal-sentencing-data)
+    - [5.4.1 Baseline Model](#541-baseline-model)
+    - [5.4.3 District II Model](#543-district-ii-model)
 - [6 Results](#6-results)
 
 ------------------------------------------------------------------------
@@ -421,11 +427,21 @@ identity, disability, class and other forms of discrimination
 ‘intersect’ to create unique dynamics and effects” (Ref: [Center for
 Intersectional
 Justice](https://www.intersectionaljustice.org/what-is-intersectionality),
-July 20, 2023). `sex` has been coded as a binary variable 0 and 1, where
-0 is “Male” and 1 is “Female”.
+July 20, 2023).
 
-<!-- **To add**
-&#10;- Add how sex was defined (sex is defined in pre-sentencing report that comes out of the investigation done by the probation office. This goes to the attorneys and also comes out of an interview with the individual. It should be noted that there are only two categories, so it is likely that there might be only two options possible). See Background section or link to official report for more information.
+Let’s take a moment to also consider how these identity-based variables
+were defined. `sex`, for example, is defined in a pre-sentencing report
+that comes out of the investigation done by the probation office. This
+goes to the attorneys and also comes out of an interview with the
+individual. It should be noted that there are only two categories, so it
+is likely that there might be only two options possible for the
+individual. Not only is this problematic in that it restricts a
+defendant’s identity to two rigid categories, but a binary variable will
+not reflect sentenced individuals’ gender identity and excludes several
+groups altogether. Therefore, a limitation of this study comes through
+in
+
+<!-- See Background section or link to official report for more information.
 - Discuss how a binary variable will not reflect sentenced individuals gender identity and excludes several groups. It is also limiting in nature.
 - Discuss difference between sex and gender
 - Discuss who has defined this variable and why this is problematic
@@ -740,13 +756,14 @@ component of our data set. Let’s change the `other` level under the
 `race` variable to “ARI”, which stands for “another racial identity”, to
 clarify what we mean. To do this, we can use `mutate()` again in
 combination when `case_when()`, a function that allows you to condition
-an action on something between true. In this case, we are saying that we
+an action on something being true. In this case, we are saying that we
 only want to change a value to “ARI” *if* `race` equals “other”.
 
 ``` r
 us_sent <- us_sent %>% 
   mutate(race = case_when(race == "other" ~ "ARI",
-                          TRUE ~ race))
+                          TRUE ~ race),
+         race = factor(race, levels = c("white", "black", "hispanic", "ARI")))
 ```
 
 You can use the `View(us_sent)` function again to take a look at all the
@@ -1521,6 +1538,15 @@ ggplot(us_sent) +
 
 # 5 Analysis
 
+Now that we’ve properly conducted an EDA of our federal sentencing data,
+we can dive into analyzing this data further. One main way that we
+analyze data is through fitting regressions. Regressions can be used to
+model the relationships between different explanatory variables and a
+chosen response variable. There are many kinds of regressions, but the
+most common and simplest regression is a simple linear regression. To
+explore linear regression, let’s first take a step back from the federal
+sentencing data, and turn to two simpler data sets for examples.
+
 ## 5.1 Fitting Lines to Data
 
 Suppose we want to predict how much electricity the city of Los Angeles,
@@ -1536,11 +1562,13 @@ Angeles will use in the future if we know the future temperature, and
 make sure that there is enough for the city’s needs.
 
 Let’s make two example points, point A at (1,2) and point B at (3,5). In
-R, we will save this into a data frame using a vector of the x values, 1
-and 3, and a vector of the matching y values, 2 and 5.
+R, we will save these points in a data frame using a vector of the x
+values, 1 and 3, and a vector of the matching y values, 2 and 5.
 
 ``` r
-twopoints <- data.frame(xvals = c(1,3), yvals = c(2,5), label = c('A','B'))
+twopoints <- data.frame(xvals = c(1,3), 
+                        yvals = c(2,5), 
+                        label = c('A','B'))
 head(twopoints)
 ```
 
@@ -1548,14 +1576,16 @@ head(twopoints)
     ## 1     1     2     A
     ## 2     3     5     B
 
-We can make a fairly simple plot of these two points.
+We can make a fairly simple plot of these two points, using
+`geom_point()` as we did in our EDA, and `geom_text()` to label our
+points.
 
 ``` r
-twoplot <- ggplot(twopoints, aes(x=xvals, y=yvals)) + 
-  geom_point(color='coral2') + 
-  geom_text(aes(label=label), nudge_y = .3 ) +
-  xlim(0,6) + 
-  ylim(0,6)
+twoplot <- ggplot(twopoints, aes(x = xvals, y = yvals)) + 
+  geom_point(color = 'coral2') + 
+  geom_text(aes(label = label), nudge_y = .3) +
+  xlim(0, 6) + 
+  ylim(0, 6)
 twoplot
 ```
 
@@ -1586,20 +1616,31 @@ $$
 y = \frac{3}{2} x+ \frac{1}{2}
 $$
 
-We can plot the results. Here we use the `abline()` function, to plot
-our linear equation which can be done by inputting the values for the
-slope and the intercept.
+We can plot the results. Here we use the `geom_abline()` function, to
+plot our linear equation which can be done by inputting the values for
+the slope and the intercept.
 
 ``` r
-twoplot + geom_abline(slope=3/2, intercept = 1/2)
+twoplot + geom_abline(slope = 3/2, 
+                      intercept = 1/2)
 ```
 
 ![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
+Great, notice that the line above goes right through our two data
+points.
+
 ### 5.1.2 Numerically Fit a Line to Two Points
 
+If we want to reduce the amount of calculations required to fit a line
+to two points, we can instead just rely on R to do the work for us. We
+can use the linear model function, `lm()` to carry out a regression for
+us. We just input our `yvals` and `xvals` along with our data
+`twopoints` to fit a linear model using R.
+
 ``` r
-twolinear <- lm(formula = yvals ~ xvals, data=twopoints)
+twolinear <- lm(formula = yvals ~ xvals, 
+                data = twopoints)
 twolinear
 ```
 
@@ -1611,39 +1652,58 @@ twolinear
     ## (Intercept)        xvals  
     ##         0.5          1.5
 
-Notice that the line above goes right through our two data points.
+### 5.1.3 Analytically Fit a Line to Three Points
 
 We know that two points alone uniquely define a line, but what do we
 think will happen if we have to find a line that describes the goes
-through three data points? Let’s add the point (2,3) to our exisiting
-set and see what happens when try to draw a line through these three
-points. Below, we will use R to plot three graphs of our points, each
-attempting to find a line that goes through all three data points.
+through three data points? Let’s add the point (2,3) to our existing set
+and see what happens when try to draw a line through these three points.
+Below, we will use R to plot three graphs of our points, each attempting
+to find a line that goes through all three data points. Don’t worry too
+much on the coding for now, but pay attention to the resulting plots.
 
 ``` r
-threepoints = rbind(twopoints, data.frame(xvals = 2, yvals = 3, label='C'))
-threepoints$yfit1 = threepoints$xvals*3/2+1/2
-threepoints$yfit2 = threepoints$xvals+1
-threepoints$yfit3 = threepoints$xvals*2-1
+threepoints = rbind(twopoints, 
+                    data.frame(xvals = 2, yvals = 3, label = 'C'))
+threepoints$yfit1 = threepoints$xvals*3/2 + 1/2
+threepoints$yfit2 = threepoints$xvals + 1
+threepoints$yfit3 = threepoints$xvals*2 - 1
 
-threeplot = ggplot(threepoints, aes(x=xvals, y = yvals)) + 
+threeplot = ggplot(threepoints, aes(x = xvals, 
+                                    y = yvals)) + 
   geom_point(color = 'coral2')  + 
-  geom_text(aes(label=label), nudge_y = 0.3, check_overlap = TRUE) +
-  xlim(0,6) + ylim(0,6)
+  geom_text(aes(label = label), 
+            nudge_y = 0.3, 
+            check_overlap = TRUE) +
+  xlim(0,6) + 
+  ylim(0,6)
 
 grid.arrange(
-  threeplot + geom_abline(slope=3/2, intercept = 1/2) + geom_segment(aes(xend = xvals, yend = yfit1), color='coral2'),
-  threeplot + geom_abline(slope=1, intercept = 1) + geom_segment(aes(xend = xvals, yend = yfit2), color='coral2'),
-  threeplot + geom_abline(slope=2, intercept = -1) +  geom_segment(aes(xend = xvals, yend = yfit3), color='coral2'),
-ncol=3
-)
+  threeplot + 
+    geom_abline(slope = 3/2, intercept = 1/2) + 
+    geom_segment(aes(xend = xvals, 
+                     yend = yfit1), 
+                 color = 'coral2'),
+  threeplot + 
+    geom_abline(slope = 1, intercept = 1) + 
+    geom_segment(aes(xend = xvals, 
+                     yend = yfit2), 
+                 color = 'coral2'),
+  threeplot + 
+    geom_abline(slope = 2, intercept = -1) +  
+    geom_segment(aes(xend = xvals, 
+                     yend = yfit3), 
+                 color='coral2'),
+  ncol=3)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-40-1.png)<!-- --> Notice in
-all three graphs above, we can’t draw a straight line through all three
-points at the same time. The best that we can do is try to find a line
-that gets very close to all theree points, or fits these three points
-the best. But how can we define “the best” line that fits this data?
+![](master_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+
+Notice in all three graphs above, we can’t draw a straight line through
+all three points at the same time. The best that we can do is try to
+find a line that gets very close to all theree points, or fits these
+three points the best. But how can we define “the best” line that fits
+this data?
 
 To understand which line *best fits* our three data points, we need to
 talk about the **error**, which is also called the **residual** in
@@ -1651,20 +1711,21 @@ statistics. The residual is the vertical distance between the predicted
 data point y (on the line) and the actual value of y our data takes on
 at that point (the value we collected) at each of our data points. In
 our data set we have the points (1,2), (2,3), and (3,5) so the only
-actual values for y in our data set are 2,3, and 5 even though our
+actual values for y in our data set are 2, 3,and 5 even though our
 prediction line (our model) takes on all values of y between 0 and 6.
 
-### 5.1.3 Numerically Fit a Line to Three Points
+### 5.1.4 Numerically Fit a Line to Three Points
 
 To find the model that best fits our data, we want to make the error as
-small as possible. Linear regression is a techique that allows us to
-identify the line that minimizes our error, this line is called a
-*linear regression model* and is the line that best fits our data.
-Below, you will see R code to identify the model that best fits our
-data.
+small as possible. To expand on our definition of linear regression
+above, linear regression is a technique that allows us to identify the
+line that minimizes our error. This line is called a *linear regression
+model* and is the line that best fits our data. Below, you will see R
+code to identify the model that best fits our data.
 
 ``` r
-threelinear = lm(formula=yvals~xvals, data=threepoints)
+threelinear = lm(formula = yvals ~ xvals, 
+                 data = threepoints)
 threelinear
 ```
 
@@ -1678,45 +1739,68 @@ threelinear
 
 ``` r
 threepoints$linfit = 1.5*threepoints$xvals + 0.3333
-ggplot(threepoints, aes(x=xvals, y = yvals)) + 
-  geom_point(color='coral2')  + 
-  geom_text(aes(label=label), nudge_y = -0.4 ) +
-  xlim(0,6) + ylim(0,6)+ 
-  geom_abline(slope=1.5, intercept=0.3333) + 
-  geom_segment(aes(xend = xvals, yend = linfit), color='coral2')
+ggplot(threepoints, aes(x = xvals, 
+                        y = yvals)) + 
+  geom_point(color = 'coral2')  + 
+  geom_text(aes(label = label), 
+            nudge_y = -0.4 ) +
+  xlim(0,6) + 
+  ylim(0,6) + 
+  geom_abline(slope = 1.5, intercept = 0.3333) + 
+  geom_segment(aes(xend = xvals, 
+                   yend = linfit), 
+               color = 'coral2')
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-42-1.png)<!-- --> Notice that
-the best fit linear model doesn’t go through any of our three points!
-**Why do you think that is?**
+![](master_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+
+Notice that the best fit linear model doesn’t go through any of our
+three points! **Why do you think that is?**
 
 Keep in mind, our goal is to minimize our error as much as we can. In
 each of the four previous graphs, the error (or the distance between the
-predicted y value and the actual y value) is shown on the graph. Of the
-four plots we just made of lines through our three data points, which
-looks like it has the smallest error?
+predicted y value and the actual y value) is shown on the graph,
+highlighted in the coral color. Of the four plots we just made of lines
+through our three data points, which one seems to have the smallest
+error?
+
+> NOTE: Whenever you employ linear regression, there are various
+> conditions you must make sure are satisfied before proceeding. You can
+> use the acronym L.I.N.E to remember that you must satisfy linearity,
+> independence, normality, and equal variance conditions. For the
+> purposes of this tutorial, we won’t go in depth about what these
+> conditions mean and how you can check these conditions, but make sure
+> to keep them in mind for your future data analyses. Conditions are
+> super important in statistical analysis!
 
 ## 5.2 Fitting a Line to Many Points: Linear Regression!
 
-Now let’s go back to our penguins data. Do you think a linear model
-might be a good way to model the data? Run the code below to create a
-scatterplot of flipper length versus body mass.
+Now let’s turn to another example data set. This new dataset focuses on
+penguins. Do you think a linear model might be a good way to model the
+data? Run the code below to create a scatter plot of flipper length
+versus body mass.
 
 ``` r
-pengscat = ggplot(penguins, aes(x=body_mass_g, y=flipper_length_mm)) + 
-  geom_point(color='coral2', alpha=0.7)
+data(penguins)
+
+pengscat = ggplot(penguins, aes(x = body_mass_g, 
+                                y = flipper_length_mm)) + 
+  geom_point(color = 'coral2', alpha = 0.7) +
+  labs(x = "Body Mass (grams)",
+            y = "Flipper Length (mm)",
+            title = "Flipper Length by Body Mass of Penguins")
 pengscat
 ```
 
-    ## Warning: Removed 2 rows containing missing values (`geom_point()`).
+![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
 
-![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- --> Take a look
-at the scatterplot, does it look like most of the data fall along a
-straight line? If the general shape is a line, then yes, we should try
-to model this data with linear regression line.
+Take a look at the scatterplot, does it look like most of the data fall
+along a straight line? If the general shape is a line, then yes, we
+should try to model this data with linear regression line.
 
 ``` r
-pengfit = lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
+pengfit <- lm(formula = flipper_length_mm ~ body_mass_g, 
+             data = penguins)
 pengfit
 ```
 
@@ -1728,106 +1812,205 @@ pengfit
     ## (Intercept)  body_mass_g  
     ##   136.72956      0.01528
 
-Here R givs us the slope and intercept of the straight line that best
+Here R gives us the slope and intercept of the straight line that best
 fits our data. Let’s graph this line together with our data using the
 code below.
 
 ``` r
-pengscat + geom_abline(slope= 0.0152, intercept = 137.0396)
+pengscat + geom_abline(slope = 0.0152, intercept = 137.0396)
 ```
 
-    ## Warning: Removed 2 rows containing missing values (`geom_point()`).
+![](master_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
 
-![](master_files/figure-gfm/unnamed-chunk-45-1.png)<!-- --> - still need
-how to evaluate whether we have a good model R^2
+That looks like a pretty good fit, right? But how do we evaluate how
+good of a fit the linear regression provides? One function we can use in
+R is `summary()`. This function provides an overview of the fitted
+model.
+
+``` r
+summary(pengfit)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -23.7626  -4.9138   0.9891   5.1166  16.6392 
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) 1.367e+02  1.997e+00   68.47   <2e-16 ***
+    ## body_mass_g 1.528e-02  4.668e-04   32.72   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 6.913 on 340 degrees of freedom
+    ##   (2 observations deleted due to missingness)
+    ## Multiple R-squared:  0.759,  Adjusted R-squared:  0.7583 
+    ## F-statistic:  1071 on 1 and 340 DF,  p-value: < 2.2e-16
+
+There is a lot of information that comes out of this function, but just
+focus on “Multiple R-squared” for now. $R^2$ represents the percent of
+variation in the response y-variable that is explained by the
+explanatory x-variable(s). Can you find the $R^2$ for this model in the
+summary table?
+
+You probably found 0.759 on the table. This means that 75.9% of the
+variation in flipper length can be explained by the body mass of
+penguins. That is a pretty high $R^2$, especially for observational
+data. Therefore, we can already consider this model to be quite good for
+modeling flipper length.
+
+Apart from looking at the $R^2$, it is a good idea to look at the
+resulting t-tests and F-tests. While t-tests looks at the significance
+of individual variables by comparing population means, F-tests examine
+the significance of overall models by comparing population variances.
+You can see the “t value” column for the test statistics from the
+t-tests, but you can mainly just focus on the resulting p-values in the
+“Pr(\>\|t\|)” column. In this case, the p-value for `body_mass_g` is
+quite low, meaning it is a significant variable in this model. At the
+bottom, you can see the F-statistic and associated p-value. Again, the
+p-value is quite low, meaning the model is significant. These two
+outcomes of the t-test and F-test can increase our confidence in the
+model even further.
 
 ## 5.3 Categorical Data to Numerical Representations
 
-So that we can analyze the sentencing data that we looked at earlier, we
-will need to explore scatterplots where only on variable is numerical
-and the other is categorical. Let’s compare flipper length to penguin
-species. Remember that flipper length is a numerical varible and species
-is a categorical variable with three levels (Adelie, Chinstrap, and
-Gentoo).
+So far we’ve only explored linear regression with numerical variables,
+but we can certainly use categorical variables in our model as well.
+Continuing with our penguins data, let’s compare flipper length to
+penguin species. Remember that flipper length is a numerical variable
+and species is a categorical variable (with three levels: Adelie,
+Chinstrap, and Gentoo).
 
 To start, let’s consider one level at a time, so we can get a good sense
-of what is the relationship between species and flipper length. Below we
-examine Adelie penguins first.
+of the relationship between species and flipper length. Below we examine
+Adelie penguins first. We start off by using `mutate()` again to label
+our species as either “Adelie” or “Not Adelie”. Then, we create a
+side-by-side boxplot using `geom_boxplot()` again.
 
 ``` r
-penguins$isAdelie = ifelse(penguins$species=='Adelie', 1, 0)
-adelieplot = ggplot(penguins, aes(x=isAdelie, y=flipper_length_mm)) + 
-  geom_point(color='coral2', alpha=0.7)
+#penguins$isAdelie = ifelse(penguins$species == 'Adelie', 1, 0)
+
+pengAdelie <- penguins %>% 
+  mutate(species = case_when(species != "Adelie" ~ "Not Adelie",
+                            TRUE ~ "Adelie"))
+
+adelieplot <- ggplot(pengAdelie, aes(x = species,
+                                     y = flipper_length_mm)) + 
+  geom_boxplot(color = 'coral2', 
+               alpha = 0.7) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)")
 adelieplot
 ```
 
-    ## Warning: Removed 2 rows containing missing values (`geom_point()`).
+![](master_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
 
-![](master_files/figure-gfm/unnamed-chunk-46-1.png)<!-- --> Next, we
-create a linear model for the relationship between flipper length and
-whether a penguin is an Adelie penguin or not.
+We can see that Adelie penguins seem to have a shorter flipper length,
+on average, than non-Adelie penguins.
+
+Next, we create a linear model for the relationship between flipper
+length and whether a penguin is an Adelie penguin or not.
 
 ``` r
-amodel = lm(formula = flipper_length_mm~isAdelie, data=penguins)
+amodel <- lm(formula = flipper_length_mm ~ species, 
+             data = pengAdelie)
 amodel
 ```
 
     ## 
     ## Call:
-    ## lm(formula = flipper_length_mm ~ isAdelie, data = penguins)
+    ## lm(formula = flipper_length_mm ~ species, data = pengAdelie)
     ## 
     ## Coefficients:
-    ## (Intercept)     isAdelie  
-    ##      209.58       -19.63
+    ##       (Intercept)  speciesNot Adelie  
+    ##            189.95              19.63
 
 Then plot this best fit linear model against with our scatterplot to
 compare. Do you think that our linear model is a good representation of
 the data?
 
+<!-- FIX THIS SECTION WITH THE REGRESSION LINE-->
+
 As we saw before, things look a little bit different when we are dealing
-with categroical variables. In these types of scatterplots, we would
+with categorical variables. In these types of scatterplots, we would
 expect the best fit model to pass through the mean values of each level
 of our categorical variable (or each ‘chunk’ of data). See below.
 
 ``` r
-adelieplot + geom_abline(slope=-19.35, intercept=209.45)
+adelieplot + geom_abline(slope = 19.63, intercept = 189.95)
 ```
 
-    ## Warning: Removed 2 rows containing missing values (`geom_point()`).
+    ## Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).
 
-![](master_files/figure-gfm/unnamed-chunk-48-1.png)<!-- --> Now we do
+![](master_files/figure-gfm/unnamed-chunk-49-1.png)<!-- --> Now we do
 the same thing for the other two species (Chinstrap and Gentoo) and plot
 all three graphs side by side.
 
 ``` r
 penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
-penguins$isGentoo = ifelse(penguins$species=='Gentoo',1,0)
 
-cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
-gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
+pengChinstrap <- penguins %>% 
+  mutate(species = case_when(species != "Chinstrap" ~ "Not Chinstrap",
+                            TRUE ~ "Chinstrap"))
 
-speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
-aplot = speciesbase + 
-  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
-  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
-cplot = speciesbase + 
-  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
-  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
-gplot = speciesbase + 
-  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
-  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
-
-grid.arrange(aplot, cplot, gplot, ncol=3)
+chinstrapplot <- ggplot(pengChinstrap, aes(x = species,
+                                     y = flipper_length_mm)) + 
+  geom_boxplot(color = 'coral2', 
+               alpha = 0.7) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)")
+chinstrapplot
 ```
 
-    ## Warning: Removed 2 rows containing missing values (`geom_point()`).
-    ## Removed 2 rows containing missing values (`geom_point()`).
-    ## Removed 2 rows containing missing values (`geom_point()`).
+    ## Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).
 
-![](master_files/figure-gfm/unnamed-chunk-49-1.png)<!-- --> What would
-happen if instead of creating linear models for each level of the
-categorical variable separately, we created a single linear model for
-flipper length versus all species types? The code below allows us to
+![](master_files/figure-gfm/unnamed-chunk-50-1.png)<!-- -->
+
+``` r
+penguins$isGentoo = ifelse(penguins$species=='Gentoo',1,0)
+
+pengGentoo <- penguins %>% 
+  mutate(species = case_when(species != "Gentoo" ~ "Not Gentoo",
+                            TRUE ~ "Gentoo"))
+
+gentooplot <- ggplot(pengGentoo, aes(x = species,
+                                        y = flipper_length_mm)) + 
+  geom_boxplot(color = 'coral2', 
+               alpha = 0.7) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)")
+gentooplot
+```
+
+    ## Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).
+
+![](master_files/figure-gfm/unnamed-chunk-50-2.png)<!-- -->
+
+``` r
+#cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
+#gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
+
+#speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
+#aplot = speciesbase + 
+#  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
+#  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
+#cplot = speciesbase + 
+#  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
+#  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
+#gplot = speciesbase + 
+#  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
+#  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
+
+#grid.arrange(pengAdelie, pengChinstrap, pengGentoo, ncol = 3, nrow)
+```
+
+What would happen if instead of creating linear models for each level of
+the categorical variable separately, we created a single linear model
+for flipper length versus all species types? The code below allows us to
 find that model in just one step.
 
 ``` r
@@ -1869,7 +2052,7 @@ peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 
 head(peng_encoded)
 ```
 
-    ## # A tibble: 6 × 13
+    ## # A tibble: 6 × 12
     ##   island  bill_length_mm bill_depth_mm flipper_length_mm body_mass_g sex    year
     ##   <fct>            <dbl>         <dbl>             <int>       <int> <fct> <int>
     ## 1 Torger…           39.1          18.7               181        3750 male   2007
@@ -1878,20 +2061,115 @@ head(peng_encoded)
     ## 4 Torger…           NA            NA                  NA          NA <NA>   2007
     ## 5 Torger…           36.7          19.3               193        3450 fema…  2007
     ## 6 Torger…           39.3          20.6               190        3650 male   2007
-    ## # ℹ 6 more variables: isAdelie <dbl>, isChinstrap <dbl>, isGentoo <dbl>,
-    ## #   Adelie <dbl>, Chinstrap <dbl>, Gentoo <dbl>
+    ## # ℹ 5 more variables: isChinstrap <dbl>, isGentoo <dbl>, Adelie <dbl>,
+    ## #   Chinstrap <dbl>, Gentoo <dbl>
+
+## 5.4 Using Linear Regression with the Federal Criminal Sentencing Data
+
+Now that we’ve explored the basics of linear regression using both
+numerical and categorical variables, let’s return to the goal of this
+project: to explore patterns in federal criminal sentencing data from
+2006-2020. We will show how to create relevant linear models for this
+case study, and discuss the results of these models in the following
+section. We won’t dive into the specifics of why, based on the EDA, we
+will include certain variables over others in the linear regression.
+Rather, we will simply replicate the results of the paper mentioned at
+the beginning of this case study. For more information on how the
+researchers of that paper arrived their final models, please read the
+paper.
+
+### 5.4.1 Baseline Model
+
+Let’s try a model of `sentence_length` based on the variable `race`,
+using the same methods we used above.
+
+``` r
+baselinemod <- lm(sentence_length ~ race,
+                  data = us_sent)
+summary(baselinemod)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = sentence_length ~ race, data = us_sent)
+    ## 
+    ## Residuals:
+    ##    Min     1Q Median     3Q    Max 
+    ## -74.34 -48.34 -20.49  22.66 423.15 
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)   55.8291     0.1584  352.36   <2e-16 ***
+    ## raceblack     18.5143     0.2300   80.48   <2e-16 ***
+    ## racehispanic   5.2614     0.2725   19.31   <2e-16 ***
+    ## raceARI       -8.9796     0.4578  -19.61   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 71.47 on 518715 degrees of freedom
+    ## Multiple R-squared:  0.01549,    Adjusted R-squared:  0.01549 
+    ## F-statistic:  2721 on 3 and 518715 DF,  p-value: < 2.2e-16
+
+<!-- How should we do confidence intervals in this case?
+&#10;We can also figure out confidence intervals using the following code:
+&#10;
+```r
+library(DescTools)
+&#10;us_sent %>% 
+  drop_na(race) %>%
+  count(race) %>%
+  data.frame(MultinomCI(.$n, conf.level = 0.95))
+
+    ##       race      n       est     lwr.ci     upr.ci
+    ## 1    white 203469 0.3922528 0.39075685 0.39375019
+    ## 2    black 183652 0.3540491 0.35255312 0.35554646
+    ## 3 hispanic 103908 0.2003165 0.19882056 0.20181390
+    ## 4      ARI  27690 0.0533815 0.05188551 0.05487886
+
+–\>
+
+    ### [5.4.2 District I Model]{data-rmarkdown-temporarily-recorded-id="district-i-model"}
+
+    The first model includes defendant demographics, sentencing year,
+    whether or not there was a guilty plea, relevant cell on the U.S.
+    sentencing grid, whether there was a mandatory minimum sentence,
+    presence of government-sponsored downward departures, and the
+    interaction of judicial district and defendant race. An interaction term
+    is employed when the one variable impacts another variable in some
+    wayFor our dataset this includes the following variables: `age`, `sex`,
+    and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`,
+    `gov_departures`, and the interaction of `district` and `race`. In this
+    model, all terms except for the interaction derive from nationwide data.
+    For example, this model assumes that all districts, on average, apply
+    the U.S. sentencing grid in the same way. The code for formulating this
+    linear regression model would follow the same format as the other linear
+    models we've made:
+
+    ``` r
+    lm1 <- lm(sentence_length ~ age + sex + educ + year + guilty_plea + grid_cell + mandatory_min + 
+                gov_departures + district:race,
+              data = us_sent)
+
+### 5.4.3 District II Model
+
+The second model relies on the same variables as in the District I Model
+plus `race` on its own. However, a regression is performed within each
+district, rather than across all districts represented in the data set.
+This model allows for variations in grid application, defendant
+demographics, and more. To perform this form of regression in R, you
+would create a subset of `us_sent` for each district, and then employ
+the same code as above but with each smaller data set.
 
 # 6 Results
 
 With all of our work constructing the regression complete, we are now
-ready to interpret the results of Table 1. The baseline model assumes
-that no factors affect sentencing except race, so race is our
-independent variable and total sentence length is the dependent
-variable. Because the independent variable race is categorical, we code
-one of the values of that variable (one race) with a value of zero and
-call that value the reference level. In this case, the race white was
-coded as the reference value and the races Black, Hispanic, and ARI are
-compared against it.
+ready to interpret the results. The Baseline Model assumes that no
+factors affect sentencing except race, so race is our independent
+variable and total sentence length is the dependent variable. Because
+the independent variable race is categorical, we code one of the values
+of that variable (one race) with a value of zero and call that value the
+reference level. In this case, the race white was coded as the reference
+value and the races Black, Hispanic, and ARI are compared against it.
 
 We see that, accounting for nothing other than race, Black defendants
 received on average sentences that were 18.5 months longer than white
@@ -1915,29 +2193,31 @@ independent variables, Black defendants receive on average sentences
 that are 12.9 years longer than white defendants. The researchers
 included other explanatory variables, including factors considered in
 the sentencing guidelines. In the end, with all explanatory variables
-included, we find that Black defendants receive sentences on average 1.9
-months longer than white defendants and Hispanic defendants receive
-sentences at the same length as white defendants.
+included in the District I Model, we find that Black defendants receive
+sentences on average 1.9 months longer than white defendants and
+Hispanic defendants receive sentences at the same length as white
+defendants.
 
-It is worth noting in the comments at the bottom of the table that the
-adjusted $r^2$ values are reported. This allows us to determine how much
-of the variation in sentencing is explained by the independent variables
-considered in the model. For the baseline model, the adjusted $r^2$ is
-0.02, meaning that only 2% of the variability in sentence length is
-explained by the baseline model. For the full model, the adjusted $r^2$
-is reported as 0.79, meaning that 79% of the variability in sentence
-length is explained by the full model. The adjusted $r^2$ is reported
-instead of $r^2$ because adjusted $r^2$ adjusts for the number of
-independent variables included in the model. As we add explanatory
-variables, $r^2$ will likely increase, but it might be a spurious
-increase. The adjusted $r^2$ takes the number of variables into account
-so is reported in multivariate regressions.
+It is worth noting that the adjusted $r^2$ values are reported. This
+allows us to determine how much of the variation in sentencing is
+explained by the independent variables considered in the model. For the
+baseline model, the adjusted $r^2$ is 0.02, meaning that only 2% of the
+variability in sentence length is explained by the baseline model. For
+the full model, the adjusted $r^2$ is reported as 0.79, meaning that 79%
+of the variability in sentence length is explained by the full model.
+The adjusted $r^2$ is reported instead of $r^2$ because adjusted $r^2$
+adjusts for the number of independent variables included in the model.
+As we add explanatory variables, $r^2$ will likely increase, but it
+might be a spurious increase. The adjusted $r^2$ takes the number of
+variables into account so is reported in multivariate regressions.
 
 The authors further refine the analysis by looking at individual
-districts rather than the federal court system nationwide. We focus our
-examination on the results of Model II, which are reported in Table 3.
-We see that Black defendants receive longer sentences than white
+districts rather than the federal court system nationwide in the
+District II Model. We focus our examination on the results of this
+model. We see that Black defendants receive longer sentences than white
 defendants in 11 districts and ARI defendants receive longer sentences
 than white defendants in 3 districts. Figure 3 pulls out these districts
 and provides the 95% confidence interval for the sentence differential
 and Figure 4 highlights the locations of these districts in the U.S.
+
+<!-- Add figure labels to match? -->
