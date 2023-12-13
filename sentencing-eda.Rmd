@@ -140,6 +140,8 @@ ggplot(us_sent, aes(x = age,
 
 What do you notice in this scatter plot? What do you wonder?
 
+> Interpreting plots: While you might have some ideas already about how to approach the above questions, here are a few things to think about when you are interpreting plots. It is important to consider shape, center, and spread. Shape refers to the general patterns in the datapoints. Some questions to consider related to shape include: Are the points symmetric or skewed? Do the points gather in one, two, or more "mounds" (called unimodal, binmodal, or multimodal)? Or are the points uniformly distributed across the plot? Center refers to where the datapoints congregate, which can be approximated using the mean and/or median of the datapoints. As a general rule, uou should use mean to measure the center of a symmetric distribution and median to measure the center of a skewed distribution. Lastly, spread considers how spread out the datapoints are. You can think about the standard deviations of the data points from the mean, the inter-quartile range, and whether there are any noticeable outliers. 
+
 ### What happens when you try to make a scatter plot with categorical variables?
 
 We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical. Run the code below that plots `criminal_history` (a categorical variable) against `age` (a numerical variable).
