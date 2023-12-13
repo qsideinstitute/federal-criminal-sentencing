@@ -55,7 +55,7 @@ twoplot + geom_abline(slope = 3/2,
                       intercept = 1/2)
 ```
 
-Great, notice that the line above goes right through our two data points.
+Great! Notice that the line above goes right through our two data points.
 
 ### Numerically Fit a Line to Two Points
 
@@ -72,12 +72,16 @@ twolinear
 We know that two points alone uniquely define a line, but what do we think will happen if we have to find a line that describes the goes through three data points? Let's add the point (2,3) to our existing set and see what happens when try to draw a line through these three points. Below, we will use R to plot three graphs of our points, each attempting to find a line that goes through all three data points. Don't worry too much on the coding for now, but pay attention to the resulting plots. 
 
 ```{r, fig.width=12}
+# add point C
 threepoints = rbind(twopoints, 
                     data.frame(xvals = 2, yvals = 3, label = 'C'))
+
+# fit possible regression lines
 threepoints$yfit1 = threepoints$xvals*3/2 + 1/2
 threepoints$yfit2 = threepoints$xvals + 1
 threepoints$yfit3 = threepoints$xvals*2 - 1
 
+# plot data points with lines
 threeplot = ggplot(threepoints, aes(x = xvals, 
                                     y = yvals)) + 
   geom_point(color = 'coral2')  + 
@@ -87,6 +91,7 @@ threeplot = ggplot(threepoints, aes(x = xvals,
   xlim(0,6) + 
   ylim(0,6)
 
+# display plots
 grid.arrange(
   threeplot + 
     geom_abline(slope = 3/2, intercept = 1/2) + 
@@ -120,6 +125,8 @@ threelinear = lm(formula = yvals ~ xvals,
 threelinear
 ```
 
+Here R gives us the slope and intercept of the straight line that best fits our data. Let's graph this line together with our data using the code below. 
+
 ```{r}
 threepoints$linfit = 1.5*threepoints$xvals + 0.3333
 ggplot(threepoints, aes(x = xvals, 
@@ -139,7 +146,7 @@ Notice that the best fit linear model doesn't go through any of our three points
 
 Keep in mind, our goal is to minimize our error as much as we can. In each of the four previous graphs, the error (or the distance between the predicted y value and the actual y value) is shown on the graph, highlighted in the coral color. Of the four plots we just made of lines through our three data points, which one seems to have the smallest error?
 
-> NOTE: Whenever you employ linear regression, there are various conditions you must make sure are satisfied before proceeding. You can use the acronym L.I.N.E to remember that you must satisfy linearity, independence, normality, and equal variance conditions. For the purposes of this tutorial, we won't go in depth about what these conditions mean and how you can check these conditions, but make sure to keep them in mind for your future data analyses. Conditions are super important in statistical analysis!
+> Note: Whenever you employ linear regression, there are various conditions you must make sure are satisfied before proceeding. You can use the acronym L.I.N.E to remember that you must satisfy linearity, independence, normality, and equal variance conditions. For the purposes of this tutorial, we won't go in depth about what these conditions mean and how you can check these conditions, but make sure to keep them in mind for your future data analyses. Conditions are super important in statistical analysis!
 
 ## Fitting a Line to Many Points: Linear Regression!
 Now let's turn to another example data set. This new dataset focuses on penguins. Do you think a linear model might be a good way to model the data? Run the code below to create a scatter plot of flipper length versus body mass. 
@@ -147,7 +154,7 @@ Now let's turn to another example data set. This new dataset focuses on penguins
 ```{r, warning = FALSE, fig.width = 5, fig.height = 4}
 data(penguins)
 
-pengscat = ggplot(penguins, aes(x = body_mass_g, 
+pengscat <- ggplot(penguins, aes(x = body_mass_g, 
                                 y = flipper_length_mm)) + 
   geom_point(color = 'coral2', alpha = 0.7) +
   labs(x = "Body Mass (grams)",
@@ -158,30 +165,25 @@ pengscat
 
 Take a look at the scatterplot, does it look like most of the data fall along a straight line? If the general shape is a line, then yes, we should try to model this data with linear regression line.
 
-```{r}
+```{r, warning = FALSE}
 pengfit <- lm(formula = flipper_length_mm ~ body_mass_g, 
              data = penguins)
 pengfit
-```
 
-Here R gives us the slope and intercept of the straight line that best fits our data. Let's graph this line together with our data using the code below. 
-
-```{r, warning = FALSE}
 pengscat + geom_abline(slope = 0.0152, intercept = 137.0396)
 ```
 
-That looks like a pretty good fit, right? But how do we evaluate how good of a fit the linear regression provides? One function we can use in R is `msummary()`. This function provides an overview of the fitted model.  
+That looks like a pretty good fit, right? But how do we evaluate how good of a fit the linear regression provides? One function we can use in R is `summary()`. This function provides an overview of the fitted model.  
 
 ```{r}
-library(mosaic) # check if i can add this for a simpler summary... otherwise use just summary
-msummary(pengfit)
-
-#summary(pengfit)
+summary(pengfit)
 ```
 
 There is a lot of information that comes out of this function, but just focus on "Multiple R-squared" for now. $R^2$ represents the percent of variation in the response y-variable that is explained by the explanatory x-variable(s). Can you find the $R^2$ for this model in the summary table? 
 
-You probably found 0.759 on the table. This means that 75.9% of the variation in flipper length can be explained by the body mass of penguins. That is a pretty high $R^2$, especially for observational data. Therefore, we can consider this model to be quite good for modeling flipper length. 
+You probably found 0.759 on the table. This means that 75.9% of the variation in flipper length can be explained by the body mass of penguins. That is a pretty high $R^2$, especially for observational data. Therefore, we can already consider this model to be quite good for modeling flipper length. 
+
+Apart from looking at the $R^2$, it is a good idea to look at the resulting t-tests and F-tests. While t-tests looks at the significance of individual variables by comparing population means, F-tests examine the significance of overall models by comparing population variances. You can see the "t value" column for the test statistics from the t-tests, but you can mainly just focus on the resulting p-values in the "Pr(>|t|)" column. In this case, the p-value for `body_mass_g` is quite low, meaning it is a significant variable in this model predicting flipper length. At the bottom, you can see the F-statistic and associated p-value for the overall model. Again, the p-value is quite low, meaning the model is significant. These two outcomes of the t-test and F-test can increase our confidence in the model even further. 
 
 ## Categorical Data to Numerical Representations
 So far we've only explored linear regression with numerical variables, but we can certainly use categorical variables in our model as well. Continuing with our penguins data, let's compare flipper length to penguin species. Remember that flipper length is a numerical variable and species is a categorical variable (with three levels: Adelie, Chinstrap, and Gentoo).
@@ -189,18 +191,18 @@ So far we've only explored linear regression with numerical variables, but we ca
 To start, let's consider one level at a time, so we can get a good sense of the relationship between species and flipper length. Below we examine Adelie penguins first. We start off by using `mutate()` again to label our species as either "Adelie" or "Not Adelie". Then, we create a side-by-side boxplot using `geom_boxplot()` again. 
 
 ```{r, warning = FALSE}
-#penguins$isAdelie = ifelse(penguins$species == 'Adelie', 1, 0)
-
 pengAdelie <- penguins %>% 
   mutate(species = case_when(species != "Adelie" ~ "Not Adelie",
-                            TRUE ~ "Adelie"))
+                            TRUE ~ "Adelie")) %>% 
+  drop_na()
 
 adelieplot <- ggplot(pengAdelie, aes(x = species,
                                      y = flipper_length_mm)) + 
   geom_boxplot(color = 'coral2', 
                alpha = 0.7) +
   labs(x = "Species",
-       y = "Flipper Length (mm)")
+       y = "Flipper Length (mm)",
+       title = "Flipper Length by Adelie and non-Adelie Species")
 adelieplot
 ```
 
@@ -209,40 +211,71 @@ We can see that Adelie penguins seem to have a shorter flipper length, on averag
 Next, we create a linear model for the relationship between flipper length and whether a penguin is an Adelie penguin or not.
 
 ```{r}
-amodel <- lm(formula = flipper_length_mm ~ species, 
+amodel <- lm(flipper_length_mm ~ species, 
              data = pengAdelie)
 amodel
 ```
 Then plot this best fit linear model against with our scatterplot to compare. Do you think that our linear model is a good representation of the data?
 
-<!-- FIX THIS SECTION WITH THE REGRESSION LINE-->
+<!-- FIX THIS SECTION WITH THE REGRESSION LINE ON THE BOXPLOT-->
 
-As we saw before, things look a little bit different when we are dealing with categorical variables. In these types of scatterplots, we would expect the best fit model  to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
+As we saw before, things look a little bit different when we are dealing with categorical variables. In these types of scatterplots, we would expect the best fit model to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
 
-```{r}
-adelieplot + geom_abline(slope = 19.63, intercept = 189.95)
+```{r, warning = FALSE}
+coefs <- coef(lm(flipper_length_mm ~ species, data = pengAdelie))
+
+ggplot(pengAdelie, aes(y = flipper_length_mm, x = species, group = species)) +
+  geom_boxplot() +
+  geom_abline(intercept = coefs[1], slope = coefs[2])
 ```
+
 Now we do the same thing for the other two species (Chinstrap and Gentoo) and plot all three graphs side by side.
 
 ```{r, fig.width=12}
 penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
+
+pengChinstrap <- penguins %>% 
+  mutate(species = case_when(species != "Chinstrap" ~ "Not Chinstrap",
+                            TRUE ~ "Chinstrap"))
+
+chinstrapplot <- ggplot(pengChinstrap, aes(x = species,
+                                     y = flipper_length_mm)) + 
+  geom_boxplot(color = 'coral2', 
+               alpha = 0.7) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)")
+chinstrapplot
+
+
 penguins$isGentoo = ifelse(penguins$species=='Gentoo',1,0)
 
-cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
-gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
+pengGentoo <- penguins %>% 
+  mutate(species = case_when(species != "Gentoo" ~ "Not Gentoo",
+                            TRUE ~ "Gentoo"))
 
-speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
-aplot = speciesbase + 
-  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
-  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
-cplot = speciesbase + 
-  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
-  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
-gplot = speciesbase + 
-  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
-  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
+gentooplot <- ggplot(pengGentoo, aes(x = species,
+                                        y = flipper_length_mm)) + 
+  geom_boxplot(color = 'coral2', 
+               alpha = 0.7) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)")
+gentooplot
 
-grid.arrange(aplot, cplot, gplot, ncol=3)
+#cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
+#gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
+
+#speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
+#aplot = speciesbase + 
+#  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
+#  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
+#cplot = speciesbase + 
+#  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
+#  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
+#gplot = speciesbase + 
+#  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
+#  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
+
+#grid.arrange(pengAdelie, pengChinstrap, pengGentoo, ncol = 3, nrow)
 ```
 What would happen if instead of creating linear models for each level of the categorical variable separately, we created a single linear model for flipper length versus all species types? The code below allows us to find that model in just one step.
 
@@ -272,7 +305,7 @@ Let's try a model of `sentence_length` based on the variable `race`, using the s
 ```{r}
 baselinemod <- lm(sentence_length ~ race,
                   data = us_sent)
-msummary(baselinemod)
+summary(baselinemod)
 ```
 <!-- How should we do confidence intervals in this case?
 
@@ -295,7 +328,8 @@ The first model includes defendant demographics, sentencing year, whether or not
 ```{r, eval = FALSE}
 lm1 <- lm(sentence_length ~ age + sex + educ + year + guilty_plea + grid_cell + mandatory_min + 
             gov_departures + district:race,
-          data = us_sent)
+          data = us_sent,
+          model = TRUE, fitted = TRUE, y = TRUE)
 ```
 
 ### District II Model
