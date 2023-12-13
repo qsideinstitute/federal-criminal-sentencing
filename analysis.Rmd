@@ -211,22 +211,48 @@ We can see that Adelie penguins seem to have a shorter flipper length, on averag
 Next, we create a linear model for the relationship between flipper length and whether a penguin is an Adelie penguin or not.
 
 ```{r}
-amodel <- lm(flipper_length_mm ~ species, 
+amodel <- lm(flipper_length_mm ~ body_mass_g + species, 
              data = pengAdelie)
 amodel
 ```
-Then plot this best fit linear model against with our scatterplot to compare. Do you think that our linear model is a good representation of the data?
+Do you think that our linear model is a good representation of the data? Let's turn to `summary()` again to answer this question.
 
-<!-- FIX THIS SECTION WITH THE REGRESSION LINE ON THE BOXPLOT-->
+```{r}
+summary(amodel)
+```
+
+We can analyze this summary table like normal to determine whether this is a good model of our data. 
+
+Let's assume for the purposes of this case study that we checked conditions and feel ready to interpret our linear model. For interpreting the coefficient of the categorical variable `species`, however, you may notice that the variable shows up a little differently than you might expect, being named `speciesNot Adelie` rather than just `species`. When R is dealing with categorical variables in linear models, it chooses one level to be a baseline, coded as 0, and makes the other level 1. Since `Not Adelie` is in the name of the categorical variable in the linear model, we know R decided to code this level as 1, and therefore `Adelie` as 0. This is exactly what we would expect because, unless we specify which level we want to be our baseline variable, R will just choose the level that is first in the alphabet to be the baseline. How should we interpret this categorical variable you may ask? It may help to write out the equation for the linear model:
+
+$\widehat{FlipperLength} = 144.3 + 0.01237(BodyMass) + 8.311(speciesNotAdelie)$
+
+Now, since we know we will enter 0 for `speciesNot Adelie` for Adelie penguins, and 1 for `speciesNot Adelie` for non-Adelie penguins, we can now make two separate equations, one for each category.
+
+Plugging in 0 for `speciesNot Adelie`, we get the equation for Adelie penguins: 
+
+$\widehat{FlipperLength} =  144.3 + 0.01237(BodyMass)$
+
+Plugging in 1 for `speciesNot Adelie`, we get the equation for non-Adelie penguins: 
+
+$\widehat{FlipperLength} =  152.61 + 0.01237(BodyMass)$
+
+Awesome. What do you now see about the impact of the `species` variable on predicting flipper length? The only difference in the two equations is in the y-intercept in the model, meaning that flipper length for non-Adelie penguins is, on average, 8.311 mm longer than flipper length for Adelie penguins, across all body mass values. 
+
+
+<!-- Regression line with boxplot
+
+Let's plot this best fit linear model against with our scatterplot to compare. 
 
 As we saw before, things look a little bit different when we are dealing with categorical variables. In these types of scatterplots, we would expect the best fit model to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
 
 ```{r, warning = FALSE}
-coefs <- coef(lm(flipper_length_mm ~ species, data = pengAdelie))
+#coefs <- coef(lm(flipper_length_mm ~ species, data = pengAdelie))
 
-ggplot(pengAdelie, aes(y = flipper_length_mm, x = species, group = species)) +
-  geom_boxplot() +
-  geom_abline(intercept = coefs[1], slope = coefs[2])
+ggplot(pengAdelie, aes(y = flipper_length_mm, 
+                       x = body_mass_g, 
+                       color = species)) +
+  geom_smooth(method = "lm", se = FALSE)
 ```
 
 Now we do the same thing for the other two species (Chinstrap and Gentoo) and plot all three graphs side by side.
@@ -261,21 +287,22 @@ gentooplot <- ggplot(pengGentoo, aes(x = species,
        y = "Flipper Length (mm)")
 gentooplot
 
-#cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
-#gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
+amodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
+cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
+gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
 
-#speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
-#aplot = speciesbase + 
-#  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
-#  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
-#cplot = speciesbase + 
-#  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
-#  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
-#gplot = speciesbase + 
-#  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
-#  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
+speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
+aplot = speciesbase + 
+  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
+  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
+cplot = speciesbase + 
+  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
+  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
+gplot = speciesbase + 
+  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
+  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
 
-#grid.arrange(pengAdelie, pengChinstrap, pengGentoo, ncol = 3, nrow)
+grid.arrange(aplot, cplot, gplot, ncol = 3, nrow)
 ```
 What would happen if instead of creating linear models for each level of the categorical variable separately, we created a single linear model for flipper length versus all species types? The code below allows us to find that model in just one step.
 
@@ -295,6 +322,8 @@ peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 
 head(peng_encoded)
 ```
 
+-->
+
 ## Using Linear Regression with the Federal Criminal Sentencing Data
 
 Now that we've explored the basics of linear regression using both numerical and categorical variables, let's return to the goal of this project: to explore patterns in federal criminal sentencing data from 2006-2020. We will show how to create relevant linear models for this case study, and discuss the results of these models in the following section. We won't dive into the specifics of why, based on the EDA, we will include certain variables over others in the linear regression. Rather, we will simply replicate the results of the paper mentioned at the beginning of this case study. For more information on how the researchers of that paper arrived their final models, please read the paper.
@@ -302,36 +331,56 @@ Now that we've explored the basics of linear regression using both numerical and
 ### Baseline Model
 
 Let's try a model of `sentence_length` based on the variable `race`, using the same methods we used above.
+
 ```{r}
 baselinemod <- lm(sentence_length ~ race,
                   data = us_sent)
 summary(baselinemod)
 ```
-<!-- How should we do confidence intervals in this case?
 
-We can also figure out confidence intervals using the following code:
+Already, we can use some of the methods we used above to determine whether this is a good model for `sentence_length`. Considering the $R^2$, t-test, and F-test values, is this a good model for our data? 
+
+You may have noticed that the Multiple $R^2$ is relatively low, indicating that our model using `race` accounts for only 1.5% of the variation in `sentence_length`. You also may have noticed that all variables in our model have low p-values from t-tests, meaning the variables are significant predictors of `race`, and the overall F-test has a low-p-value as well. Do you think we can make a better model using more variables to predict `sentence_length`? 
+
+Here is one more tool you can use to determine the effectiveness of certain predictors in a linear model. You may recall that confidence intervals give us a reasonable margin of error for estimating the coefficients in front of predictors in a model. You can get the confidence intervals for the different levels of `race` from our baseline model using the following code:
 
 ```{r}
-library(DescTools)
-
-us_sent %>% 
-  drop_na(race) %>%
-  count(race) %>%
-  data.frame(MultinomCI(.$n, conf.level = 0.95))
+confint(baselinemod)
 ```
 
--->
+Here, you automatically get 95% confidence intervals. We can see that the estimates for the coefficients in our linear model are 18.51 for `raceblack`, 5.26 for `racehispanic` and -8.98 for `raceARI`, but that the 95% confidence interval for `raceblack` is 18.06 to 18.97, the 95% confidence interval for `racehispanic` is 4.73 to 5.80, and the 95% confidence interval for `raceARI` is -9.88 to -8.08. 
+
+> Note: Remember that for interpreting these values, the actual value of the coefficient in the model has nothing to do with the strength of the predictor. For example, just because the estimated coefficient for `racehispanic` is half the value of the estimated coefficient for `raceblack`, that doesn't necessarily mean one predictor is between than the other. Rather, it is important to focus on the strength of these predictors by relying on statistical tests like the t-test. Also, remember that to interpret a 95% confidence interval, you should interpret the interval as follows: "If I were to repeatedly sample from this population many times, I would expect the true coefficient to fall within this interval 95% of the time". 
+
 
 ### District I Model
-The first model includes defendant demographics, sentencing year, whether or not there was a guilty plea, relevant cell on the U.S. sentencing grid, whether there was a mandatory minimum sentence, presence of government-sponsored downward departures, and the interaction of judicial district and defendant race. An interaction term is employed when the one variable impacts another variable in some wayFor our dataset this includes the following variables: `age`, `sex`, and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`, `gov_departures`, and the interaction of `district` and `race`. In this model, all terms except for the interaction derive from nationwide data. For example, this model assumes that all districts, on average, apply the U.S. sentencing grid in the same way. The code for formulating this linear regression model would follow the same format as the other linear models we've made:
+Alright, let's try to improve our model by adding some more predictors. The first model based on the resesarch paper this case study is based on includes defendant demographics, sentencing year, whether or not there was a guilty plea, relevant cell on the U.S. sentencing grid, whether there was a mandatory minimum sentence, presence of government-sponsored downward departures, and the interaction of judicial district and defendant race. An interaction term is employed when the one variable impacts another variable in some way. For our data set, this includes the following variables: `age`, `sex`, and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`, `gov_departures`, and the interaction of `district` and `race`. In this model, all terms except for the interaction derive from nationwide data. For example, this model assumes that all districts, on average, apply the U.S. sentencing grid in the same way. Because we are working with such a large data set, let's try employing this model for just one district at a time. Let's start with Massachusetts. The code for formulating this linear regression model would follow the same format as the other linear models we've made:
 
 ```{r, eval = FALSE}
-lm1 <- lm(sentence_length ~ age + sex + educ + year + guilty_plea + grid_cell + mandatory_min + 
+us_sent_mass <- us_sent %>% 
+  filter(district == "Massachusetts")
+
+lm1 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + 
             gov_departures + district:race,
           data = us_sent,
-          model = TRUE, fitted = TRUE, y = TRUE)
+          model = TRUE,
+          y = TRUE)
+summary(lm1)
 ```
 
 ### District II Model
 The second model relies on the same variables as in the District I Model plus `race` on its own. However, a regression is performed within each district, rather than across all districts represented in the data set. This model allows for variations in grid application, defendant demographics, and more. To perform this form of regression in R, you would create a subset of `us_sent` for each district, and then employ the same code as above but with each smaller data set. 
+
+```{r}
+# us_sent_mass <- us_sent %>% 
+#   filter(district == "Massachusetts")
+# 
+lm2 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + 
+            gov_departures + race,
+          data = us_sent_mass,
+          model = TRUE, 
+          y = TRUE)
+summary(lm2)
+```
+
 
