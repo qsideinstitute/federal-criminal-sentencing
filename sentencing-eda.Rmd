@@ -140,7 +140,6 @@ ggplot(us_sent, aes(x = age,
 
 What do you notice in this scatter plot? What do you wonder?
 
-> Interpreting plots: While you might have some ideas already about how to approach the above questions, here are a few things to think about when you are interpreting plots. It is important to consider shape, center, and spread. Shape refers to the general patterns in the datapoints. Some questions to consider related to shape include: Are the points symmetric or skewed? Do the points gather in one, two, or more "mounds" (called unimodal, binmodal, or multimodal)? Or are the points uniformly distributed across the plot? Center refers to where the datapoints congregate, which can be approximated using the mean and/or median of the datapoints. As a general rule, uou should use mean to measure the center of a symmetric distribution and median to measure the center of a skewed distribution. Lastly, spread considers how spread out the datapoints are. You can think about the standard deviations of the data points from the mean, the inter-quartile range, and whether there are any noticeable outliers. 
 
 ### What happens when you try to make a scatter plot with categorical variables?
 
@@ -168,7 +167,7 @@ ggplot(us_sent, aes(x = criminal_history,
        y = "Age (Years)") 
 ```
 
-> Interpreting box plots: The middle horizontal line on a box plot refers to the mean of the datapoints. The botton and top lines of the box represent the lower quartile and upper quartile respectively (meaning the lower 25% of the datapoints are below the lower quartile and the upper 25% of the datapoints are above the upper quartile). The verticle lines called "whiskers" extending from the box represent the rest of the data, which includes all points outside of the middle 50% of the datapoints, excluding any outliers. Lastly, any points outside of the box and "whiskers" are outliers. 
+> Interpreting box plots: The middle horizontal line on a box plot refers to the mean of the data points. The botton and top lines of the box represent the lower quartile and upper quartile respectively (meaning the lower 25% of the data points are below the lower quartile and the upper 25% of the data points are above the upper quartile). The verticle lines called "whiskers" extending from the box represent the rest of the data, which includes all points outside of the middle 50% of the data points, excluding any outliers. Lastly, any points outside of the box and "whiskers" are outliers. 
 
 What do you notice in this side-by-side boxplot? What do you wonder?
 
