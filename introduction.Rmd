@@ -23,6 +23,7 @@ library(tidycensus)
 library(palmerpenguins)
 library(gridExtra)
 library(broom)
+library(ggplot2)
 ```
 
 QSIDE is a 501(c)3 tax-exempt nonprofit organization. Initiatives like our Data4Justice curriculum require resources to produce, and we depend on a public that is willing to support social justice initiatives. Anyone is welcome to use this document for free, but we ask those who are able to [please make a donation to QSIDE](https://qsideinstitute.org/support-us/donate/) so that we can maintain our innovative research, action, and education efforts at the interface of data science and social justice. Additionally, we ask anyone using any or all of this document to cite it properly using the citation above.
