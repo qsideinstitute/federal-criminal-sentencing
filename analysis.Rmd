@@ -149,7 +149,7 @@ Keep in mind, our goal is to minimize our error as much as we can. In each of th
 > Note: Whenever you employ linear regression, there are various conditions you must make sure are satisfied before proceeding. You can use the acronym L.I.N.E to remember that you must satisfy linearity, independence, normality, and equal variance conditions. For the purposes of this tutorial, we won't go in depth about what these conditions mean and how you can check these conditions, but make sure to keep them in mind for your future data analyses. Conditions are super important in statistical analysis!
 
 ## Fitting a Line to Many Points: Linear Regression!
-Now let's turn to another example data set. This new dataset focuses on penguins. Do you think a linear model might be a good way to model the data? Run the code below to create a scatter plot of flipper length versus body mass. 
+Now let's turn to another example data set. This new data set focuses on penguins. Do you think a linear model might be a good way to model the data? Run the code below to create a scatter plot of flipper length versus body mass. 
 
 ```{r, warning = FALSE, fig.width = 5, fig.height = 4}
 data(penguins)
@@ -246,7 +246,7 @@ Let's plot this best fit linear model against with our scatterplot to compare.
 
 As we saw before, things look a little bit different when we are dealing with categorical variables. In these types of scatterplots, we would expect the best fit model to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
 
-```{r, warning = FALSE}
+```{r, warning = FALSE, eval = FALSE}
 #coefs <- coef(lm(flipper_length_mm ~ species, data = pengAdelie))
 
 ggplot(pengAdelie, aes(y = flipper_length_mm, 
@@ -257,7 +257,7 @@ ggplot(pengAdelie, aes(y = flipper_length_mm,
 
 Now we do the same thing for the other two species (Chinstrap and Gentoo) and plot all three graphs side by side.
 
-```{r, fig.width=12}
+```{r, fig.width=12, eval = FALSE}
 penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
 
 pengChinstrap <- penguins %>% 
@@ -317,7 +317,7 @@ So...what happened to the Adelie penguins in our model?!?! Notice the variable f
 
 What is the flipper length predicted by our model for a Chinstrap penguin? What about a Gentoo penguin?
 
-```{r}
+```{r, eval = FALSE}
 peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 0 )
 head(peng_encoded)
 ```
@@ -354,33 +354,53 @@ Here, you automatically get 95% confidence intervals. We can see that the estima
 
 
 ### District I Model
-Alright, let's try to improve our model by adding some more predictors. The first model based on the resesarch paper this case study is based on includes defendant demographics, sentencing year, whether or not there was a guilty plea, relevant cell on the U.S. sentencing grid, whether there was a mandatory minimum sentence, presence of government-sponsored downward departures, and the interaction of judicial district and defendant race. An interaction term is employed when the one variable impacts another variable in some way. For our data set, this includes the following variables: `age`, `sex`, and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`, `gov_departures`, and the interaction of `district` and `race`. In this model, all terms except for the interaction derive from nationwide data. For example, this model assumes that all districts, on average, apply the U.S. sentencing grid in the same way. Because we are working with such a large data set, let's try employing this model for just one district at a time. Let's start with Massachusetts. The code for formulating this linear regression model would follow the same format as the other linear models we've made:
+Alright, let's try to improve our model by adding some more predictors. The first model based on the resesarch paper this case study is based on includes defendant demographics, sentencing year, whether or not there was a guilty plea, relevant cell on the U.S. sentencing grid, whether there was a mandatory minimum sentence, presence of government-sponsored downward departures, and the interaction of judicial district and defendant race. An interaction term is employed when the one variable impacts another variable in some way. For our data set, this includes the following variables: `age`, `sex`, and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`, `gov_departures`, and the interaction of `district` and `race`. In this model, all terms except for the interaction derive from nationwide data. For example, this model assumes that all districts, on average, apply the U.S. sentencing grid in the same way. The code for formulating this linear regression model would follow the same format as the other linear models we've made:
 
-```{r, eval = FALSE}
-us_sent_mass <- us_sent %>% 
-  filter(district == "Massachusetts")
-
-lm1 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + 
-            gov_departures + district:race,
+```{r}
+lm1 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + guilty_plea + grid_cell +
+            gov_departures + district + race,
           data = us_sent,
           model = TRUE,
           y = TRUE)
-summary(lm1)
 ```
 
-### District II Model
-The second model relies on the same variables as in the District I Model plus `race` on its own. However, a regression is performed within each district, rather than across all districts represented in the data set. This model allows for variations in grid application, defendant demographics, and more. To perform this form of regression in R, you would create a subset of `us_sent` for each district, and then employ the same code as above but with each smaller data set. 
+We are omitting the linear model summary from this document because, as you can imagine, it becomes quite long with so many categorical variables in the model. However, you can take a look at the $R^2$ by using a dollar sign and the typing `r.squared` as follows:
 
 ```{r}
-# us_sent_mass <- us_sent %>% 
-#   filter(district == "Massachusetts")
-# 
-lm2 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + 
-            gov_departures + race,
-          data = us_sent_mass,
-          model = TRUE, 
-          y = TRUE)
-summary(lm2)
+summary(lm1)$r.squared
 ```
 
+That's a much higher $R^2$! Obviously, you aren't able to immediately see other factors that determine how effective this model is at predicting sentence lengths because of the ommitted linear model summary. However, you can already see that this model accounts for a lot more of the variability in `sentence_length` than our baseline model.
 
+### District II Model
+
+In the paper this case study is based on, the authors apply this model (along with alternate models) across all districts in the data set. In doing this, they were able to compare the disparity in sentences across different races. Let's try employing this model for just one district at a time. Let's start with Arkansas. To only look at the datapoints from Arkansas, we will start with using the `filter()` function. Then, we will fit another model identical to the first linear model, only without `district` as a predictor:
+
+```{r}
+us_sent_az <- us_sent %>%
+  filter(district == "Arizona")
+
+lm2 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + guilty_plea + grid_cell +
+            gov_departures + race,
+          data = us_sent_az,
+          model = TRUE, 
+          y = TRUE)
+```
+
+Let's extract the resulting $R^2$ again to get a sense for how well this model using only data from Arizona predicts sentence length:
+
+```{r}
+summary(lm2)$r.squared
+```
+
+In the paper, the authors cycle through all districts. While we won't go into how they accomplished this in this case study, we encourage you to look at some other districts of interest to you.
+
+Here is one figure from their paper comparing the minoritized race - white disparity in sentencing using a 95% confidence interval:
+
+*Figure 1: Minoritized Race-White Disparity in Sentence Length (Month) Across U.S. Districts Represented by District I and II models:*
+
+![districtIIfigure1.](photos/fedsent_fig1.jpg)
+
+Here is another figure from the paper displaying where these highlighted districts are located across the United States:
+
+![districtIIfigure2.](photos/fedsent_fig2.jpg)
