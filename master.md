@@ -4,7 +4,7 @@ Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik,
 Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas
 Wakefield
 
-December 12, 2023
+December 15, 2023
 
 - [1 Acknowledgments](#1-acknowledgments)
 - [2 Introduction](#2-introduction)
@@ -46,9 +46,7 @@ December 12, 2023
     Regression!](#52-fitting-a-line-to-many-points-linear-regression)
   - [5.3 Categorical Data to Numerical
     Representations](#53-categorical-data-to-numerical-representations)
-  - [5.4 Using Linear Regression with the Federal Criminal Sentencing
-    Data](#54-using-linear-regression-with-the-federal-criminal-sentencing-data)
-    - [5.4.1 Baseline Model](#541-baseline-model)
+    - [5.4.2 District I Model](#542-district-i-model)
     - [5.4.3 District II Model](#543-district-ii-model)
 - [6 Results](#6-results)
 
@@ -137,6 +135,8 @@ library(ggridges)
 library(tidycensus)
 library(palmerpenguins)
 library(gridExtra)
+library(broom)
+library(ggplot2)
 ```
 
 QSIDE is a 501(c)3 tax-exempt nonprofit organization. Initiatives like
@@ -374,20 +374,20 @@ the severity of the crime (`all_adjustments`). The two variables are
 combined, using a table, to determine the recommended range of the
 sentence.
 
-The variable `criminal_history` is coded as a value 1–6, with 1
-including a defendant with at most one conviction, where that conviction
-resulted in a sentence of less than 60 days. Prior convictions are
-assigned “points,” depending on the number of prior convictions,
-length(s) of sentence(s), and whether or not past crimes involved
-violence. The points are then summed and translated into a “criminal
-history category,” represented by the `criminal_history` values 1
-through 6. As an additional example, a defendant who has three prior
-convictions with sentences of over 13 months and two with sentences
-between 2 and 13 months would be assigned a total of 13 points, yielding
-the criminal history category 6. With only one prior conviction of each
-type, the category would be 3. The calculation is not quite this simple,
-with many adjustments and some types of convictions and very old
-convictions being ignored.
+The variable `criminal_history` is coded as a value 1–6. Prior
+convictions are assigned “points,” depending on the number of prior
+convictions, length(s) of sentence(s), and whether or not past crimes
+involved violence. The points are then summed and translated into a
+“criminal history category,” represented by the `criminal_history`
+values 1 through 6. A value of 1, for example, would refer to a
+defendant with at most one conviction, where that conviction resulted in
+a sentence of less than 60 days. As an additional example, a defendant
+who has three prior convictions with sentences of over 13 months and two
+with sentences between 2 and 13 months would be assigned a total of 13
+points, yielding the criminal history category 6. With only one prior
+conviction of each type, the category would be 3. The calculation is not
+quite this simple, with many adjustments and some types of convictions
+and very old convictions being ignored.
 
 The variable `all_adjustments` is a rating of the offense level (how
 severe the crime is) with adjustments (added considerations that call
@@ -398,11 +398,11 @@ for example, first degree murder has a base level (that is, level prior
 to adjustments) of 43 and trespassing has a base level of 4. Two
 additional variables, `base_chapter2_adjustments` and
 `base_chapter2_3_adjustments`, have to do with the derivation of
-`all_adjustments`, but you can ignore these for the purposes of this
-case study.
+`all_adjustments`, but you can ignore these variables for the purposes
+of this case study.
 
 Apart from `criminal_history` and `all_adjustments`, there are several
-variables related to identity of defendants:
+variables related to the identity of defendants:
 
 - `age`, which refers to a defendant’s age in years.
 - `sex`, which has been coded as a binary variable 0 and 1, where 0 is
@@ -435,21 +435,26 @@ that comes out of the investigation done by the probation office. This
 goes to the attorneys and also comes out of an interview with the
 individual. It should be noted that there are only two categories, so it
 is likely that there might be only two options possible for the
-individual. Not only is this problematic in that it restricts a
+individual. Not only is this challenging in that it restricts a
 defendant’s identity to two rigid categories, but a binary variable will
 not reflect sentenced individuals’ gender identity and excludes several
-groups altogether. Therefore, a limitation of this study comes through
-in
+groups, such as non-binary individuals, altogether. Therefore, a
+limitation of this study comes through in the “levels” of each variable
+being predetermined by the data-collecting institutions we are relying
+on. It is critical that in such instances we not only acknowledge this
+limitation, but contextualize our analysis and inferences with this
+knowledge.
 
-<!-- See Background section or link to official report for more information.
+<!-- Attempted to write this section above, but could clarify/add based on these notes:
+- See Background section or link to official report for more information
 - Discuss how a binary variable will not reflect sentenced individuals gender identity and excludes several groups. It is also limiting in nature.
 - Discuss difference between sex and gender
 - Discuss who has defined this variable and why this is problematic
 - Discuss the limitations and how this affects the analysis and inferences we can make.
 - Update sex label with more appropriate label based on Background research. 
-&#10;Also to add: explaining why we are going to use "ARI" rather than "other" for the race category -->
+&#10;Also to possibly add: explaining why we are going to use "ARI" rather than "other" for the race category -->
 
-The nine other variables in the dataset refer to information about the
+The nine other variables in the data set refer to information about the
 court cases themselves:
 
 - `year`, which describes the year in which the court case took place,
@@ -466,28 +471,18 @@ court cases themselves:
 
 # 4 Explanatory Data Analysis
 
-Alright, let’s start digging into the data. Whenever you are handed a
+Alright, let’s start digging into the data! Whenever you are handed a
 new data set, you want to read in the data so you can view it in RStudio
 and perform an Exploratory Data Analysis (EDA).
 
 ## 4.1 Reading in the data
 
-You can read in your data using `read_csv()` and creating a variable
-named `us_sent` that refers to the data set.
+You can read in your data using `read_csv()` and create a variable named
+`us_sent` that refers to the dataset
 
 ``` r
 us_sent <- read_csv("data/cleaned_data_renamed.csv")
 ```
-
-    ## Rows: 518719 Columns: 15
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr  (3): grid_cell, district, race
-    ## dbl (10): sentence_length, age, sex, educ, year, guilty_plea, base_chapter2_...
-    ## lgl  (2): mandatory_min, gov_departures
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 To view the data in a new tab within RStudio, you can use the `View()`
 function. Because this is an interactive RStudio function that doesn’t
@@ -509,8 +504,9 @@ the country’s 94 districts.
 
 When we start exploring a data set, we will want to think about some key
 questions using the four W’s: who, what, when, and where. Specifically,
-you might ask: who is in our data set? What was the sentence? When was
-the individual was sentenced? Where did the sentence occur?
+you might ask in the context of this study: who is in our data set? What
+was the sentence? When was the individual was sentenced? Where did the
+sentence occur?
 
 Can you guess which variables pertain to each question? Let’s inspect
 our variables, which are in the columns, and see if that helps. There
@@ -656,8 +652,8 @@ employment status, or states/countries. These have unique values, like
 California or Oregon. In other words, categorical variables take on
 discrete, finite values. In R, these variables might show up as
 characters (`chr`), `TRUE` or `FALSE` statements which are called
-logical vectors (`lgl`), coded as the integers (`int`) 0 and 1, or
-factors (`fct`).
+logical vectors (`lgl`), coded as the integers (`int`), or factors
+(`fct`).
 
 On the other hand, numerical data is in number form. Some examples of
 numerical data are temperature, height, and salary. It makes perfect
@@ -671,8 +667,8 @@ which is a number, but you can’t live in the zip code 90210.3. Only
 whole numbers, and specific ones at that, make sense here. We will learn
 more about using numbers to represent categorical data in this lesson.
 
-Can you identify which data type each variable in the federal criminal
-sentencing data is?
+**Can you identify which data type each variable in the federal criminal
+sentencing data is?**
 
 You may notice that some variables’ data types are not what you would
 expect. Oftentimes, R will automatically assign data types to variables
@@ -739,8 +735,8 @@ glimpse(us_sent)
 
 Great! It worked. `sex` is now of the `fct` data type. Now we can use
 this process to change the rest of the variables with incorrect data
-types. You can see that we don’t always need to add labels, just when we
-think it might be useful.
+types. You can see that we don’t always need to add labels, we just do
+that when we think it might be useful.
 
 ``` r
 us_sent <- us_sent %>% 
@@ -757,7 +753,7 @@ component of our data set. Let’s change the `other` level under the
 clarify what we mean. To do this, we can use `mutate()` again in
 combination when `case_when()`, a function that allows you to condition
 an action on something being true. In this case, we are saying that we
-only want to change a value to “ARI” *if* `race` equals “other”.
+only want to change a value to “ARI” if `race` equals “other”.
 
 ``` r
 us_sent <- us_sent %>% 
@@ -775,11 +771,11 @@ data!
 ## 4.4 Data Exploration Methods
 
 A good practice to do with a new data set is to explore it through
-visualization. We can get a sense of the distributions of the different
-variables and look at the relationships among different variables. We
-will walk through a few graphs in R so you can see how to plot. We will
-examine each of these so we can see relationships and learn more about
-our data. Then, explore on your own by modifying this code!
+visualization—we can get a sense of the distributions of the different
+variables and look at the relationships among variables. We will walk
+through a few graphs in R so you can see how to plot. We will examine
+each of these so we can see relationships and learn more about our data.
+Then, explore on your own by modifying this code!
 
 ### 4.4.1 How to make a scatter plot with quantitative variables
 
@@ -791,8 +787,8 @@ this scatter plot to identify any patterns that exist in our data set.
 Each dot in the scatter plot we produce with the `ggplot()` command from
 the **ggplot2** package represents a row in our `us_sent` data.
 
-To use `ggplot()`, we start by indicating what data set we want to plot,
-`us_sent`. Then, we specify what our variables of interest are–in this
+To use `ggplot()`, we start by indicating the data set we want to plot:
+`us_sent`. Then, we specify what our variables of interest are—in this
 case, we are interested in `age` and `sentence_length`. `geom_point()`
 specifies that we want to use a scatter plot to represent our data.
 There are also many fun and useful modifications that change the way a
@@ -855,6 +851,16 @@ ggplot(us_sent, aes(x = criminal_history,
 
 ![](master_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
+> Interpreting box plots: The middle horizontal line on a box plot
+> refers to the mean of the data points. The botton and top lines of the
+> box represent the lower quartile and upper quartile respectively
+> (meaning the lower 25% of the data points are below the lower quartile
+> and the upper 25% of the data points are above the upper quartile).
+> The verticle lines called “whiskers” extending from the box represent
+> the rest of the data, which includes all points outside of the middle
+> 50% of the data points, excluding any outliers. Lastly, any points
+> outside of the box and “whiskers” are outliers.
+
 What do you notice in this side-by-side boxplot? What do you wonder?
 
 ### 4.4.3 What happens when you try to make a scatterplot with two catergoical variables?
@@ -875,14 +881,31 @@ ggplot(us_sent, aes(x = race,
 
 ![](master_files/figure-gfm/race%20by%20sex-1.png)<!-- -->
 
-What do you notice in this scatter plot? What do you wonder?
-
 As you may have noted, scatter plots of two categorical variables are
 not that useful for analysis and inference since they only display the
 way we’ve grouped our data and not any of the underlying patterns. To
-compare two categorical variables frequency tables or bar graphs are a
-better visualization to use. In the remainder of this lesson we will
-focus on comparisons where we have *at least one numerical variable*.
+compare two categorical variables frequency tables (shown below) or bar
+graphs are a better visualization to use.
+
+``` r
+us_sent %>% 
+  count(sex, race, sort = TRUE)
+```
+
+    ## # A tibble: 8 × 3
+    ##   sex    race          n
+    ##   <fct>  <fct>     <int>
+    ## 1 Male   white    164017
+    ## 2 Male   black    160152
+    ## 3 Male   hispanic  85305
+    ## 4 Female white     39452
+    ## 5 Female black     23500
+    ## 6 Male   ARI       22036
+    ## 7 Female hispanic  18603
+    ## 8 Female ARI        5654
+
+In the remainder of this lesson we will focus on comparisons where we
+have *at least one numerical variable*.
 
 ## 4.5 Federal Sentencing Data EDA
 
@@ -940,7 +963,8 @@ in our data set.
 **Race**
 
 Let’s continue exploring through turning toward the `race` variable. We
-will start our exploration of `race` by using `distinct`.
+will start our exploration of `race` by using `distinct` to remind
+ourselves of the levels of the `race` variable.
 
 ``` r
 us_sent %>%
@@ -949,7 +973,7 @@ us_sent %>%
 
     ## # A tibble: 4 × 1
     ##   race    
-    ##   <chr>   
+    ##   <fct>   
     ## 1 white   
     ## 2 black   
     ## 3 ARI     
@@ -986,15 +1010,15 @@ us_sent %>%
 
     ## # A tibble: 8 × 3
     ##   race     sex         n
-    ##   <chr>    <fct>   <int>
-    ## 1 ARI      Male    22036
-    ## 2 ARI      Female   5654
+    ##   <fct>    <fct>   <int>
+    ## 1 white    Male   164017
+    ## 2 white    Female  39452
     ## 3 black    Male   160152
     ## 4 black    Female  23500
     ## 5 hispanic Male    85305
     ## 6 hispanic Female  18603
-    ## 7 white    Male   164017
-    ## 8 white    Female  39452
+    ## 7 ARI      Male    22036
+    ## 8 ARI      Female   5654
 
 We can represent these two variables using a bar graph. Once again we
 will use `ggplot` to create this plot. This time, since we are creating
@@ -1013,7 +1037,7 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 We can also create a proportional bar plot. All we need to add to our
 previous `ggplot()` is `position = "fill"` within `geom_bar()`.
@@ -1029,14 +1053,14 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 **Age**
 
 We might want to explore what the age of different individuals is across
 districts. Let’s explore the districts of Maine, Rhode Island, and
 Vermont. We can use the `filter` command to look at only these three
-districts of interest.
+districts of interest, and then make a bar graph like before.
 
 ``` r
 us_sent %>%
@@ -1048,11 +1072,14 @@ us_sent %>%
        y = "Count")
 ```
 
+![](master_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
 What do you notice about the ages represented in our data? Can you try
 plotting the ages for other districts to see how they differ from the
 three we’ve chosen for this plot?
 
 <!--
+Note from original authors: 
 **To add**:
 - what do we divide by?
 - You may look at this plot and say that whites are sentenced at the federal district court more than black individuals. This is where it is important to look at the population in each district.
@@ -1067,13 +1094,12 @@ three we’ve chosen for this plot?
 ### 4.5.2 What
 
 Now that we explored the “Who?” question about our data, let’s move on
-to answering the “What?” question. You might have guessed that
-`sentence_length` and `mandatory_min` are the variables that fall under
-this category.
+to answering the “What?” question. You know that `sentence_length` and
+`mandatory_min` are the variables that fall under this category.
 
 #### 4.5.2.1 How does sentence length correlate with criminal history?
 
-> How do sentence lengths relate to policy? <!--- insert blurb here? -->
+<!-- Note from original authors: How do sentence lengths relate to policy? -- insert blurb here? -->
 
 To better understand `sentence_length`, we’ll display a histogram for
 this quantitative variable. A histogram gives us a visual representation
@@ -1106,7 +1132,7 @@ ggplot(us_sent) +
        title = "Numbers of Individuals per Sentence Length")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 What do you notice about the number of individuals per sentence length
 in our data set?
@@ -1140,7 +1166,7 @@ ggplot(us_sent) +
        y = "Number of Individuals")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 We observe a high frequency over 0, meaning that many individuals who
 are convicted may in fact receive a sentence of 0 months. At the other
@@ -1168,7 +1194,7 @@ ggplot(us_sent) +
        title = "Sentence Length by Criminal History")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 ##### 4.5.2.1.3 Ridge plot
 
@@ -1205,9 +1231,7 @@ ggplot(us_sent) +
   scale_fill_viridis_d()
 ```
 
-    ## Picking joint bandwidth of 5.47
-
-![](master_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 #### 4.5.2.2 What is the relationship between `all_adjustments`, `sentence_length`, and `criminal_history`?
 
@@ -1231,7 +1255,7 @@ ggplot(us_sent) +
   scale_color_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 Now we can display a lot of information in a single plot! However, let’s
 try going a step further, and adding the `race` variable into the mix.
@@ -1252,7 +1276,7 @@ ggplot(us_sent) +
   scale_color_viridis_d()
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 Now we have four different variables represented in a single plot, which
 is a super powerful tool. What do you notice about the plots above?
@@ -1266,7 +1290,7 @@ is encompassed in the “When?” question. Specifically, let’s explore the
 time data found in our US sentencing data set. How many columns of data
 did we have again? Which tool can we use to find out? Do we remember?
 
-We do remember: we can use the `names()` routine to remind ourselves.
+We can use the `names()` routine to remind ourselves.
 
 ``` r
 names(us_sent)
@@ -1316,7 +1340,7 @@ when we count each year as a whole year of data *inclusively*, we have
 15 distinct instances, which the distinct command helpfully listed out
 for us.
 
-<!--Now, each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the `sapply()` routine again.
+<!-- Now, each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the `sapply()` routine again.
 &#10;
 ```r
 sapply(us_sent, is.numeric)
@@ -1366,7 +1390,7 @@ sapply(us_sent, is.double)
     ##                        TRUE
 
 Nice, we can see that our `year` data is indeed a double precision
-floating point number.–\>
+floating point number. –\>
 
     Let's do a graph of our `year` data, where we have each year on the
     vertical y axis and the sentences on the horizontal x axis.
@@ -1379,7 +1403,7 @@ floating point number.–\>
            x = "Count",
            y = "Year")
 
-![](master_files/figure-gfm/Bar%20chart%20of%20year%20data-1.png)<!-- -->
+![](master_files/figure-gfm/year%20data%20bar%20chart-1.png)<!-- -->
 
 Let’s explore how `sentence_length` varies by each year in our data set.
 We can do this by using side-by-side boxplots again.
@@ -1431,7 +1455,7 @@ If you live in the United States, do you know which district you live
 in?
 
 If not, you can look it up at [the United States Department of Justice’s
-website](https://www.justice.gov/ust/locate-your-judicial-district).
+website](https://www.uscourts.gov/federal-court-finder/search).
 
 Apart from using the `distinct` variable to figure out what districts we
 have in our data set, we are also interested in finding out how many
@@ -1442,7 +1466,7 @@ can be quite nuanced and we will come back to this later.
 Our goals in this next section are to think about ways we can explore
 the question “Where did those sentences occur?” in a visual way.
 
-<!--**Learning aims**
+<!--Note from original authors: **Learning aims**
 &#10;- introduce factors as a data type (accomplished above)
 - explain why it might be better to put our names on the y axis instead of the x-axis for many categories and those with longer names. This makes it more readable.
 - explain that automatically categorical data will be placed in alphabetical order.
@@ -1453,7 +1477,7 @@ the question “Where did those sentences occur?” in a visual way.
 #### 4.5.4.1 Number of individuals sentences across districts
 
 Let’s start looking at the number of individual sentences across
-districtsby using a bar plot.
+districts by using a bar plot.
 
 ##### 4.5.4.1.1 Base Bar Plot
 
@@ -1462,7 +1486,7 @@ ggplot(us_sent) +
   geom_bar(aes(x = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 We can see immediately that, given the large number of districts, a
 simple bar graph makes it super hard to interpret the data. Let’s go
@@ -1480,7 +1504,7 @@ ggplot(us_sent) +
   geom_bar(aes(y = district))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 That definitely makes it easier to read the district names! However, we
 can think about ordering the districts in such a way that is useful for
@@ -1498,7 +1522,7 @@ ggplot(us_sent) +
   geom_bar(aes(y = fct_infreq(district)))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 ##### 4.5.4.1.4 Ordering from high to low
 
@@ -1511,7 +1535,7 @@ ggplot(us_sent) +
   geom_bar(aes(y = fct_rev(fct_infreq(district))))
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
 ##### 4.5.4.1.5 Add title and axes labels
 
@@ -1528,7 +1552,7 @@ ggplot(us_sent) +
        x = "Number of individuals")
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 <!--##### Making the plot more readable with subsetting -->
 <!--##### Exploring the census data
@@ -1589,7 +1613,7 @@ twoplot <- ggplot(twopoints, aes(x = xvals, y = yvals)) +
 twoplot
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 ### 5.1.1 Analytically Fit a Line to Two Points
 
@@ -1625,9 +1649,9 @@ twoplot + geom_abline(slope = 3/2,
                       intercept = 1/2)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
 
-Great, notice that the line above goes right through our two data
+Great! Notice that the line above goes right through our two data
 points.
 
 ### 5.1.2 Numerically Fit a Line to Two Points
@@ -1663,12 +1687,16 @@ to find a line that goes through all three data points. Don’t worry too
 much on the coding for now, but pay attention to the resulting plots.
 
 ``` r
+# add point C
 threepoints = rbind(twopoints, 
                     data.frame(xvals = 2, yvals = 3, label = 'C'))
+
+# fit possible regression lines
 threepoints$yfit1 = threepoints$xvals*3/2 + 1/2
 threepoints$yfit2 = threepoints$xvals + 1
 threepoints$yfit3 = threepoints$xvals*2 - 1
 
+# plot data points with lines
 threeplot = ggplot(threepoints, aes(x = xvals, 
                                     y = yvals)) + 
   geom_point(color = 'coral2')  + 
@@ -1678,6 +1706,7 @@ threeplot = ggplot(threepoints, aes(x = xvals,
   xlim(0,6) + 
   ylim(0,6)
 
+# display plots
 grid.arrange(
   threeplot + 
     geom_abline(slope = 3/2, intercept = 1/2) + 
@@ -1697,7 +1726,7 @@ grid.arrange(
   ncol=3)
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
 
 Notice in all three graphs above, we can’t draw a straight line through
 all three points at the same time. The best that we can do is try to
@@ -1737,6 +1766,10 @@ threelinear
     ## (Intercept)        xvals  
     ##      0.3333       1.5000
 
+Here R gives us the slope and intercept of the straight line that best
+fits our data. Let’s graph this line together with our data using the
+code below.
+
 ``` r
 threepoints$linfit = 1.5*threepoints$xvals + 0.3333
 ggplot(threepoints, aes(x = xvals, 
@@ -1752,7 +1785,7 @@ ggplot(threepoints, aes(x = xvals,
                color = 'coral2')
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
 
 Notice that the best fit linear model doesn’t go through any of our
 three points! **Why do you think that is?**
@@ -1764,7 +1797,7 @@ highlighted in the coral color. Of the four plots we just made of lines
 through our three data points, which one seems to have the smallest
 error?
 
-> NOTE: Whenever you employ linear regression, there are various
+> Note: Whenever you employ linear regression, there are various
 > conditions you must make sure are satisfied before proceeding. You can
 > use the acronym L.I.N.E to remember that you must satisfy linearity,
 > independence, normality, and equal variance conditions. For the
@@ -1775,7 +1808,7 @@ error?
 
 ## 5.2 Fitting a Line to Many Points: Linear Regression!
 
-Now let’s turn to another example data set. This new dataset focuses on
+Now let’s turn to another example data set. This new data set focuses on
 penguins. Do you think a linear model might be a good way to model the
 data? Run the code below to create a scatter plot of flipper length
 versus body mass.
@@ -1783,7 +1816,7 @@ versus body mass.
 ``` r
 data(penguins)
 
-pengscat = ggplot(penguins, aes(x = body_mass_g, 
+pengscat <- ggplot(penguins, aes(x = body_mass_g, 
                                 y = flipper_length_mm)) + 
   geom_point(color = 'coral2', alpha = 0.7) +
   labs(x = "Body Mass (grams)",
@@ -1792,7 +1825,7 @@ pengscat = ggplot(penguins, aes(x = body_mass_g,
 pengscat
 ```
 
-![](master_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+![](master_files/figure-gfm/unnamed-chunk-44-1.png)<!-- -->
 
 Take a look at the scatterplot, does it look like most of the data fall
 along a straight line? If the general shape is a line, then yes, we
@@ -1811,10 +1844,6 @@ pengfit
     ## Coefficients:
     ## (Intercept)  body_mass_g  
     ##   136.72956      0.01528
-
-Here R gives us the slope and intercept of the straight line that best
-fits our data. Let’s graph this line together with our data using the
-code below.
 
 ``` r
 pengscat + geom_abline(slope = 0.0152, intercept = 137.0396)
@@ -1870,11 +1899,11 @@ the significance of overall models by comparing population variances.
 You can see the “t value” column for the test statistics from the
 t-tests, but you can mainly just focus on the resulting p-values in the
 “Pr(\>\|t\|)” column. In this case, the p-value for `body_mass_g` is
-quite low, meaning it is a significant variable in this model. At the
-bottom, you can see the F-statistic and associated p-value. Again, the
-p-value is quite low, meaning the model is significant. These two
-outcomes of the t-test and F-test can increase our confidence in the
-model even further.
+quite low, meaning it is a significant variable in this model predicting
+flipper length. At the bottom, you can see the F-statistic and
+associated p-value for the overall model. Again, the p-value is quite
+low, meaning the model is significant. These two outcomes of the t-test
+and F-test can increase our confidence in the model even further.
 
 ## 5.3 Categorical Data to Numerical Representations
 
@@ -1892,18 +1921,18 @@ our species as either “Adelie” or “Not Adelie”. Then, we create a
 side-by-side boxplot using `geom_boxplot()` again.
 
 ``` r
-#penguins$isAdelie = ifelse(penguins$species == 'Adelie', 1, 0)
-
 pengAdelie <- penguins %>% 
   mutate(species = case_when(species != "Adelie" ~ "Not Adelie",
-                            TRUE ~ "Adelie"))
+                            TRUE ~ "Adelie")) %>% 
+  drop_na()
 
 adelieplot <- ggplot(pengAdelie, aes(x = species,
                                      y = flipper_length_mm)) + 
   geom_boxplot(color = 'coral2', 
                alpha = 0.7) +
   labs(x = "Species",
-       y = "Flipper Length (mm)")
+       y = "Flipper Length (mm)",
+       title = "Flipper Length by Adelie and non-Adelie Species")
 adelieplot
 ```
 
@@ -1916,39 +1945,99 @@ Next, we create a linear model for the relationship between flipper
 length and whether a penguin is an Adelie penguin or not.
 
 ``` r
-amodel <- lm(formula = flipper_length_mm ~ species, 
+amodel <- lm(flipper_length_mm ~ body_mass_g + species, 
              data = pengAdelie)
 amodel
 ```
 
     ## 
     ## Call:
-    ## lm(formula = flipper_length_mm ~ species, data = pengAdelie)
+    ## lm(formula = flipper_length_mm ~ body_mass_g + species, data = pengAdelie)
     ## 
     ## Coefficients:
-    ##       (Intercept)  speciesNot Adelie  
-    ##            189.95              19.63
+    ##       (Intercept)        body_mass_g  speciesNot Adelie  
+    ##         144.25148            0.01237            8.31142
 
-Then plot this best fit linear model against with our scatterplot to
-compare. Do you think that our linear model is a good representation of
-the data?
-
-<!-- FIX THIS SECTION WITH THE REGRESSION LINE-->
-
-As we saw before, things look a little bit different when we are dealing
-with categorical variables. In these types of scatterplots, we would
-expect the best fit model to pass through the mean values of each level
-of our categorical variable (or each ‘chunk’ of data). See below.
+Do you think that our linear model is a good representation of the data?
+Let’s turn to `summary()` again to answer this question.
 
 ``` r
-adelieplot + geom_abline(slope = 19.63, intercept = 189.95)
+summary(amodel)
 ```
 
-    ## Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).
+    ## 
+    ## Call:
+    ## lm(formula = flipper_length_mm ~ body_mass_g + species, data = pengAdelie)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -17.7795  -3.8309   0.2926   4.4861  16.2620 
+    ## 
+    ## Coefficients:
+    ##                    Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)       1.443e+02  1.857e+00   77.67   <2e-16 ***
+    ## body_mass_g       1.237e-02  4.834e-04   25.59   <2e-16 ***
+    ## speciesNot Adelie 8.311e+00  7.832e-01   10.61   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 5.921 on 330 degrees of freedom
+    ## Multiple R-squared:  0.8226, Adjusted R-squared:  0.8215 
+    ## F-statistic: 765.2 on 2 and 330 DF,  p-value: < 2.2e-16
 
-![](master_files/figure-gfm/unnamed-chunk-49-1.png)<!-- --> Now we do
-the same thing for the other two species (Chinstrap and Gentoo) and plot
-all three graphs side by side.
+We can analyze this summary table like normal to determine whether this
+is a good model of our data.
+
+Let’s assume for the purposes of this case study that we checked
+conditions and feel ready to interpret our linear model. For
+interpreting the coefficient of the categorical variable `species`,
+however, you may notice that the variable shows up a little differently
+than you might expect, being named `speciesNot Adelie` rather than just
+`species`. When R is dealing with categorical variables in linear
+models, it chooses one level to be a baseline, coded as 0, and makes the
+other level 1. Since `Not Adelie` is in the name of the categorical
+variable in the linear model, we know R decided to code this level as 1,
+and therefore `Adelie` as 0. This is exactly what we would expect
+because, unless we specify which level we want to be our baseline
+variable, R will just choose the level that is first in the alphabet to
+be the baseline. How should we interpret this categorical variable you
+may ask? It may help to write out the equation for the linear model:
+
+$\widehat{FlipperLength} = 144.3 + 0.01237(BodyMass) + 8.311(speciesNotAdelie)$
+
+Now, since we know we will enter 0 for `speciesNot Adelie` for Adelie
+penguins, and 1 for `speciesNot Adelie` for non-Adelie penguins, we can
+now make two separate equations, one for each category.
+
+Plugging in 0 for `speciesNot Adelie`, we get the equation for Adelie
+penguins:
+
+$\widehat{FlipperLength} = 144.3 + 0.01237(BodyMass)$
+
+Plugging in 1 for `speciesNot Adelie`, we get the equation for
+non-Adelie penguins:
+
+$\widehat{FlipperLength} = 152.61 + 0.01237(BodyMass)$
+
+Awesome. What do you now see about the impact of the `species` variable
+on predicting flipper length? The only difference in the two equations
+is in the y-intercept in the model, meaning that flipper length for
+non-Adelie penguins is, on average, 8.311 mm longer than flipper length
+for Adelie penguins, across all body mass values.
+
+<!-- Regression line with boxplot
+&#10;Let's plot this best fit linear model against with our scatterplot to compare. 
+&#10;As we saw before, things look a little bit different when we are dealing with categorical variables. In these types of scatterplots, we would expect the best fit model to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
+&#10;
+```r
+#coefs <- coef(lm(flipper_length_mm ~ species, data = pengAdelie))
+&#10;ggplot(pengAdelie, aes(y = flipper_length_mm, 
+                       x = body_mass_g, 
+                       color = species)) +
+  geom_smooth(method = "lm", se = FALSE)
+
+Now we do the same thing for the other two species (Chinstrap and
+Gentoo) and plot all three graphs side by side.
 
 ``` r
 penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
@@ -1964,13 +2053,8 @@ chinstrapplot <- ggplot(pengChinstrap, aes(x = species,
   labs(x = "Species",
        y = "Flipper Length (mm)")
 chinstrapplot
-```
 
-    ## Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).
 
-![](master_files/figure-gfm/unnamed-chunk-50-1.png)<!-- -->
-
-``` r
 penguins$isGentoo = ifelse(penguins$species=='Gentoo',1,0)
 
 pengGentoo <- penguins %>% 
@@ -1984,28 +2068,23 @@ gentooplot <- ggplot(pengGentoo, aes(x = species,
   labs(x = "Species",
        y = "Flipper Length (mm)")
 gentooplot
-```
 
-    ## Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).
+amodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
+cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
+gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
 
-![](master_files/figure-gfm/unnamed-chunk-50-2.png)<!-- -->
+speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
+aplot = speciesbase + 
+  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
+  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
+cplot = speciesbase + 
+  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
+  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
+gplot = speciesbase + 
+  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
+  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
 
-``` r
-#cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
-#gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
-
-#speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
-#aplot = speciesbase + 
-#  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
-#  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
-#cplot = speciesbase + 
-#  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
-#  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
-#gplot = speciesbase + 
-#  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
-#  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
-
-#grid.arrange(pengAdelie, pengChinstrap, pengGentoo, ncol = 3, nrow)
+grid.arrange(aplot, cplot, gplot, ncol = 3, nrow)
 ```
 
 What would happen if instead of creating linear models for each level of
@@ -2052,42 +2131,31 @@ peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 
 head(peng_encoded)
 ```
 
-    ## # A tibble: 6 × 12
-    ##   island  bill_length_mm bill_depth_mm flipper_length_mm body_mass_g sex    year
-    ##   <fct>            <dbl>         <dbl>             <int>       <int> <fct> <int>
-    ## 1 Torger…           39.1          18.7               181        3750 male   2007
-    ## 2 Torger…           39.5          17.4               186        3800 fema…  2007
-    ## 3 Torger…           40.3          18                 195        3250 fema…  2007
-    ## 4 Torger…           NA            NA                  NA          NA <NA>   2007
-    ## 5 Torger…           36.7          19.3               193        3450 fema…  2007
-    ## 6 Torger…           39.3          20.6               190        3650 male   2007
-    ## # ℹ 5 more variables: isChinstrap <dbl>, isGentoo <dbl>, Adelie <dbl>,
-    ## #   Chinstrap <dbl>, Gentoo <dbl>
+–\>
 
-## 5.4 Using Linear Regression with the Federal Criminal Sentencing Data
+    ## [5.4 Using Linear Regression with the Federal Criminal Sentencing Data]{data-rmarkdown-temporarily-recorded-id="using-linear-regression-with-the-federal-criminal-sentencing-data"}
 
-Now that we’ve explored the basics of linear regression using both
-numerical and categorical variables, let’s return to the goal of this
-project: to explore patterns in federal criminal sentencing data from
-2006-2020. We will show how to create relevant linear models for this
-case study, and discuss the results of these models in the following
-section. We won’t dive into the specifics of why, based on the EDA, we
-will include certain variables over others in the linear regression.
-Rather, we will simply replicate the results of the paper mentioned at
-the beginning of this case study. For more information on how the
-researchers of that paper arrived their final models, please read the
-paper.
+    Now that we've explored the basics of linear regression using both
+    numerical and categorical variables, let's return to the goal of this
+    project: to explore patterns in federal criminal sentencing data from
+    2006-2020. We will show how to create relevant linear models for this
+    case study, and discuss the results of these models in the following
+    section. We won't dive into the specifics of why, based on the EDA, we
+    will include certain variables over others in the linear regression.
+    Rather, we will simply replicate the results of the paper mentioned at
+    the beginning of this case study. For more information on how the
+    researchers of that paper arrived their final models, please read the
+    paper.
 
-### 5.4.1 Baseline Model
+    ### [5.4.1 Baseline Model]{data-rmarkdown-temporarily-recorded-id="baseline-model"}
 
-Let’s try a model of `sentence_length` based on the variable `race`,
-using the same methods we used above.
+    Let's try a model of `sentence_length` based on the variable `race`,
+    using the same methods we used above.
 
-``` r
-baselinemod <- lm(sentence_length ~ race,
-                  data = us_sent)
-summary(baselinemod)
-```
+    ``` r
+    baselinemod <- lm(sentence_length ~ race,
+                      data = us_sent)
+    summary(baselinemod)
 
     ## 
     ## Call:
@@ -2110,55 +2178,150 @@ summary(baselinemod)
     ## Multiple R-squared:  0.01549,    Adjusted R-squared:  0.01549 
     ## F-statistic:  2721 on 3 and 518715 DF,  p-value: < 2.2e-16
 
-<!-- How should we do confidence intervals in this case?
-&#10;We can also figure out confidence intervals using the following code:
-&#10;
-```r
-library(DescTools)
-&#10;us_sent %>% 
-  drop_na(race) %>%
-  count(race) %>%
-  data.frame(MultinomCI(.$n, conf.level = 0.95))
+Already, we can use some of the methods we used above to determine
+whether this is a good model for `sentence_length`. Considering the
+$R^2$, t-test, and F-test values, is this a good model for our data?
 
-    ##       race      n       est     lwr.ci     upr.ci
-    ## 1    white 203469 0.3922528 0.39075685 0.39375019
-    ## 2    black 183652 0.3540491 0.35255312 0.35554646
-    ## 3 hispanic 103908 0.2003165 0.19882056 0.20181390
-    ## 4      ARI  27690 0.0533815 0.05188551 0.05487886
+You may have noticed that the Multiple $R^2$ is relatively low,
+indicating that our model using `race` accounts for only 1.5% of the
+variation in `sentence_length`. You also may have noticed that all
+variables in our model have low p-values from t-tests, meaning the
+variables are significant predictors of `race`, and the overall F-test
+has a low-p-value as well. Do you think we can make a better model using
+more variables to predict `sentence_length`?
 
-–\>
+Here is one more tool you can use to determine the effectiveness of
+certain predictors in a linear model. You may recall that confidence
+intervals give us a reasonable margin of error for estimating the
+coefficients in front of predictors in a model. You can get the
+confidence intervals for the different levels of `race` from our
+baseline model using the following code:
 
-    ### [5.4.2 District I Model]{data-rmarkdown-temporarily-recorded-id="district-i-model"}
+``` r
+confint(baselinemod)
+```
 
-    The first model includes defendant demographics, sentencing year,
-    whether or not there was a guilty plea, relevant cell on the U.S.
-    sentencing grid, whether there was a mandatory minimum sentence,
-    presence of government-sponsored downward departures, and the
-    interaction of judicial district and defendant race. An interaction term
-    is employed when the one variable impacts another variable in some
-    wayFor our dataset this includes the following variables: `age`, `sex`,
-    and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`,
-    `gov_departures`, and the interaction of `district` and `race`. In this
-    model, all terms except for the interaction derive from nationwide data.
-    For example, this model assumes that all districts, on average, apply
-    the U.S. sentencing grid in the same way. The code for formulating this
-    linear regression model would follow the same format as the other linear
-    models we've made:
+    ##                  2.5 %    97.5 %
+    ## (Intercept)  55.518598 56.139679
+    ## raceblack    18.063471 18.965195
+    ## racehispanic  4.727307  5.795524
+    ## raceARI      -9.876799 -8.082304
 
-    ``` r
-    lm1 <- lm(sentence_length ~ age + sex + educ + year + guilty_plea + grid_cell + mandatory_min + 
-                gov_departures + district:race,
-              data = us_sent)
+Here, you automatically get 95% confidence intervals. We can see that
+the estimates for the coefficients in our linear model are 18.51 for
+`raceblack`, 5.26 for `racehispanic` and -8.98 for `raceARI`, but that
+the 95% confidence interval for `raceblack` is 18.06 to 18.97, the 95%
+confidence interval for `racehispanic` is 4.73 to 5.80, and the 95%
+confidence interval for `raceARI` is -9.88 to -8.08.
+
+> Note: Remember that for interpreting these values, the actual value of
+> the coefficient in the model has nothing to do with the strength of
+> the predictor. For example, just because the estimated coefficient for
+> `racehispanic` is half the value of the estimated coefficient for
+> `raceblack`, that doesn’t necessarily mean one predictor is between
+> than the other. Rather, it is important to focus on the strength of
+> these predictors by relying on statistical tests like the t-test.
+> Also, remember that to interpret a 95% confidence interval, you should
+> interpret the interval as follows: “If I were to repeatedly sample
+> from this population many times, I would expect the true coefficient
+> to fall within this interval 95% of the time”.
+
+### 5.4.2 District I Model
+
+Alright, let’s try to improve our model by adding some more predictors.
+The first model based on the resesarch paper this case study is based on
+includes defendant demographics, sentencing year, whether or not there
+was a guilty plea, relevant cell on the U.S. sentencing grid, whether
+there was a mandatory minimum sentence, presence of government-sponsored
+downward departures, and the interaction of judicial district and
+defendant race. An interaction term is employed when the one variable
+impacts another variable in some way. For our data set, this includes
+the following variables: `age`, `sex`, and `educ`, `year`,
+`guilty_plea`, `grid_cell`, `mandatory_min`, `gov_departures`, and the
+interaction of `district` and `race`. In this model, all terms except
+for the interaction derive from nationwide data. For example, this model
+assumes that all districts, on average, apply the U.S. sentencing grid
+in the same way. The code for formulating this linear regression model
+would follow the same format as the other linear models we’ve made:
+
+``` r
+lm1 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + guilty_plea + grid_cell +
+            gov_departures + district + race,
+          data = us_sent,
+          model = TRUE,
+          y = TRUE)
+```
+
+We are omitting the linear model summary from this document because, as
+you can imagine, it becomes quite long with so many categorical
+variables in the model. However, you can take a look at the $R^2$ by
+using a dollar sign and the typing `r.squared` as follows:
+
+``` r
+summary(lm1)$r.squared
+```
+
+    ## [1] 0.7928154
+
+That’s a much higher $R^2$! Obviously, you aren’t able to immediately
+see other factors that determine how effective this model is at
+predicting sentence lengths because of the ommitted linear model
+summary. However, you can already see that this model accounts for a lot
+more of the variability in `sentence_length` than our baseline model.
 
 ### 5.4.3 District II Model
 
-The second model relies on the same variables as in the District I Model
-plus `race` on its own. However, a regression is performed within each
-district, rather than across all districts represented in the data set.
-This model allows for variations in grid application, defendant
-demographics, and more. To perform this form of regression in R, you
-would create a subset of `us_sent` for each district, and then employ
-the same code as above but with each smaller data set.
+In the paper this case study is based on, the authors apply this model
+(along with alternate models) across all districts in the data set. In
+doing this, they were able to compare the disparity in sentences across
+different races. Let’s try employing this model for just one district at
+a time. Let’s start with Arkansas. To only look at the datapoints from
+Arkansas, we will start with using the `filter()` function. Then, we
+will fit another model identical to the first linear model, only without
+`district` as a predictor:
+
+``` r
+us_sent_az <- us_sent %>%
+  filter(district == "Arizona")
+
+lm2 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + guilty_plea + grid_cell +
+            gov_departures + race,
+          data = us_sent_az,
+          model = TRUE, 
+          y = TRUE)
+```
+
+Let’s extract the resulting $R^2$ again to get a sense for how well this
+model using only data from Arizona predicts sentence length:
+
+``` r
+summary(lm2)$r.squared
+```
+
+    ## [1] 0.7245824
+
+In the paper, the authors cycle through all districts. While we won’t go
+into how they accomplished this in this case study, we encourage you to
+look at some other districts of interest to you.
+
+Here is one figure from their paper comparing the minoritized race -
+white disparity in sentencing using a 95% confidence interval:
+
+*Figure 1: Minoritized Race-White Disparity in Sentence Length (Month)
+Across U.S. Districts Represented by District I and II models:*
+
+<figure>
+<img src="photos/fedsent_fig1.jpg" alt="districtIIfigure1." />
+<figcaption aria-hidden="true">districtIIfigure1.</figcaption>
+</figure>
+
+Here is another figure from the paper displaying where these highlighted
+districts are located across the United States:
+
+<figure>
+<img src="photos/fedsent_fig2.jpg" alt="districtIIfigure2." />
+<figcaption aria-hidden="true">districtIIfigure2.</figcaption>
+</figure>
 
 # 6 Results
 
@@ -2198,17 +2361,17 @@ sentences on average 1.9 months longer than white defendants and
 Hispanic defendants receive sentences at the same length as white
 defendants.
 
-It is worth noting that the adjusted $r^2$ values are reported. This
+It is worth noting that the adjusted $R^2$ values are reported. This
 allows us to determine how much of the variation in sentencing is
 explained by the independent variables considered in the model. For the
-baseline model, the adjusted $r^2$ is 0.02, meaning that only 2% of the
+baseline model, the adjusted $R^2$ is 0.02, meaning that only 2% of the
 variability in sentence length is explained by the baseline model. For
-the full model, the adjusted $r^2$ is reported as 0.79, meaning that 79%
+the full model, the adjusted $R^2$ is reported as 0.79, meaning that 79%
 of the variability in sentence length is explained by the full model.
-The adjusted $r^2$ is reported instead of $r^2$ because adjusted $r^2$
+The adjusted $R^2$ is reported instead of $R^2$ because adjusted $R^2$
 adjusts for the number of independent variables included in the model.
-As we add explanatory variables, $r^2$ will likely increase, but it
-might be a spurious increase. The adjusted $r^2$ takes the number of
+As we add explanatory variables, $R^2$ will likely increase, but it
+might be a spurious increase. The adjusted $R^2$ takes the number of
 variables into account so is reported in multivariate regressions.
 
 The authors further refine the analysis by looking at individual
@@ -2216,8 +2379,6 @@ districts rather than the federal court system nationwide in the
 District II Model. We focus our examination on the results of this
 model. We see that Black defendants receive longer sentences than white
 defendants in 11 districts and ARI defendants receive longer sentences
-than white defendants in 3 districts. Figure 3 pulls out these districts
+than white defendants in 3 districts. Figure 1 pulls out these districts
 and provides the 95% confidence interval for the sentence differential
-and Figure 4 highlights the locations of these districts in the U.S.
-
-<!-- Add figure labels to match? -->
+and Figure 2 highlights the locations of these districts in the U.S.
