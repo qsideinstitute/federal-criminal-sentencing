@@ -284,91 +284,64 @@ Notice the difference in these two predicted averages is exactly the slope: $217
 
 #### Categorical predictor with more than 2 levels
 
-<!-- Add content -->
-
-<!-- Regression line with boxplot
-
-Let's plot this best fit linear model against with our scatterplot to compare. 
-
-As we saw before, things look a little bit different when we are dealing with categorical variables. In these types of scatterplots, we would expect the best fit model to pass through the mean values of each level of our categorical variable (or each 'chunk' of data). See below.
-
-```{r, warning = FALSE, eval = FALSE}
-#coefs <- coef(lm(flipper_length_mm ~ species, data = pengAdelie))
-
-ggplot(pengAdelie, aes(y = flipper_length_mm, 
-                       x = body_mass_g, 
-                       color = species)) +
-  geom_smooth(method = "lm", se = FALSE)
-```
-
-Now we do the same thing for the other two species (Chinstrap and Gentoo) and plot all three graphs side by side.
-
-```{r, fig.width=12, eval = FALSE}
-penguins$isChinstrap = ifelse(penguins$species=='Chinstrap',1,0)
-
-pengChinstrap <- penguins %>% 
-  mutate(species = case_when(species != "Chinstrap" ~ "Not Chinstrap",
-                            TRUE ~ "Chinstrap"))
-
-chinstrapplot <- ggplot(pengChinstrap, aes(x = species,
-                                     y = flipper_length_mm)) + 
-  geom_boxplot(color = 'coral2', 
-               alpha = 0.7) +
-  labs(x = "Species",
-       y = "Flipper Length (mm)")
-chinstrapplot
-
-
-penguins$isGentoo = ifelse(penguins$species=='Gentoo',1,0)
-
-pengGentoo <- penguins %>% 
-  mutate(species = case_when(species != "Gentoo" ~ "Not Gentoo",
-                            TRUE ~ "Gentoo"))
-
-gentooplot <- ggplot(pengGentoo, aes(x = species,
-                                        y = flipper_length_mm)) + 
-  geom_boxplot(color = 'coral2', 
-               alpha = 0.7) +
-  labs(x = "Species",
-       y = "Flipper Length (mm)")
-gentooplot
-
-amodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
-cmodel = lm(formula = flipper_length_mm~isChinstrap, data=penguins)
-gmodel = lm(formula = flipper_length_mm~isGentoo, data=penguins)
-
-speciesbase = ggplot(penguins, aes(y=flipper_length_mm)) 
-aplot = speciesbase + 
-  geom_point(aes(x=isAdelie), color='coral2', alpha=0.7) + 
-  geom_abline(slope=amodel$coefficients[2], intercept=amodel$coefficients[1])
-cplot = speciesbase + 
-  geom_point(aes(x=isChinstrap), color='coral2', alpha=0.7) + 
-  geom_abline(slope=cmodel$coefficients[2], intercept=cmodel$coefficients[1])
-gplot = speciesbase + 
-  geom_point(aes(x=isGentoo), color='coral2', alpha=0.7) + 
-  geom_abline(slope=gmodel$coefficients[2], intercept=gmodel$coefficients[1])
-
-grid.arrange(aplot, cplot, gplot, ncol = 3, nrow)
-```
-What would happen if instead of creating linear models for each level of the categorical variable separately, we created a single linear model for flipper length versus all species types? The code below allows us to find that model in just one step.
+Now let's return to the original `species` variable with three levels. Let's see what happens when we fit the model with this variable.
 
 ```{r}
-linmodel <- lm(flipper_length_mm ~ species, data = penguins)
-linmodel
+species_lm <- lm(flipper_length_mm ~ species, data = penguins)
+summary(species_lm)
 ```
 
-This model will look like $$Flipper Length = 190.103 + 5.72*(Chinstrap) + 27.133*(Gentoo)$$ where the variable Chinstrap is an indicator variable that takes on the value of 1 when the penguin is the species Chinstrap and takes on the value of 0 when the penguin is any other species. Similarly, the variable Gentoo is an indicator variable that takes on the value of 1 when the penguin is the species Gentoo and takes on the value of 0 when the penguin is any other species.
+What do you notice? What do you think has happened?
 
-So...what happened to the Adelie penguins in our model?!?! Notice the variable for Adelie is missing in our model. It actually got absorbed by the y-intercept! We only need n-1 variables to represent n levels of a categorical variable because we have this y-intercept. When a penguin is of the species Adelie and we apply this linear model, the values for Gentoo and Chinstrap are both equal to 0, since the penguin is an Adelie. Thus our model would predict a flipper length of 190.103 for all Adelie penguins.
+You should see that instead of a single predictor `species` in the coefficient table, we have two new indicator variables, `speciesChinstrap` and `speciesGentoo`. But we know that `species` has three levels! Where did the Adelie penguins go? Let's think through the math again. For each indicator variable we have:
 
-What is the flipper length predicted by our model for a Chinstrap penguin? What about a Gentoo penguin?
+$$
+\texttt{speciesChinstrap} = \begin{cases}
+  1 & \text{if the species is Chinstrap}\\
+  0 & \text{if the species is not Chinstrap}
+\end{cases} 
+\qquad \text{and} \qquad 
+\texttt{speciesGentoo} = \begin{cases}
+  1 & \text{if the species is Gentoo}\\
+  0 & \text{if the species is not Gentoo}
+\end{cases}
+$$
 
-```{r, eval = FALSE}
-peng_encoded = penguins %>% mutate(value = 1) %>% spread(species, value, fill = 0 )
-head(peng_encoded)
+Well, if a species is *not* Chinstrap (`speciesChinstrap` = 0) *nor* Gentoo (`speciesGentoo` = 0), then it must be whatever species is left: Adelie! In other words, the Adelie penguins have now become our **reference** level of the species variable: the baseline level against which every other species is compared. We can make predictions for Adelie penguins by plugging in 0s for all the indicator variables. Let's see this in action! 
+
+The equation of the fitted regression line is now:
+
+$\widehat{\text{Flipper Length}} = 190.1 + 5.7 (\text{Chinstrap}) + 27.1 (\text{Gentoo})$
+
+First, let's find the predicted average flipper length for *Adelie penguins* by plugging in 0s for each indicator variable:
+
+$\widehat{\text{Flipper Length}} = 190.1 + 5.7 (0) + 27.1 (0) = 190.1 \text{ mm}$
+
+Next, let's find the predicted average flipper length for *Chinstrap penguins* by plugging in 1 for "Chinstrap" and 0 for "Gentoo":
+
+$\widehat{\text{Flipper Length}} = 190.1 + 5.7 (1) + 27.1 (0) = 195.8 \text{ mm}$
+
+Finally, let's find the predicted average flipper length for *Gentoo penguins* by plugging in 0 for "Chinstrap" and 1 for "Gentoo":
+
+$\widehat{\text{Flipper Length}} = 190.1 + 5.7 (0) + 27.1 (1) = 217.2 \text{ mm}$
+
+Using these predicted average values, we can make the following connections:
+
+* The **intercept** captures the average outcome for the *reference level* of the categorical variable.
+* The **slope** of each indicator variable captures the difference in the average outcome between the indicated level and the reference level.
+    * For example, if we take the predicted average flipper length of Chinstrap penguins (195.8 mm) and subtract the predicted average flipper length of Adelie penguins (190.1 mm), we get the slope for `speciesChinstrap` (5.7). 
+    * In other words, we could interpret the Chinstrap indicator variable coefficient as: "The flipper length of Chinstraps species is, on average, 5.7 mm longer than the flipper length of Adelie species."
+* The difference in slopes between two indicator variables will provide the average difference in the outcome between those two levels.
+    * For example, if we take the predicted average flipper length of Gentoo penguins (217.2 mm) and subtract the predicted average flipper length of Chinstrap penguins (195.8 mm), we get 21.4. This is the same as taking the difference in the two corresponding slopes: $27.1 - 5.7 = 21.4$.
+    
+These *pairwise comparisons* or *contrasts* of average flipper length across all three species can be done more quickly in R using the `emmeans()` function of the **emmeans** package, as shown below. To use this function, you need to provide only the name of the fitted linear model (`species_lm`) and which variable contains the levels you want to compare (`species`). 
+
+```{r}
+emmeans(species_lm, pairwise ~ species)$contrasts
 ```
 
--->
+The resulting table lists the *contrast* (which two groups are being compared and what is the order of subtraction), the *estimated* difference in the average outcome between the two groups, and some additional statistics summarizing the results of a type of $t$ test. In this case, because all of the p-values are so small, we have evidence to conclude that flipper lengths significantly differ between each of the three species of penguins.
+
 
 ### Multiple linear regression
 
