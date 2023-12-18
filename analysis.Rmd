@@ -163,45 +163,58 @@ Keep in mind, our goal is to minimize our error as much as we can. In each of th
 
 ## Introduction to linear regression
 
-Now let's turn to another example data set. This new data set focuses on penguins. Do you think a linear model might be a good way to model the data? Run the code below to create a scatter plot of flipper length versus body mass. 
+Now let's turn to another example data set to explore linear regression further. This new data set focuses on penguins. Do you think a linear model might be a good way to model the data? Run the code below load the new dataset and create a scatterplot showing the relationship between flipper length and body mass among penguins. 
 
-```{r, warning = FALSE, fig.width = 5, fig.height = 4}
+```{r penguin scatterplot, warning = FALSE, fig.width = 5, fig.height = 4}
 data(penguins)
 
-pengscat <- ggplot(penguins, aes(x = body_mass_g, 
-                                y = flipper_length_mm)) + 
-  geom_point(color = 'coral2', alpha = 0.7) +
+pengplot <- ggplot(penguins, aes(x = body_mass_g, y = flipper_length_mm)) + 
+  geom_point(color = "coral2", alpha = 0.7) +
   labs(x = "Body Mass (grams)",
-            y = "Flipper Length (mm)",
-            title = "Flipper Length by Body Mass of Penguins")
-pengscat
+       y = "Flipper Length (mm)",
+       title = "Flipper Length by Body Mass of Penguins")
+
+pengplot
 ```
 
-Take a look at the scatterplot, does it look like most of the data fall along a straight line? If the general shape is a line, then yes, we should try to model this data with linear regression line.
+Take a look at the scatterplot: does it look like most of the data fall along a straight line? If the general shape is a line, then yes, we could try to model this data with linear regression.
 
-```{r, warning = FALSE}
-pengfit <- lm(formula = flipper_length_mm ~ body_mass_g, 
-             data = penguins)
+```{r penguins lm, warning = FALSE}
+pengfit <- lm(flipper_length_mm ~ body_mass_g, data = penguins)
 pengfit
 
-pengscat + geom_abline(slope = 0.0152, intercept = 137.0396)
+pengplot + 
+  geom_abline(slope = 0.0152, 
+              intercept = 137.0396)
 ```
 
 ### Summarizing a linear regression model
 
-That looks like a pretty good fit, right? But how do we evaluate how good of a fit the linear regression provides? One function we can use in R is `summary()`. This function provides an overview of the fitted model.  
+After we fit a linear regression model, we are often interested in summarizing the model and assessing how good the model fits the data. One function we can use for this is `summary()`. This function provides an overview of the fitted model.
 
 ```{r}
 summary(pengfit)
 ```
 
+There is a lot of information that comes out of this function, but for now we will focus on the coefficients and the $R^2$ value.
+
+#### Interpreting coefficients for numerical predictors
+
+In the middle of the summary output, the estimated coefficients are provided in the first column of the table. The intercept is $b = 136.7$ and the slope is $m = 0.015$. 
+
+While the **intercept** typically represents the average outcome when all predictors are 0, it doesn't make sense in this case to talk about a penguin with a mass of 0 grams (impossible!), so we will not interpret the intercept.
+
+The **slope** represents the change in the average outcome for a one unit increase in the value of the predictor. In this case, we would say that a one-gram increase in the mass of a penguin is associated with 0.015 mm longer flipper, *on average*.
+
 #### Assessing model fit with $R^2$
 
-There is a lot of information that comes out of this function, but just focus on "Multiple R-squared" for now. $R^2$ represents the percent of variation in the response y-variable that is explained by the explanatory x-variable(s). Can you find the $R^2$ for this model in the summary table? 
+Now focus on the bottom of the summary output and find the "Multiple R-squared" value. You probably found $R^2 = 0.759$ from the table. 
 
-You probably found 0.759 on the table. This means that 75.9% of the variation in flipper length can be explained by the body mass of penguins. That is a pretty high $R^2$, especially for observational data. Therefore, we can already consider this model to be quite good for modeling flipper length. 
+$R^2$ represents the proportion of variation in the response variable that is explained by the explanatory variable(s) in your linear model. In our case,  we found that 75.9% of the variation in flipper length can be explained by the body mass of penguins. That is a pretty high $R^2$, especially for observational data! Therefore, we can already consider this model to be quite good for modeling flipper length. 
 
-Apart from looking at the $R^2$, it is a good idea to look at the resulting t-tests and F-tests. While t-tests looks at the significance of individual variables by comparing population means, F-tests examine the significance of overall models by comparing population variances. You can see the "t value" column for the test statistics from the t-tests, but you can mainly just focus on the resulting p-values in the "Pr(>|t|)" column. In this case, the p-value for `body_mass_g` is quite low, meaning it is a significant variable in this model predicting flipper length. At the bottom, you can see the F-statistic and associated p-value for the overall model. Again, the p-value is quite low, meaning the model is significant. These two outcomes of the t-test and F-test can increase our confidence in the model even further. 
+<!--
+Apart from looking at the $R^2$, it is a good idea to look at the resulting $t$-tests and $F$-tests. While t-tests looks at the significance of individual variables by comparing population means, F-tests examine the significance of overall models by comparing population variances. You can see the "t value" column for the test statistics from the t-tests, but you can mainly just focus on the resulting p-values in the "Pr(>|t|)" column. In this case, the p-value for `body_mass_g` is quite low, meaning it is a significant variable in this model predicting flipper length. At the bottom, you can see the F-statistic and associated p-value for the overall model. Again, the p-value is quite low, meaning the model is significant. These two outcomes of the t-test and F-test can increase our confidence in the model even further. 
+-->
 
 ### Linear regression with a categorical predictor
 
