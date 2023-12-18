@@ -357,31 +357,30 @@ Notice we now have three variables in the coefficient table: the two indicator v
 
 ## Linear Regression with the Federal Criminal Sentencing Data
 
-Now that we've explored the basics of linear regression using both numerical and categorical variables, let's return to the goal of this project: to explore patterns in federal criminal sentencing data from 2006-2020. We will show how to create relevant linear models for this case study, and discuss the results of these models in the following section. We won't dive into the specifics of why, based on the EDA, we will include certain variables over others in the linear regression. Rather, we will simply replicate the results of the paper mentioned at the beginning of this case study. For more information on how the researchers of that paper arrived their final models, please read the paper.
+Now that we've explored the basics of linear regression using both numerical and categorical variables, let's return to the goal of this project: to explore patterns in federal criminal sentencing data from 2006-2020. We will show how to create relevant linear models for this data, and discuss the results of these models in the following section. We won't dive into the specifics of how we determined which variables to include in the linear regression model. Rather, we will simply replicate the results of original study, [Federal Criminal Sentencing: Race-Based Disparate Impact and Differential Treatment in Judicial Districts](https://www.nature.com/articles/s41599-023-01879-5). 
 
-### Baseline Model
+### Baseline model
 
-Let's try a model of `sentence_length` based on the variable `race`, using the same methods we used above.
+Let's start with a simple model to see how sentence length changes by race alone, without considering any other factors. 
 
 ```{r}
-baselinemod <- lm(sentence_length ~ race,
-                  data = us_sent)
+baselinemod <- lm(sentence_length ~ race, data = us_sent)
 summary(baselinemod)
 ```
 
-Already, we can use some of the methods we used above to determine whether this is a good model for `sentence_length`. Considering the $R^2$, t-test, and F-test values, is this a good model for our data? 
+Already, we can use some of the methods we used above to summarize the model. How does sentence length seem to differ by race? Considering the $R^2$, is this a good model for our data? 
 
-You may have noticed that the Multiple $R^2$ is relatively low, indicating that our model using `race` accounts for only 1.5% of the variation in `sentence_length`. You also may have noticed that all variables in our model have low p-values from t-tests, meaning the variables are significant predictors of `race`, and the overall F-test has a low-p-value as well. Do you think we can make a better model using more variables to predict `sentence_length`? 
+Recall that the race variable has four categories: Black, Hispanic, White, and another race indicated (ARI). Based on the model output, "Black" is missing from the indicator variables, which tells us that Black defendants are the reference level. Because all of the coefficients are negative, we know that Black defendants tended to have longer sentences, on average, than defendants of every other race. For example, the average sentence length of Black defendants is about 18.5 months longer than the average sentence of White defendants.
 
-Here is one more tool you can use to determine the effectiveness of certain predictors in a linear model. You may recall that confidence intervals give us a reasonable margin of error for estimating the coefficients in front of predictors in a model. You can get the confidence intervals for the different levels of `race` from our baseline model using the following code:
+We can explore these differences further by obtaining 95% confidence intervals for the coefficients using `confint()` (see the previous case study on [Diversity of Artists in Major U.S. Museums](https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html) for a discussion of confidence intervals):
 
 ```{r}
 confint(baselinemod)
 ```
 
-Here, you automatically get 95% confidence intervals. We can see that the estimates for the coefficients in our linear model are 18.51 for `raceblack`, 5.26 for `racehispanic` and -8.98 for `raceARI`, but that the 95% confidence interval for `raceblack` is 18.06 to 18.97, the 95% confidence interval for `racehispanic` is 4.73 to 5.80, and the 95% confidence interval for `raceARI` is -9.88 to -8.08. 
+This allows us to estimate the coefficients with some degree of error. Using the same example as before and the bottom row of the table of confidence intervals, we would say we are 95% confident that the average sentence length of Black defendants is between 18.1 and 19 months longer than the average sentence of White defendants.
 
-> Note: Remember that for interpreting these values, the actual value of the coefficient in the model has nothing to do with the strength of the predictor. For example, just because the estimated coefficient for `racehispanic` is half the value of the estimated coefficient for `raceblack`, that doesn't necessarily mean one predictor is between than the other. Rather, it is important to focus on the strength of these predictors by relying on statistical tests like the t-test. Also, remember that to interpret a 95% confidence interval, you should interpret the interval as follows: "If I were to repeatedly sample from this population many times, I would expect the true coefficient to fall within this interval 95% of the time". 
+Returning to the model summary output, you may have noticed that the Multiple $R^2$ is relatively low, indicating that our model using only race as a predictor accounts for only 1.5% of the variation in sentence length. Do you think we can make a better model using more variables to predict sentence length? Of course! Let's jump into replicating one of the models in the original study.
 
 
 ### District I Model
