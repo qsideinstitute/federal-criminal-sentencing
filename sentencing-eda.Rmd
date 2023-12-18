@@ -199,10 +199,19 @@ us_sent %>%
 In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
 
 
-## EDA of federal criminal sentencing data
-
 <!-- - explain the different columns (linking to the background) -->
-Now, let's return to exploring the variables of interest. Remember, we want to know *who* is in our data set, *what* the sentence was, *when* the individual was sentenced and *where* the sentence occurred. Did you identify how our variables might correspond with each of these questions? 
+
+Now, let's return to exploring the variables of interest. Remember, we want to know *who* is in our data set, *what* the sentence was, *when* the individual was sentenced, and *where* the sentence occurred. 
+
+But first, how many columns of data did we have again? What were the names of those columns? Which tool can we use to find out? Do we remember?
+
+We can use the `names()` routine to remind ourselves of the variable names.
+
+```{r check the columns, i.e. names}
+names(us_sent)
+```
+
+We can see the fifteen column names in the output above. Now that we have these readily available, can you identify how our variables might correspond with each of these questions? 
 
 You might have classified the variables as follows: 
 
@@ -223,12 +232,11 @@ Let's start exploring the variables that fall under each of these key questions.
 
 #### Sex
 
-Let's use `ggplot()` again to view the distribution of `sex` within our data set, this time using `geom_bar()` to display the data in a bar graph. Another difference from when we made a scatter plot above using `geom_point()` is that we are adding `fill` to make sure the bars in the bar graph are colored in. We can also add `scale_fill_viridis_d()` to automatically apply a certain color scheme to our plot.
+Let's use `ggplot()` again to view the distribution of `sex` within our data set, this time using `geom_bar()` to display the data in a bar graph. Another difference from when we made a scatterplot above using `geom_point()` is that we are adding `fill` to make sure the bars in the bar graph are colored in. We can also add `scale_fill_viridis_d()` to automatically apply a certain color scheme to our plot.
 
-```{r sex of sentenced individuals, fig.width = 5, fig.height = 5}
-us_sent %>%
-  ggplot() +
-  geom_bar(aes(x = sex, fill = sex)) +
+```{r bar graph sex, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = sex, fill = sex)) +
+  geom_bar(show.legend = FALSE) +
   labs(title = "Sex of Sentenced Individuals",
        x = "Sex",
        y = "Number of Individuals",
@@ -240,19 +248,18 @@ From this graph, we can see that there are far more males than females in our da
 
 #### Race
 
-Let's continue exploring through turning toward the `race` variable. We will start our exploration of `race` by using `distinct` to remind ourselves of the levels of the `race` variable.
+Let's continue exploring through turning toward the `race` variable. We will start our exploration of `race` by using `distinct()` to remind ourselves of the levels of the `race` variable.
 
 ```{r}
 us_sent %>%
   distinct(race)
 ```
 
-We can once again use `ggplot()` to make a bar graph displaying the `race` variable. We can make use of `fct_infreq()` when choosing `race` as our x variable, which makes sure the bars in the plot are ordered largest to smallest from left to right. 
+We can once again use `ggplot()` to make a bar graph displaying the `race` variable. We can make use of `fct_infreq()`, which makes sure the bars in the plot are ordered largest to smallest from left to right instead of alphabetically. 
 
-```{r race of sentenced individuals, fig.width = 5, fig.height = 5}
-us_sent %>%
-  ggplot() +
-  geom_bar(aes(x = fct_infreq(race), fill = race)) +
+```{r bar graph race, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = fct_infreq(race), fill = race)) +
+  geom_bar(show.legend = FALSE) +
   labs(x = "Race",
        title = "Race of Sentenced Individuals",
        y = "Number of Individuals",
@@ -262,19 +269,18 @@ us_sent %>%
 
 #### Race and sex
 
-Now let's look at how `race` and `sex` relate to one another. First, let's look at the number of people in each combination using `count` again. 
+Now let's look at how `race` and `sex` relate to one another. First, let's look at the number of people in each combination using `count()` again. 
 
 ```{r}
 us_sent %>%
   count(race, sex)
 ```
 
-We can represent these two variables using a bar graph. Once again we will use `ggplot` to create this plot. This time, since we are creating a bar graph displaying two different variables, we can define `race` as the x variable and have the colors of the bar graph correspond to the `sex` variable. 
+We can represent these two variables using a bar graph. Once again we will use `ggplot()` to create this plot. This time, since we are creating a bar graph displaying two different variables, we can define `race` as the `x` variable and have the colors of the bar graph correspond to the `sex` variable. 
 
-```{r, , fig.width = 5, fig.height = 5}
-us_sent %>%
-  ggplot() +
-  geom_bar(aes(x = fct_infreq(race), fill = sex)) +
+```{r bar graph race by sex, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = fct_infreq(race), fill = sex)) +
+  geom_bar() +
   labs(x = "Race",
        title = "Race and Sex of Sentenced Individuals",
        y = "Number of Individuals",
@@ -282,12 +288,11 @@ us_sent %>%
   scale_fill_viridis_d()
 ```
 
-We can also create a proportional bar plot. All we need to add to our previous `ggplot()` is `position = "fill"` within `geom_bar()`. 
+We can also create a proportional bar plot. All we need to add to our previous plot is `position = "fill"` within `geom_bar()`. 
 
-```{r, fig.width = 5, fig.height = 5}
-us_sent %>%
-  ggplot() +
-  geom_bar(aes(x = fct_infreq(race), fill = sex), position = "fill") +
+```{r stacked bar graph race by sex, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = fct_infreq(race), fill = sex)) +
+  geom_bar(position = "fill") +
   labs(x = "Race",
        title = "Race and Sex of Sentenced Individuals",
        y = "Number of Individuals",
@@ -297,16 +302,17 @@ us_sent %>%
 
 #### Age
 
-We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont. We can use the `filter` command to look at only these three districts of interest, and then make a bar graph like before. 
+We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont. We can use the `filter()` command to look at only these three districts of interest, and then make a stacked histogram of age colored by district.
 
-```{r}
+```{r stacked histogram age, fig.width = 6}
 us_sent %>%
   filter(district %in% c("Maine", "Rhode Island", "Vermont")) %>%  
-  ggplot() +
-  geom_bar(aes(x = age, fill = district)) +
-  labs(title = "Age in Maine, Rhode Island, and Vermont",
+  ggplot(aes(x = age, fill = district)) +
+  geom_histogram() +
+  labs(title = "Distribution of Age in Maine, Rhode Island, and Vermont",
        x = "Age",
-       y = "Count")
+       y = "Count",
+       fill = "District")
 ```
 
 What do you notice about the ages represented in our data? Can you try plotting the ages for other districts to see how they differ from the three we've chosen for this plot?
