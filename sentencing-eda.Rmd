@@ -428,51 +428,47 @@ ggplot(us_sent, aes(x = criminal_history, y = sentence_length,
 ```
 
 
-#### How does sentence length vary by adjusted offense level and criminal history?
+#### How does sentence length vary by adjusted offense level and criminal history? 
 
-Now that we understand some useful plots for examining our data. Let's return to using scatterplots to examine three important variables related to the "What?" question: `all_adjustments`, `sentence_length`, `criminal_history`. We can look at these three variables at once by comparing `all_adjustments` and `sentence_length` in a conventional way with scatterplots, but adding in `criminal_history` through color. 
+Let's add a third variable to our exploration of sentence length: the adjusted offense level (`all_adjustments`). Recall that `all_adjustments` is a type of rating of the offense level that can be treated numerically, so we might start by looking at a scatterplot of sentence length by offense level, and then add in the criminal history level through color.
 
-```{r, fig.width = 6, fig.height = 5}
-ggplot(us_sent) +
-  geom_point(aes(y = sentence_length,
-                 x = all_adjustments, 
-                 color = criminal_history),
-             alpha = 0.3) +
-  labs(x = "All Adjustments",
-       y = "Sentence Length (in months)",
-       title = "Sentence Length by All Adjustments and Criminal History Level",
+```{r scatterplot sentence offense level criminal history, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(y = sentence_length, x = all_adjustments, 
+                    color = criminal_history)) +
+  geom_point(alpha = 0.3) +
+  labs(x = "Adjusted Offense Level",
+       y = "Sentence Length (Months)",
+       title = "Sentence Length by Adjusted Offense Level and Criminal History",
        color = "Criminal History") +
   scale_color_viridis_d()
 ```
 
-Now we can display a lot of information in a single plot! However, let's try going a step further, and adding the `race` variable into the mix. We can do so by using the same code as for the previous plot, but also using the `facet_wrap()` function with `race` to create four different plots according to `race`.
+We can display a lot of information in a single plot! Let's try going a step further, and adding the `race` variable into the mix. We can do so by using the same code as the previous plot, but also using the `facet_wrap()` function with `race` to create four different plots according to race.
 
-```{r, fig.width = 7, fig.height = 6}
-ggplot(us_sent) +
-  geom_point(aes(y = sentence_length,
-                 x = all_adjustments, 
-                 color = criminal_history), 
-             alpha = 0.3) +
-  labs(x = "All Adjustments",
-       y = "Sentence length (Months)",
+```{r scatterplot sentence offense level criminal history race, fig.width = 7, fig.height = 6}
+ggplot(us_sent, aes(y = sentence_length, x = all_adjustments, 
+                    color = criminal_history)) +
+  geom_point(alpha = 0.3) +
+  labs(x = "Adjusted Offense Level",
+       y = "Sentence Length (Months)",
+       title = "Sentence Length by Adjusted Offense Level, Criminal History, and Race",
        color = "Criminal History") +
-  facet_wrap(~ race) +
-  scale_color_viridis_d()
+  scale_color_viridis_d() +
+  facet_wrap(~race)
 ```
 
 Now we have four different variables represented in a single plot, which is a super powerful tool. What do you notice about the plots above? 
 
 <!-- #### How does the age range vary with criminal history? -->
 
-```{r, , fig.width = 6, fig.height = 5, eval = FALSE, include = FALSE}
-ggplot(us_sent) +
-  geom_density_ridges(aes(y = as.factor(criminal_history),
-                          x = age,
-                          fill = as.factor(criminal_history))) +
+```{r ridge plot age by criminal history, fig.width = 6, fig.height = 5, eval = FALSE, include = FALSE}
+ggplot(us_sent, aes(x = age, y = criminal_history,fill = criminal_history)) +
+  geom_density_ridges(show.legend = FALSE) +
   labs(fill = "Criminal History",
        x = "Age of individual in years",
        y = "Criminal History")
 ```
+
 
 ### When?
 
