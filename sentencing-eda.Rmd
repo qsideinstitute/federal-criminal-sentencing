@@ -336,121 +336,97 @@ Bringing in the spatial district files
 
 ### What?
 
-Now that we explored the "Who?" question about our data, let's move on to answering the "What?" question. You know that `sentence_length` and `mandatory_min` are the variables that fall under this category. 
+Now that we explored the "Who?" question about our data, let's move on to answering the "What?" question. Recall that `sentence_length` and `mandatory_min` are the variables that fall under this category, but we'll focus only on sentence length for our data exploration.
 
 #### Sentence length
 
-<!-- Note from original authors: How do sentence lengths relate to policy? -- insert blurb here? -->
+To better understand `sentence_length`, we’ll display a histogram for this quantitative variable. A histogram gives us a visual representation of the frequency of values. We can change the width of each bin or choose a number of bins, and then the plot shows us how many sentences fell within each bin range of sentence lengths. We can also use `geom_vline()` to add some red vertical lines on the graph as a guide to think about common sentence lengths of 12, 60, 120, or 240 months, corresponding to 1, 5, 10, and 20 years. 
 
-To better understand `sentence_length`, we’ll display a histogram for this quantitative variable. A histogram gives us a visual representation of the frequency of values. With R, we can change the width of each bin or choose a number of bins, and then the plot shows us how many sentences fell within each bin range. We can also use `geom_vline()` to add some red lines on the graph as a guide to think about common sentence lengths of 12, 60, 120, or 240 months. 
-
-
-```{r, fig.width = 6, fig.height = 5}
-ggplot(us_sent) +
-  geom_histogram(aes(x = sentence_length), 
-                 binwidth = 12) +
-  geom_vline(aes(xintercept = 12), 
+```{r histogram sentence, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = sentence_length)) +
+  geom_histogram(binwidth = 12) +
+  geom_vline(xintercept = c(12, 60, 120, 240), 
              color = "red", 
              linetype = 2) +
-  geom_vline(aes(xintercept = 60), 
-             color = "red", 
-             linetype = 2) +
-  geom_vline(aes(xintercept = 120), 
-             color = "red", 
-             linetype = 2) +
-  geom_vline(aes(xintercept = 240), 
-             color = "red", 
-             linetype = 2) +
-  labs(x = "Sentence Length (Months)", 
+  labs(x = "Sentence Length (Months)",
+       caption = "Red dashed lines indicate 1, 5, 10, and 20 year sentences",
        y = "Number of Individuals",
        title = "Numbers of Individuals per Sentence Length")
 ```
 
 What do you notice about the number of individuals per sentence length in our data set?
 
-While it may be useful to look at how sentence length in terms of months, we can also adjust the scale of our historgram to look at sentence length in terms of years. We can do so by simply dividing our x variable, `sentence_length` by 12. We can also adjust our guiding red lines to examine the sentence lengths between 1, 5, 10, and 20 years:
+While it may be useful to look at how sentence length in terms of months, we can also adjust the scale of our histogram to look at sentence length in terms of years. We can do so by simply dividing our `x` variable, `sentence_length`, by 12. We can also adjust our guiding red lines to examine the sentence lengths between 1, 5, 10, and 20 years:
 
-```{r, fig.width = 6, fig.height = 5}
-ggplot(us_sent) +
-  geom_histogram(aes(x = sentence_length/12), 
-                 binwidth = 1) +
+```{r histogram sentence years, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = sentence_length / 12)) +
+  geom_histogram(binwidth = 1) +
   labs(x = "Sentence length in years", 
        y = "Number of individuals") +
-  geom_vline(aes(xintercept = 1), 
+  geom_vline(xintercept = c(1, 5, 10, 20), 
              color = "red", 
              linetype = 2) +
-  geom_vline(aes(xintercept = 5), 
-             color = "red", 
-             linetype = 2) +
-  geom_vline(aes(xintercept = 10), 
-             color = "red", 
-             linetype = 2) +
-  geom_vline(aes(xintercept = 20), 
-             color = "red", 
-             linetype = 2) +
-  labs(title = "Distribution of Number of Individuals by Sentence Length in Years",
+  labs(title = "Distribution of Number of Individuals by Sentence Length",
+       caption = "Red dashed lines indicate 1, 5, 10, and 20 year sentences",
        x = "Sentence Length (Years)", 
        y = "Number of Individuals")
 ```
 
-We observe a high frequency over 0, meaning that many individuals who are convicted may in fact receive a sentence of 0 months. At the other extreme, we see cases corresponding to 470 months, representing individuals who either have been given a long sentence, meaning 39 years or possibly a life sentence.
+We observe a high frequency over 0, meaning that many individuals who are convicted may in fact receive a sentence of 0 months. At the other extreme, we see a group of cases corresponding to 470 months, or about 39 years, representing individuals who have been given a long sentence or possibly a life sentence.
 
 <!-- [could further discuss skew, peaks and relate to sentencing table, etc.] -->
 
 #### How does sentence length relate to criminal history level? {.tabset}
 
-<!-- Add boxplot and describe violin and ridge plots -->
+<!-- Note from original authors: How do sentence lengths relate to policy? -- insert blurb here? -->
+Earlier we used a side-by-side boxplot to see how a numerical variable changes across levels of a categorical variable, but boxplots aren't the only option. Let's explore how sentence length varies by criminal history level using boxplots, violin plots (`geom_violin()`), and ridge plots (`geom_density_ridges()`). 
+
+What do you learn from these plots? What do you see as the advantages and disadvantages of each type of plot?
 
 ##### Boxplot
 
-##### Violin plot
-
-Violin plots are another useful way of showing the distribution data. Let's use a violin plot to compare `criminal_history` and `sentence_length`. We can make use of the `geom_violin()` function to accomplish this:
-
-```{r, fig.width = 6, fig.height = 5}
-ggplot(us_sent) +
-  geom_violin(aes(x = criminal_history, 
-                  y = sentence_length, 
-                  fill = criminal_history)) +
-  labs(fill = "Criminal History", 
-       y = "Sentence Length (Months)", 
-       x = "Criminal History",
-       title = "Sentence Length by Criminal History")
-
+```{r sentence by criminal history boxplot, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = criminal_history, y = sentence_length,
+                    fill = criminal_history)) +
+  geom_boxplot(show.legend = FALSE) +
+  labs(y = "Sentence Length (Months)", 
+       x = "Criminal History Level",
+       title = "Distribution of Sentence Length by Criminal History Level")
 ```
+
 
 ##### Ridge plot
 
-Apart from historgrams and violin plots, ridge plots are another useful way to represent data. We can use similar code as for the violin plots but make use of `geom_density_ridges()`. We can also continue to add some guiding lines to our plots at 12, 60, 120, 180, and 240 months:
+Ridge plots are density plots within each level of a categorical variable. We've added vertical lines to this ridge plot to indicate 1, 5, 10, 15, and 20 year sentences.
 
-```{r, fig.width = 6, fig.height = 5, message = FALSE}
-ggplot(us_sent) +
-  geom_density_ridges(aes(y = criminal_history,
-                          x = sentence_length,
-                          fill = criminal_history)) +
-  geom_vline(aes(xintercept = 12), 
+```{r sentence by criminal history ridge plot, fig.width = 6, fig.height = 5, message = FALSE}
+ggplot(us_sent, aes(y = criminal_history, x = sentence_length,
+                    fill = criminal_history)) +
+  geom_density_ridges(show.legend = FALSE) +
+  geom_vline(xintercept = c(12, 60, 120, 180, 240), 
              color = "black", 
              linetype = 2) +
-  geom_vline(aes(xintercept = 60), 
-             color = "black", 
-             linetype = 2) +
-  geom_vline(aes(xintercept = 120), 
-             color = "black", 
-             linetype = 2) +
-  geom_vline(aes(xintercept = 180), 
-             color = "black", 
-             linetype = 2) +
-  geom_vline(aes(xintercept = 240), 
-             color = "black", 
-             linetype = 2) +
-  labs(title = "Distribution of sentence length in months by criminal history",
-       subtitle = "Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences",
-       fill = "Criminal History",
-       x = "Sentence length in months",
+  labs(title = "Distribution of Sentence Length by Criminal History Level",
+       caption = "Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences",
+       fill = "Criminal History Level",
+       x = "Sentence Length (Months)",
        y = "Criminal History") +
   scale_fill_viridis_d()
-
 ```
+
+##### Violin plot
+
+Violin plots are another type of density plot where the width of each "violin" changes with the density of the data: the wider the section of the violin, the more data around that value. For example, at the first criminal history level, it looks like short sentences are the most frequent (widest part of the violin) and it is very unusual for individuals to have sentences longer than about 125 months (plot is very narrow and needle-like around that point and higher).
+
+```{r sentence by criminal history violin plot, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = criminal_history, y = sentence_length,
+                    fill = criminal_history)) +
+  geom_violin(show.legend = FALSE) +
+  labs(y = "Sentence Length (Months)", 
+       x = "Criminal History Level",
+       title = "Distribution of Sentence Length by Criminal History Level")
+```
+
 
 #### How does sentence length vary by adjusted offense level and criminal history?
 
