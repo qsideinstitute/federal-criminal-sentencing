@@ -383,25 +383,6 @@ This allows us to estimate the coefficients with some degree of error. Using the
 Returning to the model summary output, you may have noticed that the Multiple $R^2$ is relatively low, indicating that our model using only race as a predictor accounts for only 1.5% of the variation in sentence length. Do you think we can make a better model using more variables to predict sentence length? Of course! Let's jump into replicating one of the models in the original study.
 
 
-### District I Model
-Alright, let's try to improve our model by adding some more predictors. The first model based on the resesarch paper this case study is based on includes defendant demographics, sentencing year, whether or not there was a guilty plea, relevant cell on the U.S. sentencing grid, whether there was a mandatory minimum sentence, presence of government-sponsored downward departures, and the interaction of judicial district and defendant race. An interaction term is employed when the one variable impacts another variable in some way. For our data set, this includes the following variables: `age`, `sex`, and `educ`, `year`, `guilty_plea`, `grid_cell`, `mandatory_min`, `gov_departures`, and the interaction of `district` and `race`. In this model, all terms except for the interaction derive from nationwide data. For example, this model assumes that all districts, on average, apply the U.S. sentencing grid in the same way. The code for formulating this linear regression model would follow the same format as the other linear models we've made:
-
-```{r}
-lm1 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + guilty_plea + grid_cell +
-            gov_departures + district + race,
-          data = us_sent,
-          model = TRUE,
-          y = TRUE)
-```
-
-We are omitting the linear model summary from this document because, as you can imagine, it becomes quite long with so many categorical variables in the model. However, you can take a look at the $R^2$ by using a dollar sign and the typing `r.squared` as follows:
-
-```{r}
-summary(lm1)$r.squared
-```
-
-That's a much higher $R^2$! Obviously, you aren't able to immediately see other factors that determine how effective this model is at predicting sentence lengths because of the ommitted linear model summary. However, you can already see that this model accounts for a lot more of the variability in `sentence_length` than our baseline model.
-
 ### District II Model
 
 In the paper this case study is based on, the authors apply this model (along with alternate models) across all districts in the data set. In doing this, they were able to compare the disparity in sentences across different races. Let's try employing this model for just one district at a time. Let's start with Arkansas. To only look at the datapoints from Arkansas, we will start with using the `filter()` function. Then, we will fit another model identical to the first linear model, only without `district` as a predictor:
