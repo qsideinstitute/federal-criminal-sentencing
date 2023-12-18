@@ -216,62 +216,71 @@ $R^2$ represents the proportion of variation in the response variable that is ex
 Apart from looking at the $R^2$, it is a good idea to look at the resulting $t$-tests and $F$-tests. While t-tests looks at the significance of individual variables by comparing population means, F-tests examine the significance of overall models by comparing population variances. You can see the "t value" column for the test statistics from the t-tests, but you can mainly just focus on the resulting p-values in the "Pr(>|t|)" column. In this case, the p-value for `body_mass_g` is quite low, meaning it is a significant variable in this model predicting flipper length. At the bottom, you can see the F-statistic and associated p-value for the overall model. Again, the p-value is quite low, meaning the model is significant. These two outcomes of the t-test and F-test can increase our confidence in the model even further. 
 -->
 
+
 ### Linear regression with a categorical predictor
 
-So far we've only explored linear regression with numerical variables, but we can certainly use categorical variables in our model as well. Continuing with our penguins data, let's compare flipper length to penguin species. Remember that flipper length is a numerical variable and species is a categorical variable (with three levels: Adelie, Chinstrap, and Gentoo).
+So far we've only explored linear regression with numerical variables, but we can certainly use categorical variables in our model as well. Continuing with our penguins data, let's compare flipper length to penguin species. Remember that flipper length is a numerical variable and species is a categorical variable with three levels: Adelie, Chinstrap, and Gentoo.
 
 #### Binary categorical predictor 
 
-To start, let's consider one level at a time, so we can get a good sense of the relationship between species and flipper length. Below we examine Adelie penguins first. We start off by using `mutate()` again to label our species as either "Adelie" or "Not Adelie". Then, we create a side-by-side boxplot using `geom_boxplot()` again. 
+To start, let's simplify the problem by considering species as only "Gentoo" or "Not Gentoo". We'll use `case_when()` to create this new binary variable (`species2`), then we'll create a side-by-side boxplot using `geom_boxplot()` to view the relationship between flipper length and species.
 
 ```{r, warning = FALSE}
-pengAdelie <- penguins %>% 
-  mutate(species = case_when(species != "Adelie" ~ "Not Adelie",
-                            TRUE ~ "Adelie")) %>% 
+penguins <- 
+  penguins %>% 
+  mutate(species2 = fct_collapse(species,
+                               "Not Gentoo" = c("Adelie", "Chinstrap"))) %>% 
   drop_na()
 
-adelieplot <- ggplot(pengAdelie, aes(x = species,
-                                     y = flipper_length_mm)) + 
-  geom_boxplot(color = 'coral2', 
+adelieplot <- ggplot(penguins, aes(x = species2, y = flipper_length_mm)) + 
+  geom_boxplot(color = "coral2", 
                alpha = 0.7) +
   labs(x = "Species",
        y = "Flipper Length (mm)",
-       title = "Flipper Length by Adelie and non-Adelie Species")
+       title = "Flipper Length by Gentoo and non-Gentoo Species")
 adelieplot
 ```
 
-We can see that Adelie penguins seem to have a shorter flipper length, on average, than non-Adelie penguins. 
+We can see that Gentoo penguins seem to have a longer flipper lengths, generally, than non-Gentoo penguins. 
 
-Next, we create a linear model for the relationship between flipper length and whether a penguin is an Adelie penguin or not.
-
-```{r}
-amodel <- lm(flipper_length_mm ~ body_mass_g + species, 
-             data = pengAdelie)
-amodel
-```
-Do you think that our linear model is a good representation of the data? Let's turn to `summary()` again to answer this question.
+Next, we create a linear model for the same relationship.
 
 ```{r}
-summary(amodel)
+gentoo_lm <- lm(flipper_length_mm ~ species2, data = penguins)
+summary(gentoo_lm)
 ```
 
-We can analyze this summary table like normal to determine whether this is a good model of our data. 
+$R^2$ in this case is interpreted in the same way. Find the $R^2$ value for this model. Is it a good fit?
 
-Let's assume for the purposes of this case study that we checked conditions and feel ready to interpret our linear model. For interpreting the coefficient of the categorical variable `species`, however, you may notice that the variable shows up a little differently than you might expect, being named `speciesNot Adelie` rather than just `species`. When R is dealing with categorical variables in linear models, it chooses one level to be a baseline, coded as 0, and makes the other level 1. Since `Not Adelie` is in the name of the categorical variable in the linear model, we know R decided to code this level as 1, and therefore `Adelie` as 0. This is exactly what we would expect because, unless we specify which level we want to be our baseline variable, R will just choose the level that is first in the alphabet to be the baseline. How should we interpret this categorical variable you may ask? It may help to write out the equation for the linear model:
+Yes, we see that $R^2 = 0.7514$, which means that about 75% of the variability in flipper length is explained by whether or not the penguins are Gentoo penguins.
 
-$\widehat{FlipperLength} = 144.3 + 0.01237(BodyMass) + 8.311(speciesNotAdelie)$
+How do you think we interpret this model now? You may have noticed that the predictor variable shows up a little differently than you might expect in the coefficient table: it's labeled `species2Gentoo` rather than just `species2`. This is actually a new **indicator variable** that R created to fit the linear model! Because a linear model is a mathematical equation, R converts our categorical variable into a numerical *indicator variable*: it takes on the value 1 if the specified level after the variable name is observed, and 0 otherwise. Our binary species variable `species2` was converted to an indicator variable labeled `species2Gentoo`, which tells us:
 
-Now, since we know we will enter 0 for `speciesNot Adelie` for Adelie penguins, and 1 for `speciesNot Adelie` for non-Adelie penguins, we can now make two separate equations, one for each category.
+$$
+\texttt{species2Gentoo} = \begin{cases}
+  1 & \text{if the species is Gentoo}\\
+  0 & \text{if the species is not Gentoo}
+\end{cases}
+$$
 
-Plugging in 0 for `speciesNot Adelie`, we get the equation for Adelie penguins: 
+(Note: the indicator variable would be reversed if it were instead labeled as `species2Not Gentoo` in the summary output.)
 
-$\widehat{FlipperLength} =  144.3 + 0.01237(BodyMass)$
+So how do we interpret the coefficients in this model? Let's write out the equation of the regression line to figure it out:
 
-Plugging in 1 for `speciesNot Adelie`, we get the equation for non-Adelie penguins: 
+$\widehat{\text{Flipper Length}} = 191.9 + 25.3 (\text{Gentoo})$
 
-$\widehat{FlipperLength} =  152.61 + 0.01237(BodyMass)$
+"Gentoo" in the equation above is our indicator variable `species2Gentoo`.
+If we plug in a 0 for the "Gentoo" indicator variable in the equation to get the predicted average flipper length for *non-Gentoo* species (our *reference* level), we have:
 
-Awesome. What do you now see about the impact of the `species` variable on predicting flipper length? The only difference in the two equations is in the y-intercept in the model, meaning that flipper length for non-Adelie penguins is, on average, 8.311 mm longer than flipper length for Adelie penguins, across all body mass values. 
+$\widehat{\text{Flipper Length}} = 191.9 + 25.3 (0) = 191.9 \text{ mm}$ 
+
+Notice the predicted average here is exactly the intercept! This tells us that the **intercept** can be interpreted as the average outcome for the reference level of a categorical variable (whichever level takes on the value "0").
+
+If we plug in a 1 for "Gentoo" in the equation to get the predicted average flipper length for Gentoo species, we have:
+
+$\widehat{\text{Flipper Length}} = 191.9 + 25.3 (1) = 217.2 \text{ mm}$
+
+Notice the difference in these two predicted averages is exactly the slope: $217.2 - 191.9 = 25.3$! This tells us that the **slope** can be interpreted as the difference in the average outcome between the indicated level and the reference level. In our case, the flipper length of Gentoo species is, on average, 25.3 mm longer than the flipper length of non-Gentoo species. 
 
 #### Categorical predictor with more than 2 levels
 
