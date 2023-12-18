@@ -122,80 +122,79 @@ Now that we have our data types sorted out, we can start exploring the data!
 
 ## How to visualize relationships
 
-A good practice to do with a new data set is to explore it through visualization---we can get a sense of the distributions of the different variables and look at the relationships among variables. We will walk through a few graphs in R so you can see how to plot. We will examine each of these so we can see relationships and learn more about our data. Then, explore on your own by modifying this code!
+A good practice to do with a new data set is to explore it through visualization. We can get a sense of the individual distributions of each variable (you might refer back to the case study on [Diversity of Artists in Major U.S. Museums](https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html) for an introduction to graphs of a single variable) and then move on to look at the relationships among two or more variables. As with single-variable graphs, the type of graph we use will depend on the types of variables we are exploring. We will walk through a few simple graphs below that allow us to look at relationships between variables. 
 
 
 ### Two numerical variables
 
-In this first plot, we will look at numerical variables only using a scatter plot. Scatter plots help us to visualize and understand numerical data better. We will compare each defendant's age to their sentence length through visualization and observation, and we will use this scatter plot to identify any patterns that exist in our data set. Each dot in the scatter plot we produce with the `ggplot()` command from the **ggplot2** package represents a row in our `us_sent` data. 
+A *scatterplot* is typically used to visualize the relationship between two numerical variables. One variable, usually the *dependent* variable, goes on the $y$ axis, and the other variable goes on the $x$ axis, and each observation in the data is represented by a point on the graph. 
 
-To use `ggplot()`, we start by indicating the data set we want to plot: `us_sent`. Then, we specify what our variables of interest are---in this case, we are interested in `age` and `sentence_length`. `geom_point()` specifies that we want to use a scatter plot to represent our data. There are also many fun and useful modifications that change the way a scatter plot looks. For example, you can change the color of data points using `color`, you can change the size of data points using `size`, and you can specify the transparency of data points using `alpha`. It's also good practice to come up with a useful title and good axis labels using the `labs` command.
+We will use a scatterplot to display how a defendant's age relates to their sentence length. Recall, to use `ggplot()` from the **ggplot2** package, we start by indicating the data set we want to plot: `us_sent`. Then, we specify what our variables of interest are---in this case, we are interested in `age` and `sentence_length`. The command `geom_point()` specifies that we want to use a scatterplot to represent our data. 
+
+There are many fun and useful modifications that change the way a scatterplot looks. For example, you can change the color of data points using `color`, you can change the size of data points using `size`, and you can specify the transparency of data points using `alpha` on scale of 0 = *fully transparent* to 1 = *fully opaque*. It's also good practice to come up with a useful title and good axis labels using the `labs()` command.
 
 ```{r sentence length by age, fig.width = 6, fig.height = 6}
-ggplot(us_sent, aes(x = age, 
-                    y = sentence_length)) + 
-  geom_point(color = 'coral2',
+ggplot(us_sent, aes(x = age, y = sentence_length)) + 
+  geom_point(color = "coral2",
              size = 0.5,
-             alpha = 0.4) +
+             alpha = 0.7) +
   labs(title = "Sentence Length by Age",
        x = "Age (Years)",
        y = "Sentence Length (Months)")
 ```
 
-What do you notice in this scatter plot? What do you wonder?
-
+What do you notice in this scatterplot? What do you wonder? 
 
 ### One numerical and one categorical variable
 
-We just created a scatter plot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical. Run the code below that plots `criminal_history` (a categorical variable) against `age` (a numerical variable).
+We just created a scatterplot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical. Run the code below that plots `criminal_history` (a categorical variable) against `age` (a numerical variable).
 
 ```{r criminal history by age, fig.width = 6, fig.height = 6}
-ggplot(us_sent, aes(x = criminal_history, 
-                    y = age)) + 
-  geom_point(color = 'coral2', 
+ggplot(us_sent, aes(x = criminal_history, y = age)) + 
+  geom_point(color = "coral2", 
              alpha = 0.7) +
   labs(title = "Age by Criminal History Level",
-       x = "Criminal History (1-6 levels)",
+       x = "Criminal History Level",
        y = "Age (Years)")
 ```
 
-You might think it's a little difficult to see any clear patters when using a scatterplot to examine one quantitative and one categorical variable because the points are so densely packed together. Another helpful plot for this combination of variables is the side-by-side boxplot. You can create a side-by-side boxplot by simply switching out `geom_point()` with `geom_boxplot()` in the code above:
+You might think it's a little difficult to see any clear patterns when using a scatterplot to examine one quantitative and one categorical variable because the points are so densely packed together. That's why a scatterplot is generally *not* an appropriate graph to use in this situation. Instead, a more appropriate plot for this combination of variables is the side-by-side boxplot. You can create a side-by-side boxplot by simply switching out `geom_point()` with `geom_boxplot()` in the code above:
 
-```{r, fig.width = 6, fig.height = 6}
-ggplot(us_sent, aes(x = criminal_history, 
-                    y = age)) + 
-  geom_boxplot(color = 'coral2', 
-             alpha = 0.7) +
+```{r boxplot age by criminal history, fig.width = 6, fig.height = 6}
+ggplot(us_sent, aes(x = criminal_history, y = age)) + 
+  geom_boxplot(color = "coral2", 
+               alpha = 0.7) +
   labs(title = "Age by Criminal History Level",
-       x = "Criminal History (1-6 levels)",
+       x = "Criminal History Level",
        y = "Age (Years)") 
 ```
 
-> Interpreting box plots: The middle horizontal line on a box plot refers to the mean of the data points. The botton and top lines of the box represent the lower quartile and upper quartile respectively (meaning the lower 25% of the data points are below the lower quartile and the upper 25% of the data points are above the upper quartile). The verticle lines called "whiskers" extending from the box represent the rest of the data, which includes all points outside of the middle 50% of the data points, excluding any outliers. Lastly, any points outside of the box and "whiskers" are outliers. 
+> Interpreting boxplots: The middle horizontal line on a boxplot refers to the median, or halfway point, of the data, where 50% of the values are above the median and 50% are below. The botton and top lines of the box represent the lower quartile and upper quartile respectively (meaning the lower 25% of the data points are below the lower quartile and the upper 25% of the data points are above the upper quartile). The verticle lines called "whiskers" extending from the box represent the rest of the data, which includes all points outside of the middle 50% of the data points, excluding any outliers. Lastly, any points outside of the box and "whiskers" are potential outliers. 
 
-What do you notice in this side-by-side boxplot? What do you wonder?
+What patterns do you notice in this side-by-side boxplot? What do you wonder?
+
 
 ### Two categorical variables
 
-Let's try one more scenario. What happens when you try to plot two categorical variables against each other? Run the code below to plot sex against race (both categorical variables).
+Let's try one more scenario. What happens when you try to plot two categorical variables against each other using a scatterplot? Run the code below to plot sex against race (both categorical variables).
 
-```{r race by sex, fig.width = 6, fig.height = 6}
-ggplot(us_sent, aes(x = race,
-                    y = sex)) + 
-  geom_point(color = 'coral2', 
+```{r scatterplot race by sex, fig.width = 6, fig.height = 6}
+ggplot(us_sent, aes(x = race, y = sex)) + 
+  geom_point(color = "coral2", 
              alpha = 0.7) +
   labs(title = "Race by Sex",
        x = "Race",
-       y = "Sex (Male or Female)")
+       y = "Sex")
 ```
 
-As you may have noted, scatter plots of two categorical variables are not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. To compare two categorical variables frequency tables (shown below) or bar graphs are a better visualization to use. 
+As you may have noted, scatterplots of two categorical variables are also not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. As before, scatterplots are thus generally *not* appropriate displays for exploring the relationship between two categorical variables.  Instead, frequency tables (shown below) or bar graphs (explored later) are better visualizations to use. 
 
 ```{r}
 us_sent %>% 
-  count(sex, race, sort = TRUE)
+  count(sex, race) %>% 
+  # Add distribution of race within each sex
+  mutate(proportion = round(proportions(n), 3))
 ```
-
 
 In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
 
