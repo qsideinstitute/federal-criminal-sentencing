@@ -2,11 +2,13 @@
 output: html_document
 ---
 
-# Analysis
+# Regression Analysis
 
-Now that we've properly conducted an EDA of our federal sentencing data, we can dive into analyzing this data further. One main way that we analyze data is through fitting regressions. Regressions can be used to model the relationships between different explanatory variables and a chosen response variable. There are many kinds of regressions, but the most common and simplest regression is a simple linear regression. To explore linear regression, let's first take a step back from the federal sentencing data, and turn to two simpler data sets for examples. 
+Now that we’ve properly conducted an EDA of our federal sentencing data and have an understanding of the context and the structure of the data, we can dive into analyzing this data further! 
 
-## Fitting Lines to Data
+One main way that we analyze data is through fitting regressions. Regressions can be used to model the relationships between different explanatory variables and a chosen response variable. There are many kinds of regressions, but the most common and simplest regression is a simple linear regression. To explore linear regression, let's first take a step back from the federal sentencing data, and turn to two simpler data sets for examples.  
+
+## Fitting a line: The basics
 
 Suppose we want to predict how much electricity the city of Los Angeles, California will use based on the daily temperature. As the temperature goes higher, more people will turn on their air conditioners and use more electricity. We can look at past electricity use data and compare it to the temperature each day to get a sense of how these two attributes are related. Knowing and understanding how two variables relate can help you plan for future possibilities or identify and correct patterns that you don't want to continue. For example, we can use this relationship to makes predictions of how much electricity Los Angeles will use in the future if we know the future temperature, and make sure that there is enough for the city's needs.
 
@@ -30,7 +32,7 @@ twoplot <- ggplot(twopoints, aes(x = xvals, y = yvals)) +
 twoplot
 ```
 
-### Analytically Fit a Line to Two Points
+### Analytically fit a line to two points
 
 In order to create a linear regression on these two points, we can think back to algebra and use the formula for a line.
 
@@ -57,7 +59,7 @@ twoplot + geom_abline(slope = 3/2,
 
 Great! Notice that the line above goes right through our two data points.
 
-### Numerically Fit a Line to Two Points
+### Numerically fit a line to two points
 
 If we want to reduce the amount of calculations required to fit a line to two points, we can instead just rely on R to do the work for us. We can use the linear model function, `lm()` to carry out a regression for us. We just input our `yvals` and `xvals` along with our data `twopoints` to fit a linear model using R. 
 
@@ -67,7 +69,7 @@ twolinear <- lm(formula = yvals ~ xvals,
 twolinear
 ```
 
-### Analytically Fit a Line to Three Points
+### Analytically fit a line to three points
 
 We know that two points alone uniquely define a line, but what do we think will happen if we have to find a line that describes the goes through three data points? Let's add the point (2,3) to our existing set and see what happens when try to draw a line through these three points. Below, we will use R to plot three graphs of our points, each attempting to find a line that goes through all three data points. Don't worry too much on the coding for now, but pay attention to the resulting plots. 
 
@@ -116,7 +118,8 @@ Notice in all three graphs above, we can't draw a straight line through all thre
 To understand which line *best fits* our three data points, we need to talk about the **error**, which is also called the **residual** in statistics. The residual is the vertical distance between the predicted data point y (on the line) and the actual value of y our data takes on at that  point (the value we collected) at each of our data points. In our data set we have the points (1,2), (2,3), and (3,5) so the only actual values for y in our data set are 2, 3,and 5 even though our prediction line (our model) takes on all values of y between 0 and 6.
 
 
-### Numerically Fit a Line to Three Points
+### Numerically fit a line to three points
+
 To find the model that best fits our data, we want to make the error as small as possible. To expand on our definition of linear regression above, linear regression is a technique that allows us to identify the line that minimizes our error. This line is called a *linear regression model* and is the line that best fits our data. Below, you will see R code to identify the model that best fits our data.
 
 ```{r}
@@ -148,7 +151,8 @@ Keep in mind, our goal is to minimize our error as much as we can. In each of th
 
 > Note: Whenever you employ linear regression, there are various conditions you must make sure are satisfied before proceeding. You can use the acronym L.I.N.E to remember that you must satisfy linearity, independence, normality, and equal variance conditions. For the purposes of this tutorial, we won't go in depth about what these conditions mean and how you can check these conditions, but make sure to keep them in mind for your future data analyses. Conditions are super important in statistical analysis!
 
-## Fitting a Line to Many Points: Linear Regression!
+## Introduction to linear regression
+
 Now let's turn to another example data set. This new data set focuses on penguins. Do you think a linear model might be a good way to model the data? Run the code below to create a scatter plot of flipper length versus body mass. 
 
 ```{r, warning = FALSE, fig.width = 5, fig.height = 4}
@@ -173,11 +177,15 @@ pengfit
 pengscat + geom_abline(slope = 0.0152, intercept = 137.0396)
 ```
 
+### Summarizing a linear regression model
+
 That looks like a pretty good fit, right? But how do we evaluate how good of a fit the linear regression provides? One function we can use in R is `summary()`. This function provides an overview of the fitted model.  
 
 ```{r}
 summary(pengfit)
 ```
+
+#### Assessing model fit with $R^2$
 
 There is a lot of information that comes out of this function, but just focus on "Multiple R-squared" for now. $R^2$ represents the percent of variation in the response y-variable that is explained by the explanatory x-variable(s). Can you find the $R^2$ for this model in the summary table? 
 
@@ -185,8 +193,11 @@ You probably found 0.759 on the table. This means that 75.9% of the variation in
 
 Apart from looking at the $R^2$, it is a good idea to look at the resulting t-tests and F-tests. While t-tests looks at the significance of individual variables by comparing population means, F-tests examine the significance of overall models by comparing population variances. You can see the "t value" column for the test statistics from the t-tests, but you can mainly just focus on the resulting p-values in the "Pr(>|t|)" column. In this case, the p-value for `body_mass_g` is quite low, meaning it is a significant variable in this model predicting flipper length. At the bottom, you can see the F-statistic and associated p-value for the overall model. Again, the p-value is quite low, meaning the model is significant. These two outcomes of the t-test and F-test can increase our confidence in the model even further. 
 
-## Categorical Data to Numerical Representations
+### Linear regression with a categorical predictor
+
 So far we've only explored linear regression with numerical variables, but we can certainly use categorical variables in our model as well. Continuing with our penguins data, let's compare flipper length to penguin species. Remember that flipper length is a numerical variable and species is a categorical variable (with three levels: Adelie, Chinstrap, and Gentoo).
+
+#### Binary categorical predictor 
 
 To start, let's consider one level at a time, so we can get a good sense of the relationship between species and flipper length. Below we examine Adelie penguins first. We start off by using `mutate()` again to label our species as either "Adelie" or "Not Adelie". Then, we create a side-by-side boxplot using `geom_boxplot()` again. 
 
@@ -239,6 +250,9 @@ $\widehat{FlipperLength} =  152.61 + 0.01237(BodyMass)$
 
 Awesome. What do you now see about the impact of the `species` variable on predicting flipper length? The only difference in the two equations is in the y-intercept in the model, meaning that flipper length for non-Adelie penguins is, on average, 8.311 mm longer than flipper length for Adelie penguins, across all body mass values. 
 
+#### Categorical predictor with more than 2 levels
+
+<!-- Add content -->
 
 <!-- Regression line with boxplot
 
@@ -324,7 +338,12 @@ head(peng_encoded)
 
 -->
 
-## Using Linear Regression with the Federal Criminal Sentencing Data
+### Multiple linear regression
+
+<!-- Add content -->
+
+
+## Linear Regression with the Federal Criminal Sentencing Data
 
 Now that we've explored the basics of linear regression using both numerical and categorical variables, let's return to the goal of this project: to explore patterns in federal criminal sentencing data from 2006-2020. We will show how to create relevant linear models for this case study, and discuss the results of these models in the following section. We won't dive into the specifics of why, based on the EDA, we will include certain variables over others in the linear regression. Rather, we will simply replicate the results of the paper mentioned at the beginning of this case study. For more information on how the researchers of that paper arrived their final models, please read the paper.
 
