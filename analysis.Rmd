@@ -408,10 +408,10 @@ In the paper, the authors cycle through all districts. While we won't go into ho
 
 Here is one figure from their paper comparing the minoritized race - white disparity in sentencing using a 95% confidence interval:
 
-*Figure 1: Minoritized Race-White Disparity in Sentence Length (Month) Across U.S. Districts Represented by District I and II models:*
+*Figure 2: Minoritized Race-White Disparity in Sentence Length (Month) Across U.S. Districts Represented by District I and II models:*
 
-![districtIIfigure1.](photos/fedsent_fig1.jpg)
+![districtIIfigure1.](photos/fedsent_fig2.jpg)
 
 Here is another figure from the paper displaying where these highlighted districts are located across the United States:
 
-![districtIIfigure2.](photos/fedsent_fig2.jpg)
+![districtIIfigure4.](photos/fedsent_fig4.jpg)
