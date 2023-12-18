@@ -345,7 +345,14 @@ The resulting table lists the *contrast* (which two groups are being compared an
 
 ### Multiple linear regression
 
-<!-- Add content -->
+Similar to how we were able to build up to plots with three or four variables, a multiple linear regression model allows us to consider the relationship between an outcome and *multiple* predictors at the same time. This is better than fitting a different model for every predictor of interest. We can add predictors to our linear regression model by simply using the plus sign in the linear model formula. Run the code below to see how we model flipper length as a function of both penguin species and body mass.
+
+```{r}
+penguin_lm <- lm(flipper_length_mm ~ species + body_mass_g, data = penguins)
+summary(penguin_lm)
+```
+
+Notice we now have three variables in the coefficient table: the two indicator variables we discussed before *and* the numerical predictor, body mass. We have also explained more of the variation in flipper length by including both species and body mass as predictors in the model rather than either one alone ($R^2 = 0.8526$). Because we have multiple predictors, interpretations of slopes now depend on the other variables in the model. For example, we would now interpet the coefficient for body mass as: "*After adjusting for the species of a penguin*,  a one-gram increase in the mass of a penguin is associated with 0.015 mm longer flipper, on average." Similarly, we could interpret the Chinstrap indicator variable coefficient as: "After adjusting for the body mass of a penguin, the flipper length of Chinstraps species is, on average, 5.5 mm longer than the flipper length of Adelie species."
 
 
 ## Linear Regression with the Federal Criminal Sentencing Data
