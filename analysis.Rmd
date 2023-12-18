@@ -44,10 +44,10 @@ $$
 Fitting our line to the data is straightforward and can be done in a number of ways. One way is that we can plug both points into the equation of the line and then solve the system together.
 
 $$
-\begin{align}
+\begin{aligned}
 2 &= (1)m + b\\
 5 &= (3)m + b
-\end{align}
+\end{aligned}
 $$
 
 Here we have a system that has two equations and two unknowns ($m$ and $b$), so we know this system has a unique solution! We can solve this system using a variety of techniques---try to solve this system using a technique you are comfortable with and verify that the solution below passes through each of the two points.
@@ -80,7 +80,6 @@ two_lm
 We know that two points alone uniquely define a line, but what do we think will happen if we have to find a line that goes through three data points? Let's add the point $(2, 3)$ to our existing set and see what happens when try to draw a line through all three points. Below, we will use R to plot the three points and make multiple attempts to fit a line. Don't worry too much on the coding for now, but pay attention to the resulting plots. 
 
 ```{r threepoints line guesses, fig.width=12}
-
 threepoints <- 
   twopoints %>%
   # Add third point to dataset
@@ -300,7 +299,9 @@ $$
   1 & \text{if the species is Chinstrap}\\
   0 & \text{if the species is not Chinstrap}
 \end{cases} 
-\qquad \text{and} \qquad 
+$$
+and
+$$
 \texttt{speciesGentoo} = \begin{cases}
   1 & \text{if the species is Gentoo}\\
   0 & \text{if the species is not Gentoo}
