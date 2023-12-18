@@ -383,35 +383,68 @@ This allows us to estimate the coefficients with some degree of error. Using the
 Returning to the model summary output, you may have noticed that the Multiple $R^2$ is relatively low, indicating that our model using only race as a predictor accounts for only 1.5% of the variation in sentence length. Do you think we can make a better model using more variables to predict sentence length? Of course! Let's jump into replicating one of the models in the original study.
 
 
-### District II Model
+### Replicating Model 11, District Model II
 
-In the paper this case study is based on, the authors apply this model (along with alternate models) across all districts in the data set. In doing this, they were able to compare the disparity in sentences across different races. Let's try employing this model for just one district at a time. Let's start with Arkansas. To only look at the datapoints from Arkansas, we will start with using the `filter()` function. Then, we will fit another model identical to the first linear model, only without `district` as a predictor:
+Alright, let's try to improve our model by adding more predictors. In particular, we hope to replicate---in part---Model 11 from [Table 2](https://www.nature.com/articles/s41599-023-01879-5/tables/2) of the original study, fit separately within each district as shown in [Figure 2](https://www.nature.com/articles/s41599-023-01879-5/figures/2) (District Model 2). 
 
-```{r}
-us_sent_az <- us_sent %>%
-  filter(district == "Arizona")
+Model 11 includes 9 predictors: race, age, sex, and education level (`educ`) of the defendant, year of the sentencing, whether or not the defendant entered a guilty plea (`guilty_plea`), where the case falls in the *U.S. sentencing grid* (`grid_cell`: found by by crossing each level of the criminal history variable with each possible adjusted offense level rating), whether there was a mandatory minimum sentence (`mandatory_min`), and finally the presence of government-sponsored downward departures (`gov_departures`). This model assumes that all districts, on average, apply the U.S. sentencing grid in the same way. 
 
-lm2 <- lm(sentence_length ~ age + sex + educ + year + mandatory_min + guilty_plea + grid_cell +
-            gov_departures + race,
-          data = us_sent_az,
-          model = TRUE, 
-          y = TRUE)
-```
-
-Let's extract the resulting $R^2$ again to get a sense for how well this model using only data from Arizona predicts sentence length:
+We'll start by looking at the results just for Arizona. The code for formulating this linear regression model would follow the same format as the other linear models we've fit, but we can add an argument to `subset` the data to only consider the Arizona district:
 
 ```{r}
-summary(lm2)$r.squared
+model11_az <- lm(sentence_length ~ race + age + sex + educ + year + 
+                   mandatory_min + guilty_plea + grid_cell + gov_departures,
+                 data = us_sent,
+                 subset = (district == "Arizona"))
 ```
 
-In the paper, the authors cycle through all districts. While we won't go into how they accomplished this in this case study, we encourage you to look at some other districts of interest to you.
+You can take a look at the full model summary output on your own---we are omitting the summary from this document because, as you can imagine, it becomes quite long with so many categorical variables in the model. However, the code below allows us to pull out the $R^2$ value and view only the first 9 rows of the table of coefficients, which includes only the demographic predictors:
 
-Here is one figure from their paper comparing the minoritized race - white disparity in sentencing using a 95% confidence interval:
+```{r}
+# Grab R-squared
+summary(model11_az)$r.squared
 
-*Figure 2: Minoritized Race-White Disparity in Sentence Length (Month) Across U.S. Districts Represented by District I and II models:*
+# View partial model results 
+tidy(model11_az, conf.int = TRUE) %>%
+  slice(1:9) %>%
+  kable(booktabs = TRUE, digits = 3)
+```
 
-![districtIIfigure1.](photos/fedsent_fig2.jpg)
 
-Here is another figure from the paper displaying where these highlighted districts are located across the United States:
+First, we notice that Model 11 results in a much higher $R^2$ than our baseline model! Of course it makes sense that including more variables explains more of the variability in sentencing length, but we did quite well with an $R^2$ of 0.725!  
 
-![districtIIfigure4.](photos/fedsent_fig4.jpg)
+Next, because we are primarily interested in race-based disparities after adjusting for all of the other predictors in the model, we dig deeper into how sentencing lengths differ by race. The pairwise comparisons are provided below, after averaging over every other predictor variable in Model 11 (listed as nuisance factors below to ease computation).
+
+```{r}
+emmeans(model11_az, pairwise ~ race,
+        nuisance = c("sex", "educ", "year", "mandatory_min", 
+                     "guilty_plea", "grid_cell", "gov_departures"))$contrasts
+```
+
+Notice that the only comparisons with very small p-values all involve ARI, with the biggest difference in average sentencing length (approximately 14 months) occurring between White and ARI defendants. This difference is highlighted by the orange square in the first column of [Figure 2](https://www.nature.com/articles/s41599-023-01879-5/figures/2), linked here and shown below.
+
+![](photos/fedsent_fig2.jpg)
+
+Let's repeat this process for the "Virginia East" district to see if we can replicate the second column in Figure 2:
+
+```{r}
+# Fit Model 11 in Virginia East
+model11_vae <- lm(sentence_length ~ race + age + sex + educ + year + 
+                   mandatory_min + guilty_plea + grid_cell + gov_departures,
+                 data = us_sent,
+                 subset = (district == "Virginia East"))
+
+# Grab R-squared
+summary(model11_vae)$r.squared
+
+# Look at comparisons across race
+emmeans(model11_vae, pairwise ~ race,
+        nuisance = c("sex", "educ", "year", "mandatory_min", 
+                     "guilty_plea", "grid_cell", "gov_departures"))$contrasts
+```
+
+What do you notice with these results? Which racial groups have the biggest estimated difference in average sentence length? Which comparison is highlighted in Figure2? 
+
+We could repeat this process across each district to fill in the remainder of the District Model II comparisons highlighted in orange in Figure 2. Try a few more districts on your own to see if you can replicate more points in the figure!
+
+
