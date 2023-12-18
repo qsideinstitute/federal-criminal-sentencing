@@ -38,9 +38,6 @@ This project started at the Institute for Computational and Experimental Researc
 ```{r child = "sentencing-eda.Rmd"}
 ```
 
-```{r child = "Exploration.Rmd", eval = FALSE}
-```
-
 ```{r child = "analysis.Rmd"}
 ```
 
