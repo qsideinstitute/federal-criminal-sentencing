@@ -2,159 +2,326 @@
 output: html_document
 ---
 
-# Data exploration
+# Exploratory Data Analysis
+
+Alright, let's start digging into the data! Whenever you are handed a new data set, you want to read in the data so you can view it in RStudio and perform an Exploratory Data Analysis (EDA). 
 
 ## Reading in the data
 
-First you will want to read in your data. You can do this using `read_csv`. To open the data you can "uncomment" (delete the hash tag #) to view the data file. Note that you will need to "recomment" this out in order to knit your file again.
+You can read in your data using `read_csv()` and create a variable named `us_sent` that refers to the dataset.
 
-```{r read in data, message=FALSE, warning=FALSE, echo=FALSE}
-
+```{r read in data, message = FALSE}
 us_sent <- read_csv("data/cleaned_data_renamed.csv")
-#View(us_sent)
 ```
 
-## Describe the structure of the data
+To view the data in a new tab within RStudio, you can use the `View()` function. Because this is an interactive RStudio function that doesn't work when we knit the document, we have set up our document so that the code can be viewed below but not actually run when we knit (specifically, we used the code chunk option `eval = FALSE`). 
 
-In a tidy dataset, each row is an observation, each column is a variable, and each cell is a value.
-
-In this case each row represents an individual who was sentenced in the federal district court system in the U.S. in one of the 94 districts in the U.S.
-
-When we start with a dataset we will want to think about and explore some key questions related to who is in our dataset, what the sentence was, when the individual was sentenced and where the sentence occurred.
-
-Let's inspect our variables which are in the columns.
-
-```{r check column names}
-names(us_sent)
-
-summary(us_sent)
-
-str(us_sent)
-
-glimpse(us_sent)
-
+```{r view data, eval = FALSE}
+View(us_sent)
 ```
 
-- explain what glimpse is
-- explain the different columns (linking to the background)
+## Data structure and contents
 
-### Who
+As you may remember, in a tidy data set, each row is an observation, each column is a variable, and each cell is a value. In the case of the federal criminal sentencing data, each row represents an individual who was sentenced in the federal district court system in the U.S. in one of the country's 94 districts.
 
-A key motivation for this work is exploring how our personal and racial identities influence the judicial sentencing. In a fair, democratic system this identity or perceived identity should not affect how we are treated by the justice system.
+When we start exploring a data set, we will want to think about some key questions using the four W's: who, what, when, and where. Specifically, you might ask in the context of this study: who is in our data set? What was the sentence? When was the individual was sentenced? Where did the sentence occur? 
 
-In this dataset, we have four variables that are related to identity: `age`, `sex`, `educ`: education, and `race`. It is important to note that these characteristics are not independent of one another but can intersect and interact with one another. This combined effect is known as intersectionality. The Center for Intersectional Justice describes the concept of intersectionality as: "the ways in which systems of inequality based on gender, race, ethnicity, sexual orientation, gender identity, disability, class and other forms of discrimination “intersect” to create unique dynamics and effects" (Ref: [Center for Intersectional Justice](https://www.intersectionaljustice.org/what-is-intersectionality), July 20, 2023).
+Can you guess which variables pertain to each question? Let's inspect our variables, which are in the columns, and see if that helps. There are several functions we can use to do this:
 
-#### Sex
+* `names()` will provide the names of the columns in the data set
 
-Sex has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female".
+    ```{r check column names}
+    names(us_sent)
+    ```
+    
+* `summary()` will provide the names of the columns in the data set along with a brief numeric or qualitative summary of each variable
+
+    ```{r check column summaries}
+    summary(us_sent)
+    ```
+
+* `str()` will display (sometimes complex) details of the internal structure of the R object, including the table dimensions, variable names, variable types, and the first 10 observations for each variable within a data table
+
+    ```{r check object structure}
+    str(us_sent)
+    ```
+    
+* `glimpse()` is a simplified version of `str()` that only displays the dimensions, variable names, variable types, and the first set of observations for each variable within a data table (how many observations depends on the width of your output)
+
+    ```{r get glimpse of data}
+    glimpse(us_sent)
+    ```
+    
+> Note: You can use the built in R help documentation to learn more about each function by typing a question mark followed by the name of the function in the console, e.g. `?str()` 
+
+
+## Types of variables
+
+What is halfway between 0 and 1? It is 1/2. What is halfway between horse and dog? There is no such thing! Thinking about each type of data is very important so that we don't code silly things like the mean of animal species.
+
+There are two main types of data: **categorical data** and **numerical data**. Some examples of categorical data would be color, ethnicity, employment status, or states/countries. These have unique values, like California or Oregon. In other words, categorical variables take on discrete, finite values. In R, these variables might show up as characters (`chr`), `TRUE` or `FALSE` statements which are called logical vectors (`lgl`), coded as the integers (`int`), or factors (`fct`).
+
+On the other hand, numerical data is in number form. Some examples of numerical data are temperature, height, and salary. It makes perfect sense to be 165.8 cm tall or for the temperature to be 82.4 degrees outside. In R, these variables might show up as doubles (`dbl`) or integers (`int`). 
+
+There are some confusing data types that use numbers to *represent* categorical data, like zip code. You may live in the zip code 90201, which is a number, but you can't live in the zip code 90210.3. Only whole numbers, and specific ones at that, make sense here. We will learn more about using numbers to represent categorical data in this lesson.
+
+Finally, dates and times are special variables that are treated differently depending on the context and structure of the values. In some cases, especially when there are few discrete values, dates and times might be treated as categorical variables. In some formats and in other cases, dates and times might be treated as numerical variables (note: even though a date or time might be represented as a number, this is not the type of numerical variable where it makes sense to do math in the typical way!). When data are specific dates (with day, month, and year) and/or times (with hours, minutes, seconds), then R has special data types that capture dates and times along a continuum. We don't need to worry about that for this case study, though!
+
+**Can you identify which data type each variable in the federal criminal sentencing data is?**
+
+You may notice that some variables' data types are not what you would expect. Oftentimes, R will automatically assign data types to variables in ways you don't want.  
+
+Let's take the variable `sex`, for example. Remember that `sex` has been coded as a binary variable 0 and 1, where 0 is "Male" and 1 is "Female". We can confirm this using `distinct()`, a function that displays all unique values under a specified column. 
 
 ```{r}
 us_sent %>%
   distinct(sex)
 ```
 
-We can recode this variable using `mutate` and `case_when`
+We can also see that `sex` is currently classified as a `dbl` above. Let's change that to the `fct` data type so R recognizes the variable as categorical. To deal with this, we can change the data types of variables using two important functions: `mutate()` and `factor()`.
 
-**To add**
-
-- Add how sex was defined (sex is defined in pre-sentencing report that comes out of the investigation done by the probation office. This goes to the attorneys and also comes out of an interview with the individual. It should be noted that there are only two categories, so it is likely that there might be only two options possible). See Background section or link to official report for more information.
-- Discuss how a binary variable will not reflect sentenced individuals gender identity and excludes several groups. It is also limiting in nature.
-- Discuss difference between sex and gender
-- Discuss who has defined this variable and why this is problematic
-- Discuss the limitations and how this affects the analysis and inferences we can make.
-- Update sex label with more appropriate label based on Background research.
+You can think of `mutate()` as being a function that essentially replaces the a column in the data set with a new one. In this case, we are replacing the `sex` variable column that is coded as `dbl` with a new column for `sex` coded as `fct`. We can use the function `factor()` to specify the two levels of `sex`, 0 and 1, and labeling each level as "Male" and "Female" respectively. Using this process, we are telling R to consider `sex` to be a categorical variable with two levels. 
 
 
 ```{r}
-us_sent %>%
-  mutate(sex = case_when(sex == 0 ~ "Male",
-                         sex == 1 ~ "Female")) %>%
-  ggplot() +
-  geom_bar(aes(x = sex, fill = sex)) +
-  labs(x = "Sex*",
-       title = "Sex* of Sentenced Individuals",
+us_sent <- us_sent %>% 
+  mutate(sex = factor(sex, levels = c(0, 1), labels = c("Male", "Female")))
+```
+
+Let's check our work by using `glimpse()` again:
+
+```{r}
+glimpse(us_sent)
+```
+
+Great! It worked. `sex` is now of the `fct` data type. Now we can use this process to change the rest of the variables with incorrect data types. You can see that we don't always need to add labels, we just do that when we think it might be useful. Also notice we are treating `year` as a categorical variable for our analyses.
+
+```{r}
+us_sent <- us_sent %>% 
+  mutate(educ = factor(educ, levels = c(1, 3, 5, 6),
+                       labels = c("Less than HS", 
+                                  "HS Grad", 
+                                  "Some College", 
+                                  "College Grad")),
+         year = factor(year),
+         criminal_history = factor(criminal_history),
+         guilty_plea = factor(guilty_plea))
+```
+
+Now that our variable data types are sorted out, let's change one final component of our data set. Let's capitalize each category of the `race` variable using `str_to_title()`. Then we can use `fct_recode()` to turn `race` into a factor while also changing the "Other" level to "ARI", which stands for "another racial identity", to clarify what we mean. 
+
+```{r}
+us_sent <- us_sent %>% 
+  mutate(race =  str_to_title(race),
+         race = fct_recode(race, "ARI" = "Other"))
+```
+
+You can use `View(us_sent)` again to take a look at all the alterations we made to the dataset. 
+
+Now that we have our data types sorted out, we can start exploring the data!
+
+## How to visualize relationships
+
+A good practice to do with a new data set is to explore it through visualization. We can get a sense of the individual distributions of each variable (you might refer back to the case study on [Diversity of Artists in Major U.S. Museums](https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html) for an introduction to graphs of a single variable) and then move on to look at the relationships among two or more variables. As with single-variable graphs, the type of graph we use will depend on the types of variables we are exploring. We will walk through a few simple graphs below that allow us to look at relationships between variables. 
+
+
+### Two numerical variables
+
+A *scatterplot* is typically used to visualize the relationship between two numerical variables. One variable, usually the *dependent* variable, goes on the $y$ axis, and the other variable goes on the $x$ axis, and each observation in the data is represented by a point on the graph. 
+
+We will use a scatterplot to display how a defendant's age relates to their sentence length. Recall, to use `ggplot()` from the **ggplot2** package, we start by indicating the data set we want to plot: `us_sent`. Then, we specify what our variables of interest are---in this case, we are interested in `age` and `sentence_length`. The command `geom_point()` specifies that we want to use a scatterplot to represent our data. 
+
+There are many fun and useful modifications that change the way a scatterplot looks. For example, you can change the color of data points using `color`, you can change the size of data points using `size`, and you can specify the transparency of data points using `alpha` on scale of 0 = *fully transparent* to 1 = *fully opaque*. It's also good practice to come up with a useful title and good axis labels using the `labs()` command.
+
+```{r sentence length by age, fig.width = 6, fig.height = 6}
+ggplot(us_sent, aes(x = age, y = sentence_length)) + 
+  geom_point(color = "coral2",
+             size = 0.5,
+             alpha = 0.7) +
+  labs(title = "Sentence Length by Age",
+       x = "Age (Years)",
+       y = "Sentence Length (Months)")
+```
+
+What do you notice in this scatterplot? What do you wonder? 
+
+### One numerical and one categorical variable
+
+We just created a scatterplot with two numerical variables. Now we will see what happens if one variable is numerical and the other is categorical. Run the code below that plots `criminal_history` (a categorical variable) against `age` (a numerical variable).
+
+```{r criminal history by age, fig.width = 6, fig.height = 6}
+ggplot(us_sent, aes(x = criminal_history, y = age)) + 
+  geom_point(color = "coral2", 
+             alpha = 0.7) +
+  labs(title = "Age by Criminal History Level",
+       x = "Criminal History Level",
+       y = "Age (Years)")
+```
+
+You might think it's a little difficult to see any clear patterns when using a scatterplot to examine one quantitative and one categorical variable because the points are so densely packed together. That's why a scatterplot is generally *not* an appropriate graph to use in this situation. Instead, a more appropriate plot for this combination of variables is the side-by-side boxplot. You can create a side-by-side boxplot by simply switching out `geom_point()` with `geom_boxplot()` in the code above:
+
+```{r boxplot age by criminal history, fig.width = 6, fig.height = 6}
+ggplot(us_sent, aes(x = criminal_history, y = age)) + 
+  geom_boxplot(color = "coral2", 
+               alpha = 0.7) +
+  labs(title = "Age by Criminal History Level",
+       x = "Criminal History Level",
+       y = "Age (Years)") 
+```
+
+> Interpreting boxplots: The middle horizontal line on a boxplot refers to the median, or halfway point, of the data, where 50% of the values are above the median and 50% are below. The botton and top lines of the box represent the lower quartile and upper quartile respectively (meaning the lower 25% of the data points are below the lower quartile and the upper 25% of the data points are above the upper quartile). The verticle lines called "whiskers" extending from the box represent the rest of the data, which includes all points outside of the middle 50% of the data points, excluding any outliers. Lastly, any points outside of the box and "whiskers" are potential outliers. 
+
+What patterns do you notice in this side-by-side boxplot? What do you wonder?
+
+
+### Two categorical variables
+
+Let's try one more scenario. What happens when you try to plot two categorical variables against each other using a scatterplot? Run the code below to plot sex against race (both categorical variables).
+
+```{r scatterplot race by sex, fig.width = 6, fig.height = 6}
+ggplot(us_sent, aes(x = race, y = sex)) + 
+  geom_point(color = "coral2", 
+             alpha = 0.7) +
+  labs(title = "Race by Sex",
+       x = "Race",
+       y = "Sex")
+```
+
+As you may have noted, scatterplots of two categorical variables are also not that useful for analysis and inference since they only display the way we've grouped our data and not any of the underlying patterns. As before, scatterplots are thus generally *not* appropriate displays for exploring the relationship between two categorical variables.  Instead, frequency tables (shown below) or bar graphs (explored later) are better visualizations to use. 
+
+```{r}
+us_sent %>% 
+  count(sex, race) %>% 
+  # Add distribution of race within each sex
+  mutate(proportion = round(proportions(n), 3))
+```
+
+In the remainder of this lesson we will focus on comparisons where we have *at least one numerical variable*.
+
+
+<!-- - explain the different columns (linking to the background) -->
+
+Now, let's return to exploring the variables of interest. Remember, we want to know *who* is in our data set, *what* the sentence was, *when* the individual was sentenced, and *where* the sentence occurred. 
+
+But first, how many columns of data did we have again? What were the names of those columns? Which tool can we use to find out? Do we remember?
+
+We can use the `names()` routine to remind ourselves of the variable names.
+
+```{r check the columns, i.e. names}
+names(us_sent)
+```
+
+We can see the fifteen column names in the output above. Now that we have these readily available, can you identify how our variables might correspond with each of these questions? 
+
+You might have classified the variables as follows: 
+
+<!-- https://www.nature.com/articles/s41599-023-01879-5 -->
+
+| Who | What| When | Where |
+|:---|:---|:---|:---|
+| `age` | `sentence_length` | `year` | `district` |
+| `sex` | `mandatory_min` | | |
+| `educ` | |||
+| `race` | |||
+| `criminal_history` | |||
+| `guilty_plea` | |||
+
+Let's start exploring the variables that fall under each of these key questions.
+
+### Who?
+
+#### Sex
+
+Let's use `ggplot()` again to view the distribution of `sex` within our data set, this time using `geom_bar()` to display the data in a bar graph. Another difference from when we made a scatterplot above using `geom_point()` is that we are adding `fill` to make sure the bars in the bar graph are colored in. We can also add `scale_fill_viridis_d()` to automatically apply a certain color scheme to our plot.
+
+```{r bar graph sex, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = sex, fill = sex)) +
+  geom_bar(show.legend = FALSE) +
+  labs(title = "Sex of Sentenced Individuals",
+       x = "Sex",
        y = "Number of Individuals",
-       fill = "Sex*") +
+       fill = "Sex") +
   scale_fill_viridis_d()
 ```
 
+From this graph, we can see that there are far more males than females in our data set. 
+
 #### Race
+
+Let's continue exploring through turning toward the `race` variable. We will start our exploration of `race` by using `distinct()` to remind ourselves of the levels of the `race` variable.
 
 ```{r}
 us_sent %>%
   distinct(race)
 ```
 
+We can once again use `ggplot()` to make a bar graph displaying the `race` variable. We can make use of `fct_infreq()`, which makes sure the bars in the plot are ordered largest to smallest from left to right instead of alphabetically. 
 
-```{r}
-us_sent %>%
-  mutate(race = case_when(race == "other" ~ "ari",
-                         TRUE ~ race)) %>%
-  ggplot() +
-  geom_bar(aes(x = fct_infreq(race), fill = race)) +
-  labs(x = "Race*",
-       title = "Race* of Sentenced Individuals",
+```{r bar graph race, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = fct_infreq(race), fill = race)) +
+  geom_bar(show.legend = FALSE) +
+  labs(x = "Race",
+       title = "Race of Sentenced Individuals",
        y = "Number of Individuals",
-       fill = "Race*") +
+       fill = "Race") +
   scale_fill_viridis_d()
 ```
 
-#### Race and Sex
+#### Race and sex
 
+Now let's look at how `race` and `sex` relate to one another. First, let's look at the number of people in each combination using `count()` again. 
 
 ```{r}
 us_sent %>%
   count(race, sex)
 ```
 
+We can represent these two variables using a bar graph. Once again we will use `ggplot()` to create this plot. This time, since we are creating a bar graph displaying two different variables, we can define `race` as the `x` variable and have the colors of the bar graph correspond to the `sex` variable. 
 
-
-```{r}
-us_sent %>%
-  mutate(race = case_when(race == "other" ~ "ari",
-                         TRUE ~ race)) %>%
-  mutate(sex = case_when(sex == 0 ~ "Male",
-                         sex == 1 ~ "Female")) %>%
-  ggplot() +
-  geom_bar(aes(x = fct_infreq(race), fill = sex)) +
-  labs(x = "Race*",
-       title = "Race* and Sex* of Sentenced Individuals",
+```{r bar graph race by sex, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = fct_infreq(race), fill = sex)) +
+  geom_bar() +
+  labs(x = "Race",
+       title = "Race and Sex of Sentenced Individuals",
        y = "Number of Individuals",
-       fill = "Sex*")  +
+       fill = "Sex")  +
   scale_fill_viridis_d()
 ```
 
-#### Proportional Race and Sex
+We can also create a proportional bar plot. All we need to add to our previous plot is `position = "fill"` within `geom_bar()`. 
 
-We can also create a proportional bar plot
-```{r}
-us_sent %>%
-  mutate(race = case_when(race == "other" ~ "ari",
-                         TRUE ~ race)) %>%
-  mutate(sex = case_when(sex == 0 ~ "Male",
-                         sex == 1 ~ "Female")) %>%
-  ggplot() +
-  geom_bar(aes(x = fct_infreq(race), fill = sex), position = "fill") +
-  labs(x = "Race*",
-       title = "Race* and Sex* of Sentenced Individuals",
+```{r stacked bar graph race by sex, fig.width = 5, fig.height = 5}
+ggplot(us_sent, aes(x = fct_infreq(race), fill = sex)) +
+  geom_bar(position = "fill") +
+  labs(x = "Race",
+       title = "Race and Sex of Sentenced Individuals",
        y = "Number of Individuals",
-       fill = "Sex*")  +
+       fill = "Sex")  +
   scale_fill_viridis_d()
 ```
+
 #### Age
 
-We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont.
+We might want to explore what the age of different individuals is across districts. Let's explore the districts of Maine, Rhode Island, and Vermont. We can use the `filter()` command to look at only these three districts of interest, and then make a stacked histogram of age colored by district.
 
-```{r}
+```{r stacked histogram age, fig.width = 6}
 us_sent %>%
-  filter(district %in% c("Maine", "Rhode Island", "Vermont"))
+  filter(district %in% c("Maine", "Rhode Island", "Vermont")) %>%  
+  ggplot(aes(x = age, fill = district)) +
+  geom_histogram() +
+  labs(title = "Distribution of Age in Maine, Rhode Island, and Vermont",
+       x = "Age",
+       y = "Count",
+       fill = "District")
 ```
 
+What do you notice about the ages represented in our data? Can you try plotting the ages for other districts to see how they differ from the three we've chosen for this plot?
 
+<!--
+Note from original authors: 
 **To add**:
 - what do we divide by?
 - You may look at this plot and say that whites are sentenced at the federal district court more than black individuals. This is where it is important to look at the population in each district.
-
 
 **Future Directions**
 
@@ -164,272 +331,264 @@ Bringing in the spatial district files
 - Downloading census data from the API.
 - Joining to census data
 - Limitations of census data
-- Other potential things to mention (the affect of aggregation and spatial scale).
+- Other potential things to mention (the affect of aggregation and spatial scale). -->
 
 
-### What
+### What?
 
-#### How does sentence length correlate with criminal history? {.tabset}
+Now that we explored the "Who?" question about our data, let's move on to answering the "What?" question. Recall that `sentence_length` and `mandatory_min` are the variables that fall under this category, but we'll focus only on sentence length for our data exploration.
 
-Sentence lengths and how do they relate to policy?
+#### Sentence length
 
-When we are exploring the distribution of a dataset can we can use a number of different plots. To better understand sentence length data, we’ll display a histogram for this quantitative variable. A histogram gives us a visual representation of the frequency of values. With R, we can change the width of each bin or choose a number of bins, and then the plot shows us how many sentences fell within each bin range.
+To better understand `sentence_length`, we’ll display a histogram for this quantitative variable. A histogram gives us a visual representation of the frequency of values. We can change the width of each bin or choose a number of bins, and then the plot shows us how many sentences fell within each bin range of sentence lengths. We can also use `geom_vline()` to add some red vertical lines on the graph as a guide to think about common sentence lengths of 12, 60, 120, or 240 months, corresponding to 1, 5, 10, and 20 years. 
 
-##### Histogram
-
-```{r}
-ggplot(us_sent) +
-  geom_histogram(aes(x = sentence_length), binwidth = 12) +
-  labs(x = "Sentence length in months", y = "Number of individuals")  +
-  geom_vline(aes(xintercept = 12), color = "red", linetype = 2) +
-  geom_vline(aes(xintercept = 60), color = "red", linetype = 2) +
-   geom_vline(aes(xintercept = 120), color = "red", linetype = 2) +
-  geom_vline(aes(xintercept = 240), color = "red", linetype = 2)
-
-
-
+```{r histogram sentence, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = sentence_length)) +
+  geom_histogram(binwidth = 12) +
+  geom_vline(xintercept = c(12, 60, 120, 240), 
+             color = "red", 
+             linetype = 2) +
+  labs(x = "Sentence Length (Months)",
+       caption = "Red dashed lines indicate 1, 5, 10, and 20 year sentences",
+       y = "Number of Individuals",
+       title = "Numbers of Individuals per Sentence Length")
 ```
 
-##### Histogram
+What do you notice about the number of individuals per sentence length in our data set?
 
-```{r}
-ggplot(us_sent) +
-  geom_histogram(aes(x = sentence_length/12), binwidth = 1) +
-  labs(x = "Sentence length in years", y = "Number of individuals") +
-  geom_vline(aes(xintercept = 1), color = "red", linetype = 2) +
-  geom_vline(aes(xintercept = 5), color = "red", linetype = 2) +
-  geom_vline(aes(xintercept = 10), color = "red", linetype = 2) +
-  geom_vline(aes(xintercept = 20), color = "red", linetype = 2) +
-  labs(title = "Distribution of number of individuals by ")
+While it may be useful to look at how sentence length in terms of months, we can also adjust the scale of our histogram to look at sentence length in terms of years. We can do so by simply dividing our `x` variable, `sentence_length`, by 12. We can also adjust our guiding red lines to examine the sentence lengths between 1, 5, 10, and 20 years:
 
-
-
+```{r histogram sentence years, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = sentence_length / 12)) +
+  geom_histogram(binwidth = 1) +
+  labs(x = "Sentence length in years", 
+       y = "Number of individuals") +
+  geom_vline(xintercept = c(1, 5, 10, 20), 
+             color = "red", 
+             linetype = 2) +
+  labs(title = "Distribution of Number of Individuals by Sentence Length",
+       caption = "Red dashed lines indicate 1, 5, 10, and 20 year sentences",
+       x = "Sentence Length (Years)", 
+       y = "Number of Individuals")
 ```
 
-We observe a high frequency over 0, meaning that many individuals who are convicted may in fact receive a sentence of 0 months. At the other extreme, we see cases corresponding to 470 months, representing individuals who either have been given a long sentence, meaning 39 years or possibly a life sentence.
+We observe a high frequency over 0, meaning that many individuals who are convicted may in fact receive a sentence of 0 months. At the other extreme, we see a group of cases corresponding to 470 months, or about 39 years, representing individuals who have been given a long sentence or possibly a life sentence.
 
-[could further discuss skew, peaks and relate to sentencing table, etc.]
+<!-- [could further discuss skew, peaks and relate to sentencing table, etc.] -->
 
-##### Violin Plot
+#### How does sentence length relate to criminal history level? {.tabset}
 
-Violin plots are another way of showing the distribution data.
+<!-- Note from original authors: How do sentence lengths relate to policy? -- insert blurb here? -->
+Earlier we used a side-by-side boxplot to see how a numerical variable changes across levels of a categorical variable, but boxplots aren't the only option. Let's explore how sentence length varies by criminal history level using boxplots, violin plots (`geom_violin()`), and ridge plots (`geom_density_ridges()`). 
 
-```{r}
-ggplot(us_sent) +
-  geom_violin(aes(x = as.factor(criminal_history), y = sentence_length, fill = as.factor(criminal_history))) +
-  labs(fill = "Criminal History", y = "Sentence length in months", x = "Criminal History")
+What do you learn from these plots? What do you see as the advantages and disadvantages of each type of plot?
 
+##### Boxplot
+
+```{r sentence by criminal history boxplot, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = criminal_history, y = sentence_length,
+                    fill = criminal_history)) +
+  geom_boxplot(show.legend = FALSE) +
+  labs(y = "Sentence Length (Months)", 
+       x = "Criminal History Level",
+       title = "Distribution of Sentence Length by Criminal History Level")
 ```
+
+
 ##### Ridge plot
 
-```{r}
-ggplot(us_sent) +
-  geom_density_ridges(aes(y = as.factor(criminal_history),
-                          x = sentence_length,
-                          fill = as.factor(criminal_history))) +
-  labs(title = "Distribution of sentence length in months by criminal history",
-       subtitle = "Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences",
-    fill = "Criminal History",
-       x = "Sentence length in months",
+Ridge plots are density plots within each level of a categorical variable. We've added vertical lines to this ridge plot to indicate 1, 5, 10, 15, and 20 year sentences.
+
+```{r sentence by criminal history ridge plot, fig.width = 6, fig.height = 5, message = FALSE}
+ggplot(us_sent, aes(y = criminal_history, x = sentence_length,
+                    fill = criminal_history)) +
+  geom_density_ridges(show.legend = FALSE) +
+  geom_vline(xintercept = c(12, 60, 120, 180, 240), 
+             color = "black", 
+             linetype = 2) +
+  labs(title = "Distribution of Sentence Length by Criminal History Level",
+       caption = "Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences",
+       fill = "Criminal History Level",
+       x = "Sentence Length (Months)",
        y = "Criminal History") +
-  geom_vline(aes(xintercept = 12), color = "black", linetype = 2) +
-  geom_vline(aes(xintercept = 60), color = "black", linetype = 2) +
-   geom_vline(aes(xintercept = 120), color = "black", linetype = 2) +
-  geom_vline(aes(xintercept = 180), color = "black", linetype = 2) +
-  geom_vline(aes(xintercept = 240), color = "black", linetype = 2) +
   scale_fill_viridis_d()
-
 ```
-What is the relationship between `all_adjustments` and `sentence_length`?
 
-```{r}
-ggplot(us_sent) +
-  geom_point(aes(y = sentence_length,
-                 x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
-  labs(x = "All Adjustments",
-       y = "Sentence length in months",
+##### Violin plot
+
+Violin plots are another type of density plot where the width of each "violin" changes with the density of the data: the wider the section of the violin, the more data around that value. For example, at the first criminal history level, it looks like short sentences are the most frequent (widest part of the violin) and it is very unusual for individuals to have sentences longer than about 125 months (plot is very narrow and needle-like around that point and higher).
+
+```{r sentence by criminal history violin plot, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = criminal_history, y = sentence_length,
+                    fill = criminal_history)) +
+  geom_violin(show.legend = FALSE) +
+  labs(y = "Sentence Length (Months)", 
+       x = "Criminal History Level",
+       title = "Distribution of Sentence Length by Criminal History Level")
+```
+
+
+#### How does sentence length vary by adjusted offense level and criminal history? 
+
+Let's add a third variable to our exploration of sentence length: the adjusted offense level (`all_adjustments`). Recall that `all_adjustments` is a type of rating of the offense level that can be treated numerically, so we might start by looking at a scatterplot of sentence length by offense level, and then add in the criminal history level through color.
+
+```{r scatterplot sentence offense level criminal history, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(y = sentence_length, x = all_adjustments, 
+                    color = criminal_history)) +
+  geom_point(alpha = 0.3) +
+  labs(x = "Adjusted Offense Level",
+       y = "Sentence Length (Months)",
+       title = "Sentence Length by Adjusted Offense Level and Criminal History",
        color = "Criminal History") +
-  facet_wrap(~ race) +
   scale_color_viridis_d()
 ```
 
-```{r}
-ggplot(us_sent) +
-  geom_point(aes(y = sentence_length,
-                 x = all_adjustments, color = as.factor(criminal_history)), alpha = 0.01) +
-  labs(x = "All Adjustments",
-       y = "Sentence length in months",
+We can display a lot of information in a single plot! Let's try going a step further, and adding the `race` variable into the mix. We can do so by using the same code as the previous plot, but also using the `facet_wrap()` function with `race` to create four different plots according to race.
+
+```{r scatterplot sentence offense level criminal history race, fig.width = 7, fig.height = 6}
+ggplot(us_sent, aes(y = sentence_length, x = all_adjustments, 
+                    color = criminal_history)) +
+  geom_point(alpha = 0.3) +
+  labs(x = "Adjusted Offense Level",
+       y = "Sentence Length (Months)",
+       title = "Sentence Length by Adjusted Offense Level, Criminal History, and Race",
        color = "Criminal History") +
-  scale_color_viridis_d()
+  scale_color_viridis_d() +
+  facet_wrap(~race)
 ```
 
-#### How does the age range vary with criminal history?
+Now we have four different variables represented in a single plot, which is a super powerful tool. What do you notice about the plots above? 
 
-```{r}
-ggplot(us_sent) +
-  geom_density_ridges(aes(y = as.factor(criminal_history),
-                          x = age,
-                          fill = as.factor(criminal_history))) +
-  labs(fill = "Criminal History",
-       x = "Age of individual in years",
-       y = "Criminal History")
-```
+### When?
 
-### When
-
-Let's explore the time data found in our US sentencing data set. How many columns of data did we have again? This seems like a good place to start digging into what kind of time data we have in this data set. Which tool can we use to find out?
-
-
-Do we remember?
-
-
-We do remember; we can use the names() routine to remind ourselves.
-
-
-```{r check the columns, i.e. names}
-names(us_sent)
-```
-We can see the fifteen column names in that output.  Awesome.  Looks like our time data, as far as 'when' these convicted individuals in our data were convited, is in the 'year' column.  Let's see what we're working with here.  Let's use the pipe distinct() routine again.
+Earlier we identified `year` as our only variable capturing the *when*, and from the background information we know we have records spanning from 2006 to 2020. It is worth noticing that although $2020 - 2006 = 14$, when we count each year as a whole year of data *inclusively*, we have up to 15 distinct possible years of data available. Let's see which specific years of data we have available by using `distinct()` again.
 
 ```{r Segregate and list the data in the column year}
-us_sent %>% distinct(year)
+us_sent %>% 
+  distinct(year)
 ```
 
-Excellent.  So we have years from 2006 from 2020 in our data, 15 rows worth of data.  It is worth noticing that although 2020-2006 = 14, when we cound each year as a whole year of data 'inclusively', we have 15 distinct instances, which the distinct command helpfully listed out for us.
+Now let's create a graph to see how the number of cases we have varies by year. We'll place each year on the vertical (`y`) axis and the sentences on the horizontal (`x`) axis.  
 
-Now each of these data points is a numeric variable, such as '2010', or '2015'. One way we could check is to use the 'sapply()' routine.
-
-
-```{r}
-sapply(us_sent,is.numeric)
+```{r bar graph sentences per year, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(y = year)) +
+  geom_bar(fill = "blue") +
+  labs(title = "Sentences per Year",
+       x = "Count",
+       y = "Year")
 ```
 
-In the output we can indeed see `TRUE' for the column 'year'.  As we progress in our educational journey, learn about different numeric variables, including double precision floating point arithmetic numeric variables.  Is our 'year' data in this format?  Let's use the same command with a different argument:
+Let's explore how sentence length varies by each year in our data set. We can do this by using side-by-side boxplots again. 
 
-
-```{r use sapply() to verify the year data is indeed numero}
-sapply(us_sent,is.double)
+```{r boxplot sentences per year, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = year, y = sentence_length)) + 
+  geom_boxplot() +
+  labs(title = "Distribution of Sentence Length by Year",
+       x = "Sentence Length",
+       y = "Year")
 ```
 
-Nice, we can see that our 'year' data is indeed a double precision floating point number.
+<!-- could include more information on interpreting boxplots, explaining what outliers are, etc. would likely write about this above where we first introduce boxplots. We could also consider adding in information about examining center, spread, etc. -->
 
+### Where? {.tabset}
 
-Let's do a graph of our 'year' data, where we have each year on the vertical (y) axis and the sentences on the horizonal (x) axis.  
-
-```{r Bar chart of year data}
-ggplot(us_sent) +
-  geom_bar(aes(y = year))
-```
-
-
-
-If we wanted to use a scatter plot, which could be a bit 'messier', one way to do so would be:
-```{r graph our year data- scatter plot}
-ggplot(us_sent, aes(x=sentence_length, y=year)) + geom_point()
-```
-
-### Where
-
-Let's check what districts we have in the data. We can do this using `distinct(district)`.
+Now that we've explored the *who*, *what*, and *when* questions about our data, let's finish off our EDA by understanding the *where* question. Let's check what districts we have in the data. We can do this using `distinct()` again.
 
 ```{r}
 us_sent %>%
   distinct(district)
 ```
-You'll notice that certain states are a single district on their own. Other larger states are split into several districts (e.g. New York East, New York North).  
 
-Q: If you live in the United States, can you identify which district you live in?
+You'll notice that certain states are a single district on their own, while other larger states are split into several districts (e.g. New York East, New York North).  
 
-**To Do** Add a link to a reference where someone could also find which district their town/city is in.
+If you live in the United States, do you know which district you live in?
 
-We can use `distinct` to figure out what distinct districts we have in our dataset, but we are also interested in finding out how many sentences were made in each district and we will want to think about this question in relation to the population of those districts, which can be quite nuanced and we will come back to this later.
+If not, you can look it up at [the United States Department of Justice's website](https://www.uscourts.gov/federal-court-finder/search).
 
-Our goals in this next section are to think about ways we can explore the question "Where did those sentences occur" in a visual way.
+Apart from using the `distinct()` command to figure out what districts we have in our data set, we are interested in finding out how many sentences were made in each district. We will also want to think about this question in relation to the population of those districts, which can be quite nuanced---we will come back to this later.
 
-**Learning aims**
+Our goals in this next section are to think about ways we can explore the question *"Where did those sentences occur?"* in a visual way.
 
-- introduce factors as a data type
+<!--
+Note from original authors: **Learning aims**
+
+- introduce factors as a data type (accomplished above)
 - explain why it might be better to put our names on the y axis instead of the x-axis for many categories and those with longer names. This makes it more readable.
 - explain that automatically categorical data will be placed in alphabetical order.
 - we can reconfigure the graph using functions from the `forcats` package.
 - This is a good example for when you might want to order it in terms of frequency (i.e. the count) using `fct_infreq`
-- We may also want to reverse the order to see the districts which have the most sentences at the top of our plot using `fct_rev`.
+- We may also want to reverse the order to see the districts which have the most sentences at the top of our plot using `fct_rev`. 
+-->
 
-#### Number of individuals sentences across districts {.tabset}
+Let's start looking at the number of individual sentences across districts by using a bar graph.  
 
-
-##### Base Bar Plot
-
-```{r}
-ggplot(us_sent) +
-  geom_bar(aes(x = district))
+```{r bar graph districts, fig.width = 6, fig.height = 5}
+ggplot(us_sent, aes(x = district)) +
+  geom_bar()
 ```
 
-##### District on the y-axis
+We can see immediately that, given the large number of districts, a simple bar graph makes it super hard to interpret the data. Let's step through some ways we can improve this plot. 
 
-```{r}
-ggplot(us_sent) +
-  geom_bar(aes(y = district))
+
+#### 1. Place district on the $y$-axis
+
+First, we can change our plot so that `district` is on the $y$-axis so there is more room for the text. Let's not worry about presenting accurate axis labels or titles until we get our plot into a readable format: 
+
+```{r horizontal bar graph districts, fig.width = 5, fig.height = 9}
+ggplot(us_sent, aes(y = district)) +
+  geom_bar()
 ```
 
-##### Ordered by number of sentences
+That definitely makes it easier to read the district names! However, we can think about ordering the districts in such a way that is useful for us. For example, we might be interested in seeing the districts with the most amount of sentences.
 
-```{r}
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_infreq(district)))
+#### 2. Sort district by frequency
+
+To answer this question, we can use `fct_infreq()`, as we did earlier in our EDA, to order the districts from the least to the most number of sentences. 
+
+```{r bar graph district sorted, fig.width = 5, fig.height = 9}
+ggplot(us_sent, aes(y = fct_infreq(district))) +
+  geom_bar()
 ```
 
-##### Ordering from high to low
+#### 3. Reverse the order of the districts
 
-```{r}
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district))))
+Alternatively, we can order the districts from the most to the least amount of sentences in our data set by using `fct_rev()` in conjunction with `fct_infreq()`.
+
+```{r bar graph district reverse sorted, fig.width = 5, fig.height = 9}
+ggplot(us_sent, aes(y = fct_rev(fct_infreq(district)))) +
+  geom_bar()
 ```
 
-##### Add title and axes labels
+#### 4. Add title and axes labels
 
-```{r}
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
+Now that we have our plot data organized in a readable and useful way, let's add useful title and axis titles. When we have longer titles, you can use `\n` to add a line break. 
+
+```{r final district bar graph, fig.width = 5, fig.height = 9}
+ggplot(us_sent, aes(y = fct_rev(fct_infreq(district)))) +
+  geom_bar(fill = "forestgreen") +
+  labs(title = "Number of Individuals Sentenced at \nthe Federal District Court Level",
        y = "Federal District Court",
        x = "Number of individuals")
 ```
 
-##### Making the plot more readable with subsetting
 
-```{r}
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_rev(fct_infreq(district)))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-       y = "Federal District Court",
-       x = "Number of individuals")
-```
-```{r}
-ggplot(us_sent) +
-  geom_bar(aes(y = fct_infreq(district))) +
-  labs(title = "Number of individuals sentenced at the federal district court level for each district from x to x",
-       y = "Federal District Court",
-       x = "Number of individuals")
-```
-
-##### Exploring the census data
+<!--##### Exploring the census data
 
 **To Do**:
 
 - If we want to get out the district populations, we will probably need to download the data by the county level.
-- Decision points: we could download the data in categories by age and sex and race: e.g. 5-9, 10-14 etc. This might get a little
+- Decision points: we could download the data in categories by age and sex and race: e.g. 5-9, 10-14 etc. This might get a little -->
 
-```{r census-data-import, echo = TRUE, warning = FALSE, message = FALSE, results = 'hide'}
+```{r census-data-import, echo = TRUE, warning = FALSE, message = FALSE, results = 'hide', include = FALSE, eval = FALSE}
 
 # apply unique census api key
 census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 
 # import census data
 ## guide to spatial units: https://api.census.gov/data/2016/acs/acs5/geography.html
-## variable of interest --> population
+## variable of interest -> population
 ## vars <- load_variables(year = 2013,
-                      # dataset = "acs5",
+                      # data set = "acs5",
                       # cache = TRUE)
 
 # B02001_001: Total
@@ -445,3 +604,4 @@ census_api_key("5177724b01a7fe4714097e711cb95230c37cfce7", overwrite = TRUE)
 #census_place_df <- get_acs(geography = "state", variables = c("B01003_001E"), geometry = TRUE, year = 2010)
 
 ```
+
